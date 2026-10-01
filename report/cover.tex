@@ -1,8 +1,7 @@
-% Bố cục tham khảo trang bìa Final_Project_Blockchain-1.pdf do P1 cung cấp.
-% Logo được trích nguyên bản từ PDF mẫu.
+% Bìa A4 theo bố cục ảnh mẫu do P1 cung cấp.
+% Logo trích nguyên bản từ Final_Project_Blockchain-1.pdf.
 \begin{titlepage}
-% Giữ khổ A4 từ main.tex. Vùng nội dung bìa: 160 x 247 mm.
-\newgeometry{left=25mm,right=25mm,top=25mm,bottom=25mm,noheadfoot}
+\newgeometry{left=22mm,right=22mm,top=23mm,bottom=24mm,noheadfoot}
 \thispagestyle{empty}
 \begin{tikzpicture}[remember picture,overlay]
   \draw[line width=0.6pt]
@@ -18,49 +17,51 @@
 \centering
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{0pt}
+% Giữ tên trường trên một dòng, giới hạn đúng chiều rộng nội dung A4.
+\resizebox{\textwidth}{!}{%
+  \fontsize{12}{15}\selectfont\bfseries
+  TRƯỜNG ĐẠI HỌC CÔNG NGHỆ KỸ THUẬT TP. HỒ CHÍ MINH}\par
+\vspace{1.5mm}
 {\fontsize{12}{16}\selectfont\bfseries
-TRƯỜNG ĐẠI HỌC CÔNG NGHỆ KỸ THUẬT\par
-TP. HỒ CHÍ MINH\par}
-\vspace{0.15cm}
-{\fontsize{12}{16}\selectfont\bfseries KHOA ĐIỆN -- ĐIỆN TỬ\par}
-% Bổ sung tên bộ môn/mã môn khi có thông tin xác nhận cho môn DFT.
+KHOA ĐIỆN -- ĐIỆN TỬ\par
+BỘ MÔN KỸ THUẬT ĐIỆN TỬ -- THÔNG TIN\par}
 
-\vspace{0.7cm}
-\includegraphics[width=30mm,height=30mm,keepaspectratio]{figures/p1/logo_truong.png}\par
+\vspace{8mm}
+\includegraphics[height=32mm,keepaspectratio]{figures/p1/logo_truong.png}\par
 
-\vspace{0.6cm}
-{\fontsize{18}{23}\selectfont\bfseries ĐỀ TÀI CUỐI KỲ\par}
+\vspace{7mm}
+{\fontsize{17}{21}\selectfont\bfseries ĐỀ TÀI CUỐI KỲ\par}
 
-\vspace{0.7cm}
-{\fontsize{18}{23}\selectfont\bfseries
+\vspace{9mm}
+{\fontsize{17}{21}\selectfont\bfseries
 SINH MẪU KIỂM TRA TỰ ĐỘNG\par
 CHO MẠCH TỔ HỢP VÀ TUẦN TỰ\par}
-\vspace{0.25cm}
-{\fontsize{12}{16}\selectfont
-Automatic Test Pattern Generation Algorithms\par
-for Combinational and Sequential Circuits\par}
 
-\vspace{0.7cm}
-{\fontsize{13}{18}\selectfont
-\textbf{Môn học:} Kỹ thuật DFT và kiểm thử\par
-\vspace{0.3cm}
-\textbf{Nhóm SVTH:} Nhóm 4\par}
+\vspace{9mm}
+{\fontsize{13}{17}\selectfont
+\textbf{Môn học:} Kỹ thuật DFT và kiểm thử\par}
+% Chưa có mã môn DFT: bổ sung sau khi được xác nhận.
 
-\vspace{0.45cm}
-{\fontsize{12}{17}\selectfont
-\renewcommand{\arraystretch}{1.25}
-\begin{tabular}{@{}l@{\hspace{1.2cm}}l@{}}
-\textbf{Họ và tên} & \textbf{MSSV} \\
-Phan Ngọc Tuấn Nguyên & 23119178 \\
-Hà Quang Huy & 23119147 \\
-Võ Trung Nguyên & 23119180 \\
-Phạm Trọng An Nam & 23119174 \\
-Nguyễn Thị Thúy Hàng & 23119142 \\
-Nguyễn Thị Thanh Tuyền & 23119222 \\
+\vspace{7mm}
+% Nhóm SVTH và GVHD thẳng hàng; MSSV nằm dưới tên từng sinh viên.
+{\fontsize{12}{14}\selectfont
+\renewcommand{\arraystretch}{1}
+\begin{tabular}{@{}l@{\hspace{2mm}}l@{}}
+\textbf{Nhóm SVTH:} & Nhóm 4 \\[2pt]
+& \textbf{Phan Ngọc Tuấn Nguyên} \\
+& MSSV: 23119178 \\[2pt]
+& \textbf{Hà Quang Huy} \\
+& MSSV: 23119147 \\[2pt]
+& \textbf{Võ Trung Nguyên} \\
+& MSSV: 23119180 \\[2pt]
+& \textbf{Phạm Trọng An Nam} \\
+& MSSV: 23119174 \\[2pt]
+& \textbf{Nguyễn Thị Thúy Hàng} \\
+& MSSV: 23119142 \\[2pt]
+& \textbf{Nguyễn Thị Thanh Tuyền} \\
+& MSSV: 23119222 \\[5pt]
+\textbf{GVHD:} & \textbf{Nguyễn Văn Thành Lộc} \\
 \end{tabular}\par}
-
-\vspace{0.55cm}
-{\fontsize{13}{18}\selectfont\bfseries GVHD: Nguyễn Văn Thành Lộc\par}
 
 \vfill
 {\fontsize{12}{16}\selectfont TP. Hồ Chí Minh, 10/2026\par}
