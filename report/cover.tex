@@ -3,6 +3,7 @@
 \begin{titlepage}
 \newgeometry{left=22mm,right=22mm,top=23mm,bottom=24mm,noheadfoot}
 \thispagestyle{empty}
+\ifcoverborder
 \begin{tikzpicture}[remember picture,overlay]
   \draw[line width=0.6pt]
     ([xshift=15mm,yshift=-15mm]current page.north west)
@@ -13,6 +14,7 @@
     rectangle
     ([xshift=-16.5mm,yshift=16.5mm]current page.south east);
 \end{tikzpicture}
+\fi
 
 \centering
 \setlength{\parindent}{0pt}
@@ -64,7 +66,7 @@ for Combinational and Sequential Circuits\par}
 & \textbf{Nguyễn Thị Thúy Hàng} \\
 & MSSV: 23119142 \\[2pt]
 & \textbf{Nguyễn Thị Thanh Tuyền} \\
-& MSSV: 23119222 \\[5pt]
+& MSSV: 23119222 \\[17pt]
 \textbf{GVHD:} & \textbf{Nguyễn Văn Thành Lộc} \\
 \end{tabular}\par}
 

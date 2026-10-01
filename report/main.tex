@@ -34,11 +34,18 @@
 \setlength{\parindent}{1.25cm}
 \setlength{\parskip}{0.3em}
 \renewcommand{\arraystretch}{1.2}
+% Dùng chung nội dung cho bìa ngoài có viền và bìa trong không viền.
+\newif\ifcoverborder
 
 \begin{document}
+\hypersetup{pageanchor=false}
+\coverbordertrue
+\input{cover}
+\coverborderfalse
 \input{cover}
 
 \pagenumbering{roman}
+\hypersetup{pageanchor=true}
 \tableofcontents
 % Không in danh mục hình/bảng riêng trong bản ngắn 5--10 trang.
 \clearpage
