@@ -6,6 +6,11 @@
 \setmonofont{Latin Modern Mono}
 \usepackage[vietnamese]{babel}
 \usepackage[margin=2.5cm]{geometry}
+% Báo cáo 5--10 trang: giữ lệnh chapter nhưng không ép sang trang mới.
+\usepackage{titlesec}
+\titleclass{\chapter}{straight}
+\titleformat{\chapter}[hang]{\large\bfseries}{\thechapter.}{0.6em}{}
+\titlespacing*{\chapter}{0pt}{1.2em}{0.5em}
 \usepackage{amsmath,amssymb}
 \usepackage{graphicx}
 \usepackage{booktabs,longtable,array}
@@ -23,7 +28,7 @@
 \usepackage[unicode,hidelinks]{hyperref}
 \hypersetup{
   pdftitle={Automatic Test Pattern Generation Algorithms for Combinational and Sequential Circuits},
-  pdfauthor={Nhóm đồ án DFT}
+  pdfauthor={Nhóm 4 -- Khoa Điện-Điện tử}
 }
 \setlength{\parindent}{1.25cm}
 \setlength{\parskip}{0.3em}
@@ -32,21 +37,34 @@
 \begin{document}
 \begin{titlepage}
 \centering
-{\large [TÊN TRƯỜNG]\par}
-{\large [TÊN KHOA / BỘ MÔN]\par}
-\vspace{2cm}
+{\large\bfseries Trường Đại học Công nghệ Kỹ thuật Tp.Hồ Chí Minh\par}
+{\large Khoa Điện-Điện tử\par}
+\vspace{1.2cm}
 {\Large\bfseries BÁO CÁO ĐỒ ÁN\par}
 \vspace{0.5cm}
-{\large Môn học: Design for Testability (DFT)\par}
+{\large Môn học: Kỹ thuật DFT và kiểm thử\par}
 \vspace{1cm}
 {\LARGE\bfseries Automatic Test Pattern Generation Algorithms for Combinational and Sequential Circuits\par}
 \vspace{0.7cm}
 {\large Sinh mẫu kiểm tra tự động cho mạch tổ hợp và tuần tự\par}
 \vfill
 \begin{tabular}{ll}
-Giảng viên hướng dẫn: & [HỌ TÊN GIẢNG VIÊN] \\
-Nhóm thực hiện: & [TÊN / SỐ NHÓM] \\
-Thành viên: & [HỌ TÊN VÀ MSSV P1--P6] \\
+Giảng viên hướng dẫn: & Nguyễn Văn Thành Lộc \\
+Nhóm thực hiện: & Nhóm 4 \\
+\end{tabular}
+\vspace{0.6cm}
+
+\begin{tabular}{cll}
+\toprule
+Vai trò & Họ và tên & MSSV \\
+\midrule
+P1 & Phan Ngọc Tuấn Nguyên & 23119178 \\
+P2 & Hà Quang Huy & 23119147 \\
+P3 & Võ Trung Nguyên & 23119180 \\
+P4 & Phạm Trọng An Nam & 23119174 \\
+P5 & Nguyễn Thị Thúy Hàng & 23119142 \\
+P6 & Nguyễn Thị Thanh Tuyền & 23119222 \\
+\bottomrule
 \end{tabular}
 \vfill
 {\large Tháng 10 năm 2026\par}
@@ -54,8 +72,9 @@ Thành viên: & [HỌ TÊN VÀ MSSV P1--P6] \\
 
 \pagenumbering{roman}
 \tableofcontents
-\listoffigures
-\listoftables
+% Không in danh mục hình/bảng riêng trong bản ngắn 5--10 trang.
+\clearpage
+\pagenumbering{arabic}
 \chapter*{Danh mục viết tắt}
 \addcontentsline{toc}{chapter}{Danh mục viết tắt}
 \begin{longtable}{@{}p{2.4cm}p{6.4cm}p{5.2cm}@{}}
@@ -75,16 +94,15 @@ DFF & D Flip-Flop & Phần tử nhớ D \\
 \bottomrule
 \end{longtable}
 
-\clearpage
-\pagenumbering{arabic}
-\include{chapters/01_gioi_thieu}
-\include{chapters/02_nguyen_ly_atpg}
-\include{chapters/03_d_algorithm}
-\include{chapters/04_podem}
-\include{chapters/05_atpg_tuan_tu}
-\include{chapters/06_cai_dat_podem}
-\include{chapters/07_ket_qua}
-\include{chapters/08_ket_luan}
+% Dùng input thay include để các phần có thể nối tiếp trên cùng trang.
+\input{chapters/01_gioi_thieu}
+\input{chapters/02_nguyen_ly_atpg}
+\input{chapters/03_d_algorithm}
+\input{chapters/04_podem}
+\input{chapters/05_atpg_tuan_tu}
+\input{chapters/06_cai_dat_podem}
+\input{chapters/07_ket_qua}
+\input{chapters/08_ket_luan}
 
 \printbibliography[heading=bibintoc,title={Tài liệu tham khảo}]
 \end{document}

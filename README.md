@@ -18,16 +18,18 @@ Repo chung của nhóm gồm báo cáo LaTeX, slide và chương trình minh h�
 
 ## Thành viên và phân công
 
-Điền họ tên và MSSV trước khi nộp.
+**Nhóm 4 — Trường Đại học Công nghệ Kỹ thuật Tp.Hồ Chí Minh, Khoa Điện-Điện tử.**
+
+Môn: Kỹ thuật DFT và kiểm thử. Giảng viên: Nguyễn Văn Thành Lộc.
 
 | Vai trò | Họ tên / MSSV | Công việc | Branch |
 |---|---|---|---|
-| P1 | Chưa điền | Chương 1, 2, 8; repo; khung LaTeX; review và tích hợp báo cáo | `p1-nguyen-ly` |
-| P2 | Chưa điền | Chương 3; D-algorithm; bảng logic 5 giá trị; hình c17 dùng chung | `p2-d-algorithm` |
-| P3 | Chưa điền | Chương 4; PODEM lý thuyết; golden trace | `p3-podem-ly-thuyet` |
-| P4 | Chưa điền | Chương 5; mạch tuần tự; full scan và unroll | `p4-tuan-tu` |
-| P5 | Chưa điền | Chương 6; logic 5 giá trị và lõi PODEM | `p5-podem-code` |
-| P6 | Chưa điền | Chương 7; đọc mạch, mô phỏng lỗi, CLI, kiểm chứng; ghép slide | `p6-mo-phong-ket-qua` |
+| P1 | Phan Ngọc Tuấn Nguyên — 23119178 | Chương 1, 2, 8; repo; khung LaTeX; review và tích hợp báo cáo | `p1-nguyen-ly` |
+| P2 | Hà Quang Huy — 23119147 | Chương 3; D-algorithm; bảng logic 5 giá trị; hình c17 dùng chung | `p2-d-algorithm` |
+| P3 | Võ Trung Nguyên — 23119180 | Chương 4; PODEM lý thuyết; golden trace | `p3-podem-ly-thuyet` |
+| P4 | Phạm Trọng An Nam — 23119174 | Chương 5; mạch tuần tự; full scan và unroll | `p4-tuan-tu` |
+| P5 | Nguyễn Thị Thúy Hàng — 23119142 | Chương 6; logic 5 giá trị và lõi PODEM | `p5-podem-code` |
+| P6 | Nguyễn Thị Thanh Tuyền — 23119222 | Chương 7; đọc mạch, mô phỏng lỗi, CLI, kiểm chứng; ghép slide | `p6-mo-phong-ket-qua` |
 
 ## Cấu trúc repo
 
@@ -52,16 +54,17 @@ Các thư mục trống có `.gitkeep` để Git lưu được cấu trúc. Nh�
 
 ## Biên dịch báo cáo
 
-Cần TeX Live có XeLaTeX, Biber, hỗ trợ tiếng Việt và các font TeX Gyre, Latin Modern; hoặc dùng Overleaf. Không dùng pdfLaTeX cho khung này.
+Cần TeX Live có XeLaTeX, Biber, hỗ trợ tiếng Việt và các font TeX Gyre, Latin Modern; hoặc dùng TeXPage (nền tảng nhóm đã chọn). Không dùng pdfLaTeX cho khung này.
 
-### Trên Overleaf
+### Trên TeXPage
 
-1. Tải ZIP của branch đang làm việc trên GitHub và tải lên thành project Overleaf.
-2. Chọn **Main document** là `report/main.tex`, **Compiler** là **XeLaTeX**.
-3. Bấm Recompile; Overleaf dùng Biber khi cần xử lý thư mục tham khảo của biblatex.
-4. Bổ sung thông tin bìa và nội dung chương. File `.bib` ban đầu chỉ có chú thích, nên chưa có danh mục tài liệu và có thể có cảnh báo bibliography trống.
-5. Muốn biên dịch slide, đổi Main document thành `slides/main.tex`.
-6. Cuối mỗi đợt, tải nguồn `.tex`, `.bib` và hình về rồi commit vào đúng thư mục; không phụ thuộc tính năng đồng bộ GitHub trả phí.
+1. Tải ZIP của branch cần dùng và nhập nguồn vào project TeXPage, giữ cấu trúc thư mục.
+2. Cấu hình file chính là `report/main.tex`, trình biên dịch **XeLaTeX**; bibliography dùng **Biber** theo cấu hình trong nguồn.
+3. Biên dịch và kiểm tra log. File `.bib` ban đầu chưa có mục tài liệu nên có thể có cảnh báo bibliography trống.
+4. Để biên dịch slide, chọn `slides/main.tex` làm file chính.
+5. Sau mỗi đợt chỉnh sửa, tải nguồn về, đối chiếu thay đổi và commit vào branch của mình. GitHub là nơi lưu bản nguồn chung.
+
+Tài liệu chính thức: [bibliography với biblatex và Biber trên TeXPage](https://www.texpage.com/docs/en/learning/chapter-4/). Chưa xác nhận biên dịch thành công trên project TeXPage của nhóm.
 
 ### Trên máy cá nhân
 
@@ -154,22 +157,34 @@ git push -u origin p2-d-algorithm
 
 Giải quyết xung đột nếu có trước khi push. Mở PR vào `main`, ghi nội dung và cách kiểm tra. Báo cáo/slide do P1 review; code P5 và P6 review chéo, code P4 do P5 review. Không push trực tiếp vào `main`; chỉ P1 merge PR.
 
-## Các mốc chung
+## Yêu cầu nộp đã cập nhật
 
-| Ngày | Mốc |
+Theo thông tin P1 xác nhận và `Thang_diem_DFT_public.pdf` do giảng viên cung cấp:
+
+- Báo cáo **5–10 trang nội dung**, không tính bìa và mục lục theo xác nhận của P1. Mục tiêu 8–9 trang kể cả tài liệu tham khảo và danh mục viết tắt để chừa dư địa.
+- Khung vẫn giữ tám file chương và lệnh `\chapter`, nhưng dùng `\input` và tiêu đề liên tục, không ép mỗi chương sang trang mới. Bỏ danh mục hình/bảng riêng để giảm phần đầu.
+- Thuyết trình và demo tổng cộng **20 phút**; chưa xác nhận có tính hỏi đáp hay không.
+- **Bắt buộc chọn 01 ví dụ/bài tập từ sách hoặc tài liệu môn học, trình bày đề bài, cách giải và kết luận; quay video giải thích để nộp kèm.** Chưa chọn bài hoặc người phụ trách video.
+- Hạn nộp chính thức: **08/10/2026**. Mục tiêu nội bộ: hoàn thiện hết ngày **05/10/2026**, tức trước 06/10.
+- Kế hoạch này thay thế mốc 10/10 và dự kiến số trang dài trong bộ hướng dẫn ban đầu. Chi tiết phân bổ trang, rubric và thời gian: [kế hoạch P1](notes/p1_ke_hoach.md).
+
+## Các mốc chung mới — kế hoạch đề xuất
+
+| Ngày | Đầu ra cần đạt |
 |---|---|
-| 01/10/2026 | M0: repo, khung LaTeX; học kiến thức chung; P5/P6 xác nhận giao diện |
-| 03/10/2026 | M1: đọc c17, golden trace, bảng 5 giá trị, mạch tuần tự ví dụ |
-| 06/10/2026 | M2: PODEM chạy được lỗi mẫu; PR bản nháp chương |
-| 07/10/2026 | M3: tích hợp code, kiểm chứng; PR chương hoàn chỉnh |
-| 08/10/2026 | M4: ghép báo cáo và slide |
-| 09/10/2026 | Rà soát, tập thuyết trình và demo |
-| 10/10/2026 | Nộp PDF báo cáo, PDF slide và link repo; tạo tag `v1.0` |
+| 01/10/2026 | Repo và khung; kiểm tra TeXPage; xác nhận giao diện P5/P6, tài liệu môn học và bài tập video |
+| 02/10/2026 | Netlist c17 đọc được, bảng logic, golden trace, mạch tuần tự; học và viết ghi chú song song |
+| 03/10/2026 | PR bản nháp các phần; PODEM chạy lỗi mẫu, kiểm chứng bằng fault simulation |
+| 04/10/2026 | Ghép báo cáo/slide; coverage c17, demo tuần tự, đối chiếu trace; hoàn thiện lời giải và quay video |
+| 05/10/2026 | Sửa lỗi, chốt 5–10 trang, diễn tập trong 20 phút; xuất PDF cuối, kiểm tra video và gói nộp |
+| 06–07/10/2026 | Dự phòng sửa lỗi hoặc phản hồi, không bố trí nội dung bắt buộc mới |
+| 08/10/2026 | Hạn nộp chính thức; thời điểm đóng cổng và cách nộp cần xác nhận |
 
-## Việc P1 cần hoàn tất cho M0
+## Việc P1 cần hoàn tất
 
-- Mời năm thành viên vào repo và bổ sung họ tên/MSSV.
-- Merge PR khung dự án, thông báo cả nhóm tạo branch từ `main` mới nhất.
-- Xác nhận biên dịch trên Overleaf và máy có XeLaTeX + Biber.
-- Hỏi giảng viên mẫu trang bìa và quy định định dạng.
-- Tổ chức buổi họp khởi động; nhắc P5/P6 xác nhận giao diện.
+- Mời năm thành viên vào repo; xác nhận mỗi người đã tạo branch từ `main` mới nhất.
+- Kiểm tra biên dịch trên TeXPage bằng XeLaTeX + Biber; khi có nội dung, rà soát tràn trang, tham chiếu và trích dẫn.
+- Thống nhất kế hoạch rút ngắn với cả nhóm, xác nhận tiến độ thực tế của P2–P6.
+- Chọn bài tập từ tài liệu môn học và phân công người quay/ghép video.
+- Xác nhận hình thức nộp, yêu cầu video và việc tính hỏi đáp trong 20 phút.
+- Hoàn tất phần học P1 trước khi viết chương; chỉ viết kết luận theo kết quả thực tế.
