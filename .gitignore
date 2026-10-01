@@ -1,0 +1,35 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+*.egg-info/
+
+# LaTeX và bản dựng trung gian
+*.aux
+*.log
+*.out
+*.toc
+*.lof
+*.lot
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.bbl
+*.bcf
+*.blg
+*.run.xml
+*.nav
+*.snm
+*.vrb
+*.xdv
+*.pdf
+!report/bao_cao_DFT_ATPG.pdf
+!slides/slide_DFT_ATPG.pdf
+
+# File tạm của hệ điều hành và trình soạn thảo
+.DS_Store
+Thumbs.db
+*.swp
+*.tmp

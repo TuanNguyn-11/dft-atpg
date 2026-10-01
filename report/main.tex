@@ -1,0 +1,90 @@
+% Biên dịch từ thư mục report bằng XeLaTeX và Biber.
+\documentclass[12pt,a4paper,oneside]{report}
+\usepackage{fontspec}
+\setmainfont{TeX Gyre Termes}
+\setsansfont{TeX Gyre Heros}
+\setmonofont{Latin Modern Mono}
+\usepackage[vietnamese]{babel}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs,longtable,array}
+\usepackage{float}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,shapes.geometric,calc}
+\usepackage{csquotes}
+\usepackage[backend=biber,style=numeric,sorting=none]{biblatex}
+\addbibresource{bib/p1.bib}
+\addbibresource{bib/p2.bib}
+\addbibresource{bib/p3.bib}
+\addbibresource{bib/p4.bib}
+\addbibresource{bib/p5.bib}
+\addbibresource{bib/p6.bib}
+\usepackage[unicode,hidelinks]{hyperref}
+\hypersetup{
+  pdftitle={Automatic Test Pattern Generation Algorithms for Combinational and Sequential Circuits},
+  pdfauthor={Nhóm đồ án DFT}
+}
+\setlength{\parindent}{1.25cm}
+\setlength{\parskip}{0.3em}
+\renewcommand{\arraystretch}{1.2}
+
+\begin{document}
+\begin{titlepage}
+\centering
+{\large [TÊN TRƯỜNG]\par}
+{\large [TÊN KHOA / BỘ MÔN]\par}
+\vspace{2cm}
+{\Large\bfseries BÁO CÁO ĐỒ ÁN\par}
+\vspace{0.5cm}
+{\large Môn học: Design for Testability (DFT)\par}
+\vspace{1cm}
+{\LARGE\bfseries Automatic Test Pattern Generation Algorithms for Combinational and Sequential Circuits\par}
+\vspace{0.7cm}
+{\large Sinh mẫu kiểm tra tự động cho mạch tổ hợp và tuần tự\par}
+\vfill
+\begin{tabular}{ll}
+Giảng viên hướng dẫn: & [HỌ TÊN GIẢNG VIÊN] \\
+Nhóm thực hiện: & [TÊN / SỐ NHÓM] \\
+Thành viên: & [HỌ TÊN VÀ MSSV P1--P6] \\
+\end{tabular}
+\vfill
+{\large Tháng 10 năm 2026\par}
+\end{titlepage}
+
+\pagenumbering{roman}
+\tableofcontents
+\listoffigures
+\listoftables
+\chapter*{Danh mục viết tắt}
+\addcontentsline{toc}{chapter}{Danh mục viết tắt}
+\begin{longtable}{@{}p{2.4cm}p{6.4cm}p{5.2cm}@{}}
+\toprule
+Viết tắt & Tiếng Anh & Tiếng Việt \\
+\midrule
+\endhead
+DFT & Design for Testability & Thiết kế hỗ trợ kiểm thử \\
+ATPG & Automatic Test Pattern Generation & Sinh mẫu kiểm tra tự động \\
+PI & Primary Input & Ngõ vào chính \\
+PO & Primary Output & Ngõ ra chính \\
+SA0 & Stuck-at-0 & Lỗi kẹt mức 0 \\
+SA1 & Stuck-at-1 & Lỗi kẹt mức 1 \\
+PODEM & Path-Oriented Decision Making & Tên thuật toán ATPG của nhóm \\
+SCOAP & Sandia Controllability/Observability Analysis Program & Độ đo khả năng điều khiển và quan sát \\
+DFF & D Flip-Flop & Phần tử nhớ D \\
+\bottomrule
+\end{longtable}
+
+\clearpage
+\pagenumbering{arabic}
+\include{chapters/01_gioi_thieu}
+\include{chapters/02_nguyen_ly_atpg}
+\include{chapters/03_d_algorithm}
+\include{chapters/04_podem}
+\include{chapters/05_atpg_tuan_tu}
+\include{chapters/06_cai_dat_podem}
+\include{chapters/07_ket_qua}
+\include{chapters/08_ket_luan}
+
+\printbibliography[heading=bibintoc,title={Tài liệu tham khảo}]
+\end{document}
