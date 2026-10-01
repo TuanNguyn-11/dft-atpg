@@ -1,30 +1,32 @@
 % Bố cục tham khảo trang bìa Final_Project_Blockchain-1.pdf do P1 cung cấp.
 % Logo được trích nguyên bản từ PDF mẫu.
 \begin{titlepage}
-\newgeometry{left=2.2cm,right=2.2cm,top=2.4cm,bottom=2.2cm}
+% Giữ khổ A4 từ main.tex. Vùng nội dung bìa: 160 x 247 mm.
+\newgeometry{left=25mm,right=25mm,top=25mm,bottom=25mm,noheadfoot}
 \thispagestyle{empty}
 \begin{tikzpicture}[remember picture,overlay]
   \draw[line width=0.6pt]
-    ([xshift=1.2cm,yshift=-1.2cm]current page.north west)
+    ([xshift=15mm,yshift=-15mm]current page.north west)
     rectangle
-    ([xshift=-1.2cm,yshift=1.2cm]current page.south east);
+    ([xshift=-15mm,yshift=15mm]current page.south east);
   \draw[line width=1.5pt]
-    ([xshift=1.35cm,yshift=-1.35cm]current page.north west)
+    ([xshift=16.5mm,yshift=-16.5mm]current page.north west)
     rectangle
-    ([xshift=-1.35cm,yshift=1.35cm]current page.south east);
+    ([xshift=-16.5mm,yshift=16.5mm]current page.south east);
 \end{tikzpicture}
 
 \centering
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{0pt}
-{\fontsize{11.5}{15}\selectfont\bfseries
-TRƯỜNG ĐẠI HỌC CÔNG NGHỆ KỸ THUẬT TP. HỒ CHÍ MINH\par}
+{\fontsize{12}{16}\selectfont\bfseries
+TRƯỜNG ĐẠI HỌC CÔNG NGHỆ KỸ THUẬT\par
+TP. HỒ CHÍ MINH\par}
 \vspace{0.15cm}
 {\fontsize{12}{16}\selectfont\bfseries KHOA ĐIỆN -- ĐIỆN TỬ\par}
 % Bổ sung tên bộ môn/mã môn khi có thông tin xác nhận cho môn DFT.
 
 \vspace{0.7cm}
-\includegraphics[height=3cm,keepaspectratio]{figures/p1/logo_truong.png}\par
+\includegraphics[width=30mm,height=30mm,keepaspectratio]{figures/p1/logo_truong.png}\par
 
 \vspace{0.6cm}
 {\fontsize{18}{23}\selectfont\bfseries ĐỀ TÀI CUỐI KỲ\par}
