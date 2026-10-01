@@ -21,6 +21,8 @@ Net 11 mang D, net 16 mang D', net 22 mang D.
 
 ## Điều chỉnh ngày 01/10/2026
 - Hạn nộp chính thức 08/10; mục tiêu hoàn thành hết 05/10.
-- Thuyết trình và demo: 20 phút; chưa rõ có bao gồm hỏi đáp.
+- Thuyết trình và demo: 20 phút, không bao gồm hỏi đáp. Video giải thích: khoảng 2–3 phút.
 - Dàn ý nhiều trang trong P1.md được thay bằng ngân sách trang ở [kế hoạch P1](p1_ke_hoach.md).
 - Chưa xác nhận thành công khi biên dịch trên TeXPage.
+- Giáo trình chính đã nhận: Wang/Wu/Wen (biên tập), 2006. Đề xuất ví dụ video tại mục 4.3, Hình 4.5, trang 166–167; chưa dạy/kiểm tra phần Boolean difference.
+- P2–P6 chưa triển khai theo thông tin P1 cung cấp.
