@@ -18,4 +18,3 @@ Net 11 mang D, net 16 mang D', net 22 mang D.
 - Cần hỏi giảng viên mẫu bìa và yêu cầu định dạng.
 - Cần mời năm thành viên, tổ chức họp khởi động, xác nhận giao diện P5/P6.
 - Cần biên dịch bằng XeLaTeX + Biber trên Overleaf hoặc máy có TeX Live.
-
