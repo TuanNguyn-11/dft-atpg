@@ -163,8 +163,10 @@ Theo thông tin P1 xác nhận và `Thang_diem_DFT_public.pdf` do giảng viên 
 
 - Báo cáo **5–10 trang nội dung**, không tính bìa và mục lục theo xác nhận của P1. Mục tiêu 8–9 trang kể cả tài liệu tham khảo và danh mục viết tắt để chừa dư địa.
 - Khung vẫn giữ tám file chương và lệnh `\chapter`, nhưng dùng `\input` và tiêu đề liên tục, không ép mỗi chương sang trang mới. Bỏ danh mục hình/bảng riêng để giảm phần đầu.
-- Thuyết trình và demo tổng cộng **20 phút**; chưa xác nhận có tính hỏi đáp hay không.
-- **Bắt buộc chọn 01 ví dụ/bài tập từ sách hoặc tài liệu môn học, trình bày đề bài, cách giải và kết luận; quay video giải thích để nộp kèm.** Chưa chọn bài hoặc người phụ trách video.
+- Thuyết trình và demo tổng cộng **20 phút, không bao gồm hỏi đáp**. Video giải thích dài khoảng **2–3 phút**.
+- **Bắt buộc chọn 01 ví dụ/bài tập từ sách hoặc tài liệu môn học, trình bày đề bài, cách giải và kết luận; quay video giải thích để nộp kèm.** Đề xuất Hình 4.5, mục 4.3, trang 166–167 của giáo trình chính; xem [đề xuất video](notes/p1_video_de_xuat.md). Nhóm chưa chốt ví dụ và người thực hiện.
+- Giáo trình chính: *VLSI Test Principles and Architectures: Design for Testability*, Laung-Terng Wang, Cheng-Wen Wu, Xiaoqing Wen (biên tập), Morgan Kaufmann, 2006. Thông tin được kiểm tra trực tiếp từ PDF do P1 cung cấp; mục BibLaTeX ở `report/bib/p1.bib`.
+- Tình trạng P1 xác nhận: P2–P6 chưa triển khai; báo cáo chưa được biên dịch trên TeXPage.
 - Hạn nộp chính thức: **08/10/2026**. Mục tiêu nội bộ: hoàn thiện hết ngày **05/10/2026**, tức trước 06/10.
 - Kế hoạch này thay thế mốc 10/10 và dự kiến số trang dài trong bộ hướng dẫn ban đầu. Chi tiết phân bổ trang, rubric và thời gian: [kế hoạch P1](notes/p1_ke_hoach.md).
 
@@ -186,5 +188,5 @@ Theo thông tin P1 xác nhận và `Thang_diem_DFT_public.pdf` do giảng viên 
 - Kiểm tra biên dịch trên TeXPage bằng XeLaTeX + Biber; khi có nội dung, rà soát tràn trang, tham chiếu và trích dẫn.
 - Thống nhất kế hoạch rút ngắn với cả nhóm, xác nhận tiến độ thực tế của P2–P6.
 - Chọn bài tập từ tài liệu môn học và phân công người quay/ghép video.
-- Xác nhận hình thức nộp, yêu cầu video và việc tính hỏi đáp trong 20 phút.
+- Xác nhận hình thức nộp, định dạng video và có cần chiếu video trong 20 phút hay chỉ nộp kèm.
 - Hoàn tất phần học P1 trước khi viết chương; chỉ viết kết luận theo kết quả thực tế.

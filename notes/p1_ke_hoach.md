@@ -4,6 +4,7 @@
 - Nguồn yêu cầu: thông tin P1 xác nhận ngày 01/10/2026 và trang 1 của `Thang_diem_DFT_public.pdf` do GV Nguyễn Văn Thành Lộc cung cấp.
 - Yêu cầu mới thay thế các mốc và số trang cũ trong prompt.md/P1.md: hạn nộp 08/10, hoàn thành nội bộ hết 05/10, báo cáo 5–10 trang (không tính bìa và mục lục), trình bày và demo 20 phút.
 - Đây là kế hoạch đề xuất của P1; chưa xác nhận khả năng đáp ứng của P2–P6.
+- P1 xác nhận P2–P6 chưa triển khai, chưa biên dịch TeXPage. Thời gian trình bày 20 phút không gồm hỏi đáp; video khoảng 2–3 phút.
 - Giữ phân công và hợp đồng code/trace. Không viết thay nội dung của thành viên khác.
 - Tiếp tục học từng nhóm khái niệm trước khi viết; kết luận phải dựa trên kết quả thực tế.
 
@@ -50,17 +51,17 @@ Trong Chương 2 vẫn cần một ví dụ fault collapsing và bảng SCOAP c1
 | P5: cài đặt và demo PODEM | 3 |
 | P6: kết quả kiểm chứng, coverage và nhận xét | 3 |
 | P1: kết luận | 1 |
-| Dự phòng thao tác/chuyển người hoặc hỏi đáp ngắn | 2 |
+| Dự phòng thao tác/chuyển người | 2 |
 
-Tổng 20 phút, nội dung trình bày 18 phút. Nếu giảng viên yêu cầu hỏi đáp dài hơn trong cùng 20 phút thì phải cắt thời lượng nội dung tương ứng. Chưa tự giả định thời lượng video hoặc yêu cầu chiếu video trong buổi thuyết trình.
+Tổng 20 phút, nội dung trình bày 18 phút, hỏi đáp nằm ngoài khung này. Video nộp kèm dài khoảng 2–3 phút. Nếu cần chiếu video trong buổi thuyết trình thì điều chỉnh thời lượng nội dung; chưa mặc định phải chiếu.
 
 ## Bài tập và video — đầu ra còn thiếu
-- Chưa biết sách/tài liệu môn học; chưa chọn bài.
-- Ghi tên sách/tác giả/ấn bản, chương/trang/số bài sau khi nhận tài liệu.
+- Giáo trình chính: *VLSI Test Principles and Architectures: Design for Testability*, Wang/Wu/Wen (biên tập), Morgan Kaufmann, 2006; đã đối chiếu trang tên sách và bản quyền trong PDF.
+- Đề xuất ví dụ Hình 4.5, mục 4.3, trang in 166–167 (trang PDF 197–198), lỗi y/SA0. Đây là ví dụ trong nội dung sách, không phải bài tập đánh số. Rubric cho phép ví dụ hoặc bài tập. Xem [đề xuất video](p1_video_de_xuat.md).
 - Chọn bài liên quan trực tiếp đến chủ đề; không mặc định demo c17 tự xây là bài trong sách.
 - Lời giải phải có đề bài, bước giải/giải thích, kết luận và kiểm chứng nếu phù hợp.
 - Người giải thích, quay, ghép và nộp video: chưa phân công.
-- Cần xác nhận thời lượng, định dạng, kênh nộp và yêu cầu xuất hiện của các thành viên.
+- Đã xác nhận thời lượng khoảng 2–3 phút; còn thiếu định dạng, kênh nộp và yêu cầu xuất hiện của các thành viên.
 - Không công bố video hoặc tài liệu môn học lên repo công khai khi chưa thống nhất cách chia sẻ.
 
 ## Lịch rút ngắn
