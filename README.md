@@ -41,6 +41,7 @@ results/                  Trace, pattern và kết quả kiểm chứng
 notes/                    Ghi chú học tập pX_ghi_chu.md
 report/
   main.tex                File gốc báo cáo do P1 quản lý
+  cover.tex               Trang bìa theo mẫu P1 cung cấp, không hiển thị vai trò
   chapters/               Tám chương theo phân công
   figures/common/         Hình c17 dùng chung do P2 cung cấp
   figures/p1/ ... p6/      Hình riêng của từng thành viên
@@ -51,6 +52,8 @@ slides/
 ```
 
 Các thư mục trống có `.gitkeep` để Git lưu được cấu trúc. Những file code, netlist và kết quả sẽ được chủ sở hữu thêm khi triển khai.
+
+Trang bìa nằm trong `report/cover.tex`; logo `report/figures/p1/logo_truong.png` được trích từ PDF mẫu `Final_Project_Blockchain-1.pdf` do P1 cung cấp. Khi cập nhật lên TeXPage, cần đưa cả file bìa và logo cùng với `main.tex`.
 
 ## Biên dịch báo cáo
 
