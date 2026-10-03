@@ -1,0 +1,15 @@
+% Sơ đồ do P1 vẽ; các gói TikZ được khai báo ở main.tex.
+\begin{tikzpicture}[>=Stealth,node distance=4mm,
+  every node/.style={font=\footnotesize,align=center},
+  box/.style={draw,rounded corners,text width=3.5cm,minimum height=8mm}]
+\node[box] (select) {Chọn lỗi chưa xử lý};
+\node[box,right=8mm of select] (search) {Kích hoạt, lan truyền,\\justify; backtrack khi xung đột};
+\node[box,right=8mm of search] (result) {Phân loại kết quả tìm kiếm};
+\node[box,below=of result] (stop) {Hết tìm kiếm: UNTESTABLE\\Hết giới hạn: ABORTED};
+\node[box,below=of search] (sim) {Có mẫu: mô phỏng kiểm chứng;\\lưu mẫu và fault dropping};
+\draw[->] (select)--(search);
+\draw[->] (search)--(result);
+\draw[->] (result)--(stop);
+\draw[->] (result.south west)--(sim.north east);
+\draw[->] (sim.west)-|(select.south);
+\end{tikzpicture}

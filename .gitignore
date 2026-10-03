@@ -24,6 +24,7 @@ venv/
 *.snm
 *.vrb
 *.xdv
+build-output.txt
 *.pdf
 !report/bao_cao_DFT_ATPG.pdf
 !slides/slide_DFT_ATPG.pdf

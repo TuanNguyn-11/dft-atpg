@@ -1,5 +1,7 @@
 # Đề xuất ví dụ cho video 2–3 phút
 
+> **Cập nhật 03/10/2026:** P1 đã chốt Hình 4.5 và tự thực hiện video. Bản dưới đây giữ làm lịch sử đề xuất; trạng thái “chưa chốt/chưa phân công” không còn áp dụng. Dùng [lời giải và lời dẫn đã kiểm tra](p1_video_loi_giai.md) để chuẩn bị quay.
+
 ## Nguồn đã kiểm tra
 - Sách: *VLSI Test Principles and Architectures: Design for Testability*.
 - Biên tập: Laung-Terng Wang, Cheng-Wen Wu, Xiaoqing Wen; Morgan Kaufmann, 2006.

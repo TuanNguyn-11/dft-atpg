@@ -1,11 +1,15 @@
 % Biên dịch từ thư mục report bằng XeLaTeX và Biber.
 \documentclass[12pt,a4paper,oneside]{report}
 \usepackage{fontspec}
-\setmainfont{TeX Gyre Termes}
-\setsansfont{TeX Gyre Heros}
-\setmonofont{Latin Modern Mono}
+% Nạp theo tên file để chạy cả TeX Live portable, không cần cài font hệ thống.
+\setmainfont{texgyretermes}[Extension=.otf,UprightFont=*-regular,
+  BoldFont=*-bold,ItalicFont=*-italic,BoldItalicFont=*-bolditalic]
+\setsansfont{texgyreheros}[Extension=.otf,UprightFont=*-regular,
+  BoldFont=*-bold,ItalicFont=*-italic,BoldItalicFont=*-bolditalic]
+\setmonofont{lmmono10-regular.otf}
 \usepackage[vietnamese]{babel}
-\usepackage[margin=2.5cm]{geometry}
+% Khổ A4 đứng: 210 x 297 mm; áp dụng cho cả PDF xuất ra.
+\usepackage[a4paper,paperwidth=210mm,paperheight=297mm,margin=25mm]{geometry}
 % Báo cáo 5--10 trang: giữ lệnh chapter nhưng không ép sang trang mới.
 \usepackage{titlesec}
 \titleclass{\chapter}{straight}
@@ -17,8 +21,11 @@
 \usepackage{float}
 \usepackage{tikz}
 \usetikzlibrary{arrows.meta,positioning,shapes.geometric,calc}
-\usepackage{csquotes}
+\usepackage[autostyle=false,style=american]{csquotes}
 \usepackage[backend=biber,style=numeric,sorting=none]{biblatex}
+% BibLaTeX chưa có locale tiếng Việt; dùng định dạng Anh và dịch nhãn cần dùng.
+\DeclareLanguageMapping{vietnamese}{english}
+\DefineBibliographyStrings{vietnamese}{and={và},editor={biên tập},editors={biên tập}}
 \addbibresource{bib/p1.bib}
 \addbibresource{bib/p2.bib}
 \addbibresource{bib/p3.bib}
@@ -33,44 +40,18 @@
 \setlength{\parindent}{1.25cm}
 \setlength{\parskip}{0.3em}
 \renewcommand{\arraystretch}{1.2}
+% Dùng chung nội dung cho bìa ngoài có viền và bìa trong không viền.
+\newif\ifcoverborder
 
 \begin{document}
-\begin{titlepage}
-\centering
-{\large\bfseries Trường Đại học Công nghệ Kỹ thuật Tp.Hồ Chí Minh\par}
-{\large Khoa Điện-Điện tử\par}
-\vspace{1.2cm}
-{\Large\bfseries BÁO CÁO ĐỒ ÁN\par}
-\vspace{0.5cm}
-{\large Môn học: Kỹ thuật DFT và kiểm thử\par}
-\vspace{1cm}
-{\LARGE\bfseries Automatic Test Pattern Generation Algorithms for Combinational and Sequential Circuits\par}
-\vspace{0.7cm}
-{\large Sinh mẫu kiểm tra tự động cho mạch tổ hợp và tuần tự\par}
-\vfill
-\begin{tabular}{ll}
-Giảng viên hướng dẫn: & Nguyễn Văn Thành Lộc \\
-Nhóm thực hiện: & Nhóm 4 \\
-\end{tabular}
-\vspace{0.6cm}
-
-\begin{tabular}{cll}
-\toprule
-Vai trò & Họ và tên & MSSV \\
-\midrule
-P1 & Phan Ngọc Tuấn Nguyên & 23119178 \\
-P2 & Hà Quang Huy & 23119147 \\
-P3 & Võ Trung Nguyên & 23119180 \\
-P4 & Phạm Trọng An Nam & 23119174 \\
-P5 & Nguyễn Thị Thúy Hàng & 23119142 \\
-P6 & Nguyễn Thị Thanh Tuyền & 23119222 \\
-\bottomrule
-\end{tabular}
-\vfill
-{\large Tháng 10 năm 2026\par}
-\end{titlepage}
+\hypersetup{pageanchor=false}
+\coverbordertrue
+\input{cover}
+\coverborderfalse
+\input{cover}
 
 \pagenumbering{roman}
+\hypersetup{pageanchor=true}
 \tableofcontents
 % Không in danh mục hình/bảng riêng trong bản ngắn 5--10 trang.
 \clearpage

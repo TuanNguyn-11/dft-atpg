@@ -1,5 +1,14 @@
 # Kế hoạch P1 — Nhóm 4
 
+## Cập nhật thực hiện 03/10/2026
+
+- Theo yêu cầu tiếp tục triển khai của P1, đã viết Chương 1/2, kết luận đúng trạng thái repo, ba frame và tài liệu tự học. Các ghi chú “học trước khi viết” bên dưới là kế hoạch ban đầu, không xác nhận P1 đã vượt qua kiểm tra kiến thức.
+- P1 đã chốt và tự quay video Hình 4.5, mục 4.3, trang in 166–167; lời giải và lời dẫn ở `p1_video_loi_giai.md`. Công việc quay vẫn còn chờ thực hiện.
+- Bảng SCOAP, ví dụ collapsing và vector Hình 4.5 đã có script kiểm chứng độc lập. Trạng thái kiểm tra bản dựng/PR ở `p1_review.md`.
+- Chưa có phần P2–P6 hoàn chỉnh trong repo; chưa chốt báo cáo cuối, PDF nộp, hoặc tag v1.0. Chương 8 cần cập nhật khi nhận đủ thực nghiệm.
+
+Các mục chưa phân công video bên dưới ghi lại kế hoạch trước cập nhật này.
+
 ## Cơ sở và ưu tiên
 - Nguồn yêu cầu: thông tin P1 xác nhận ngày 01/10/2026 và trang 1 của `Thang_diem_DFT_public.pdf` do GV Nguyễn Văn Thành Lộc cung cấp.
 - Yêu cầu mới thay thế các mốc và số trang cũ trong prompt.md/P1.md: hạn nộp 08/10, hoàn thành nội bộ hết 05/10, báo cáo 5–10 trang (không tính bìa và mục lục), trình bày và demo 20 phút.

@@ -1,4 +1,27 @@
 \chapter{Giới thiệu}
 \label{sec:p1-gioi-thieu}
-% P1 phụ trách. Bổ sung nội dung sau khi hoàn thành phần tìm hiểu.
-% Không khai báo gói hoặc định nghĩa lại lệnh trong file chương.
+% P1: mục tiêu/phạm vi, chưa khẳng định kết quả thực nghiệm.
+Kiểm chứng thiết kế (verification) đánh giá thiết kế có đáp ứng đặc tả hay không,
+trong khi kiểm thử sau sản xuất (manufacturing testing) nhằm phát hiện các chip
+có khuyết tật chế tạo. Một thiết kế đúng vẫn có thể tạo ra sản phẩm lỗi, do đó
+hai hoạt động này bổ sung cho nhau. Thay vì kiểm tra mọi tổ hợp đầu vào, kiểm
+thử cấu trúc sử dụng mô hình lỗi để xây dựng các mẫu kiểm tra có mục tiêu.
+Sinh mẫu kiểm tra tự động (Automatic Test Pattern Generation -- ATPG) tìm
+các kích thích làm cho đáp ứng của mạch lỗi khác mạch tốt tại ngõ ra
+quan sát được~\cite{p1_wang2006}.
+
+Đề tài tập trung giải thích nguyên lý ATPG, cơ chế của D-algorithm và PODEM,
+đồng thời trình bày những khó khăn khi áp dụng ATPG cho mạch tuần tự.
+Phần thực hành hướng tới cài đặt PODEM bằng Python, minh họa trên mạch c17
+và đối chiếu mẫu sinh ra bằng mô phỏng lỗi. Lỗi \texttt{11/SA0} được chọn
+làm ví dụ chung để so sánh quá trình tìm kiếm bằng tay với chương trình.
+
+Phạm vi chính là mô hình lỗi kẹt mức logic đơn (single stuck-at fault).
+Đối với mạch tuần tự nhỏ, nhóm khảo sát thiết kế quét đầy đủ (full scan)
+và trải khung thời gian (time-frame expansion). Các phần tiếp theo lần lượt
+trình bày cơ sở lý thuyết, thuật toán, cách cài đặt, kết quả kiểm chứng và
+kết luận; những giới hạn thực nghiệm sẽ được nêu theo kết quả thực tế.
+
+Phân công gồm P1 phụ trách nguyên lý và tích hợp; P2 trình bày D-algorithm;
+P3 phụ trách PODEM lý thuyết; P4 khảo sát ATPG tuần tự; P5 cài đặt lõi
+PODEM; P6 xây dựng mô phỏng lỗi, tổng hợp kết quả và ghép slide.
