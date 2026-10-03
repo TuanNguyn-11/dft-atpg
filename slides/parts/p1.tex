@@ -1,2 +1,39 @@
-% P1: bổ sung 2--3 frame cho phần của mình.
-% Không khai báo documentclass, gói, begin{document} hoặc end{document} ở đây.
+\begin{frame}{Vì sao cần testing và ATPG?}
+\begin{itemize}
+\item Verification: thiết kế có đúng đặc tả? Testing: chip chế tạo có lỗi?
+\item Stuck-at: một dây bị kẹt 0 (SA0) hoặc 1 (SA1).
+\item ATPG tìm mẫu làm đáp ứng mạch tốt khác mạch lỗi tại ngõ ra.
+\end{itemize}
+\begin{block}{Hai điều kiện bắt buộc}
+Kích hoạt lỗi tại vị trí lỗi và lan truyền khác biệt đến ngõ ra quan sát được.
+\end{block}
+\footnotesize Nguồn: Wang, Wu, Wen (biên tập), 2006, Chương 1 và 4.
+\end{frame}
+
+\begin{frame}{c17: phát hiện lỗi stem 11/SA0}
+\[
+11=\overline{3\cdot6},\quad16=\overline{2\cdot11},\quad
+10=\overline{1\cdot3},\quad22=\overline{10\cdot16}.
+\]
+\begin{enumerate}
+\item Đặt $3=0$: net $11$ tốt bằng 1, lỗi bằng 0, tức $D=(1,0)$.
+\item Đặt $2=1$: net $16=\overline D=(0,1)$; net $10=1$.
+\item Ngõ ra $22=D$: quan sát được lỗi.
+\end{enumerate}
+\begin{block}{Mẫu theo thứ tự PI $(1,2,3,6,7)$}
+$(X,1,0,X,X)$; ví dụ điền $X=0$ được $01000$.
+\end{block}
+\end{frame}
+
+\begin{frame}{Lộ trình và tiêu chí kiểm chứng}
+\begin{itemize}
+\item P2--P3: D-algorithm và PODEM; cùng minh họa lỗi c17 11/SA0.
+\item P4: trạng thái, full scan và trải khung thời gian.
+\item P5--P6: cài đặt, trace, mô phỏng lỗi và coverage.
+\item Coverage phải ghi rõ danh sách lỗi; hết giới hạn tìm kiếm là
+\texttt{ABORTED}, không kết luận \texttt{UNTESTABLE}.
+\end{itemize}
+\begin{block}{Video do P1 thực hiện, dài 2--3 phút}
+Hình 4.5, mục 4.3, trang 166--167: $f=xy+\overline y z$, tìm mẫu cho $y/SA0$.
+\end{block}
+\end{frame}

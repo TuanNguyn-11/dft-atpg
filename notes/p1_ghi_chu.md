@@ -1,5 +1,13 @@
 # Ghi chú P1
 
+## Cập nhật triển khai 03/10/2026
+
+- Đã tiếp tục viết phần P1 theo yêu cầu hiện tại: Chương 1, 2, kết luận theo trạng thái repo và ba slide; không đánh dấu người học đã trả lời những câu chưa được kiểm tra.
+- Tài liệu diễn giải, câu hỏi tự kiểm tra và bảng thuật ngữ: [p1_kien_thuc.md](p1_kien_thuc.md).
+- Ví dụ c17 và Hình 4.5 được kiểm chứng bằng `python scripts/check_p1_examples.py`; P1 tự quay video theo [lời giải](p1_video_loi_giai.md).
+- Bản ZIP trùng nội dung báo cáo trước đợt cập nhật; không có thay đổi riêng cần nhập. Tình trạng build và review: [p1_review.md](p1_review.md).
+- Phần bên dưới là lịch sử học trước lần cập nhật này; những dòng “chưa viết/chưa kiểm tra PR” phản ánh mốc cũ.
+
 ## Tiến độ học
 - Đã học và trả lời đúng: verification và testing; kích hoạt và lan truyền lỗi stuck-at.
 - Đã giới thiệu: logic 5 giá trị và ý tưởng ATPG; chưa hoàn tất câu hỏi kiểm tra.

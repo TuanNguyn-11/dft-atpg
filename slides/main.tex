@@ -2,9 +2,11 @@
 % Biên dịch bằng XeLaTeX từ thư mục slides.
 \documentclass[aspectratio=169,11pt]{beamer}
 \usepackage{fontspec}
-\setsansfont{TeX Gyre Heros}
-\setmainfont{TeX Gyre Termes}
-\setmonofont{Latin Modern Mono}
+\setsansfont{texgyreheros}[Extension=.otf,UprightFont=*-regular,
+  BoldFont=*-bold,ItalicFont=*-italic,BoldItalicFont=*-bolditalic]
+\setmainfont{texgyretermes}[Extension=.otf,UprightFont=*-regular,
+  BoldFont=*-bold,ItalicFont=*-italic,BoldItalicFont=*-bolditalic]
+\setmonofont{lmmono10-regular.otf}
 \usepackage[vietnamese]{babel}
 \usepackage{amsmath,amssymb,booktabs}
 \usepackage{tikz}
@@ -12,7 +14,7 @@
 \usetheme{Madrid}
 \setbeamertemplate{navigation symbols}{}
 \title[DFT -- ATPG]{Automatic Test Pattern Generation Algorithms for Combinational and Sequential Circuits}
-\author{Nhóm đồ án DFT -- [Bổ sung thành viên]}
+\author[Nhóm 4]{Nhóm 4 -- Khoa Điện-Điện tử}
 \date{Tháng 10 năm 2026}
 \begin{document}
 \begin{frame}

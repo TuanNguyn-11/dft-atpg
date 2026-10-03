@@ -1,4 +1,18 @@
 \chapter{Kết luận}
 \label{sec:p1-ket-luan}
-% P1 phụ trách. Bổ sung nội dung sau khi hoàn thành phần tìm hiểu.
-% Không khai báo gói hoặc định nghĩa lại lệnh trong file chương.
+Phần nguyên lý đã làm rõ điều kiện kích hoạt và quan sát lỗi stuck-at,
+phân biệt lỗi stem/branch, rút gọn lỗi và cách tính coverage. Ví dụ c17
+cho thấy mẫu $(X,1,0,X,X)$ phát hiện \texttt{11/SA0}; bảng SCOAP cung cấp
+ước lượng chi phí hỗ trợ lựa chọn hướng tìm kiếm. Các ví dụ này được kiểm
+tra độc lập, chưa phải kết quả chạy lõi PODEM của nhóm.
+
+Ở bản tích hợp hiện tại, các phần thuật toán, cài đặt và thực nghiệm của
+P2--P6 chưa được nộp đầy đủ. Vì vậy chưa có cơ sở kết luận về coverage
+toàn c17, hiệu năng PODEM hay kết quả mạch tuần tự. Khi tích hợp, cần đối
+chiếu trace tay với trace code, kiểm chứng mọi mẫu bằng fault simulation
+và báo cáo riêng lỗi chưa xử lý do giới hạn tìm kiếm.
+
+Giới hạn của phạm vi hiện tại là mô hình stuck-at mức logic và mạch ví dụ
+nhỏ; kết quả trong mô hình không bảo đảm phát hiện mọi khuyết tật vật lý.
+Hướng phát triển gồm heuristic FAN, nén dữ liệu scan (scan compression)
+và ATPG cho lỗi trễ; mỗi hướng cần tiêu chí đánh giá và thực nghiệm riêng.

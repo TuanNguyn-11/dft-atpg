@@ -6,7 +6,15 @@ Repo chung của nhóm gồm báo cáo LaTeX, slide và chương trình minh h�
 
 ## Trạng thái
 
-**M0 — khung dự án:** đã chuẩn bị cấu trúc thư mục, tám chương báo cáo, cấu hình XeLaTeX và khung slide. Chưa có code ATPG, netlist, kết quả đo hoặc nội dung chương hoàn chỉnh. Các lệnh chạy Python bên dưới là giao diện dự kiến theo thỏa thuận nhóm, chưa chạy được ở mốc này.
+**Cập nhật P1 ngày 03/10/2026:** đã viết Chương 1, 2, kết luận theo trạng thái hiện tại, ba slide P1, bảng SCOAP và ví dụ collapsing c17. Có lời giải/lời dẫn Hình 4.5; **P1 tự quay video 2–3 phút**. P2–P6 trong repo vẫn là khung, chưa có lõi ATPG, netlist hoặc kết quả thực nghiệm được tích hợp. Các lệnh CLI ATPG bên dưới là giao diện dự kiến, chưa chạy được. Chưa phát hành PDF cuối hoặc tag `v1.0`.
+
+Kiểm chứng độc lập phần P1 (chỉ dùng thư viện chuẩn, chạy từ gốc repo):
+
+```text
+python scripts/check_p1_examples.py
+```
+
+Lệnh này kiểm tra collapsing trên 32 vector c17, tám cách điền mẫu X, bảng SCOAP 11 net và toàn bộ tám vector bài Hình 4.5. Đây không phải phép chạy PODEM hoặc kết quả coverage của nhóm. Xem [kiến thức và thuật ngữ P1](notes/p1_kien_thuc.md), [lời giải video](notes/p1_video_loi_giai.md) và [biên bản kiểm tra tích hợp](notes/p1_review.md).
 
 ## Mục tiêu và phạm vi
 
@@ -63,13 +71,23 @@ Cần TeX Live có XeLaTeX, Biber, hỗ trợ tiếng Việt và các font TeX G
 
 1. Tải ZIP của branch cần dùng và nhập nguồn vào project TeXPage, giữ cấu trúc thư mục.
 2. Cấu hình file chính là `report/main.tex`, trình biên dịch **XeLaTeX**; bibliography dùng **Biber** theo cấu hình trong nguồn.
-3. Biên dịch và kiểm tra log. File `.bib` ban đầu chưa có mục tài liệu nên có thể có cảnh báo bibliography trống.
+3. Biên dịch đủ XeLaTeX → Biber → XeLaTeX → XeLaTeX và kiểm tra log; `bib/p1.bib` đã có giáo trình được trích dẫn.
 4. Để biên dịch slide, chọn `slides/main.tex` làm file chính.
 5. Sau mỗi đợt chỉnh sửa, tải nguồn về, đối chiếu thay đổi và commit vào branch của mình. GitHub là nơi lưu bản nguồn chung.
 
 Tài liệu chính thức: [bibliography với biblatex và Biber trên TeXPage](https://www.texpage.com/docs/en/learning/chapter-4/). Chưa xác nhận biên dịch thành công trên project TeXPage của nhóm.
 
 ### Trên máy cá nhân
+
+Có thể biên dịch và kiểm tra cả báo cáo/slide bằng PowerShell:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/build_documents.ps1
+# Nếu TeX Live portable chưa có trong PATH:
+powershell -ExecutionPolicy Bypass -File scripts/build_documents.ps1 -TexBin 'C:\duong-dan\TinyTeX\bin\windows'
+```
+
+Bản TeX Live tối giản cần gói `babel-vietnamese`, `tex-gyre`, `lm`, `titlesec`, `pgf`, `biblatex`, `biber` và `beamer`. Font được nạp theo file đi kèm TeX Live nên không cần cài font vào Windows.
 
 Từ thư mục gốc repo, chạy từng lệnh:
 
@@ -91,7 +109,7 @@ xelatex -interaction=nonstopmode -halt-on-error main.tex
 xelatex -interaction=nonstopmode -halt-on-error main.tex
 ```
 
-Kết quả là `slides/main.pdf`. Bản khung slide chỉ có trang tiêu đề cho đến khi các thành viên thêm frame.
+Kết quả là `slides/main.pdf`. Hiện có trang tiêu đề và ba frame P1; P6 tiếp tục ghép khi P2–P6 gửi slide.
 
 PDF trung gian được bỏ qua bởi Git. Khi đã rà soát bản cuối, sao chép thành `report/bao_cao_DFT_ATPG.pdf` và `slides/slide_DFT_ATPG.pdf`; hai tên này được phép commit.
 
@@ -167,9 +185,9 @@ Theo thông tin P1 xác nhận và `Thang_diem_DFT_public.pdf` do giảng viên 
 - Báo cáo **5–10 trang nội dung**, không tính bìa và mục lục theo xác nhận của P1. Mục tiêu 8–9 trang kể cả tài liệu tham khảo và danh mục viết tắt để chừa dư địa.
 - Khung vẫn giữ tám file chương và lệnh `\chapter`, nhưng dùng `\input` và tiêu đề liên tục, không ép mỗi chương sang trang mới. Bỏ danh mục hình/bảng riêng để giảm phần đầu.
 - Thuyết trình và demo tổng cộng **20 phút, không bao gồm hỏi đáp**. Video giải thích dài khoảng **2–3 phút**.
-- **Bắt buộc chọn 01 ví dụ/bài tập từ sách hoặc tài liệu môn học, trình bày đề bài, cách giải và kết luận; quay video giải thích để nộp kèm.** Đề xuất Hình 4.5, mục 4.3, trang 166–167 của giáo trình chính; xem [đề xuất video](notes/p1_video_de_xuat.md). Nhóm chưa chốt ví dụ và người thực hiện.
+- **Bắt buộc chọn 01 ví dụ/bài tập từ sách hoặc tài liệu môn học, trình bày đề bài, cách giải và kết luận; quay video giải thích để nộp kèm.** Đã chốt Hình 4.5, mục 4.3, trang in 166–167, tìm vector phát hiện y/SA0; **P1 thực hiện video 2–3 phút**. Xem [lời giải và lời dẫn](notes/p1_video_loi_giai.md). Video còn chờ P1 quay.
 - Giáo trình chính: *VLSI Test Principles and Architectures: Design for Testability*, Laung-Terng Wang, Cheng-Wen Wu, Xiaoqing Wen (biên tập), Morgan Kaufmann, 2006. Thông tin được kiểm tra trực tiếp từ PDF do P1 cung cấp; mục BibLaTeX ở `report/bib/p1.bib`.
-- Tình trạng P1 xác nhận: P2–P6 chưa triển khai; báo cáo chưa được biên dịch trên TeXPage.
+- Chưa xác nhận tiến độ làm riêng của P2–P6 ngoài repo. Bản ZIP TeXPage do P1 cung cấp trùng nội dung nguồn báo cáo trước đợt cập nhật này; chưa có bằng chứng build trên TeXPage. Kiểm tra build cục bộ được ghi trong biên bản review.
 - Hạn nộp chính thức: **08/10/2026**. Mục tiêu nội bộ: hoàn thiện hết ngày **05/10/2026**, tức trước 06/10.
 - Kế hoạch này thay thế mốc 10/10 và dự kiến số trang dài trong bộ hướng dẫn ban đầu. Chi tiết phân bổ trang, rubric và thời gian: [kế hoạch P1](notes/p1_ke_hoach.md).
 
@@ -190,6 +208,6 @@ Theo thông tin P1 xác nhận và `Thang_diem_DFT_public.pdf` do giảng viên 
 - Mời năm thành viên vào repo; xác nhận mỗi người đã tạo branch từ `main` mới nhất.
 - Kiểm tra biên dịch trên TeXPage bằng XeLaTeX + Biber; khi có nội dung, rà soát tràn trang, tham chiếu và trích dẫn.
 - Thống nhất kế hoạch rút ngắn với cả nhóm, xác nhận tiến độ thực tế của P2–P6.
-- Chọn bài tập từ tài liệu môn học và phân công người quay/ghép video.
+- Quay video Hình 4.5 theo lời giải đã kiểm tra (P1 phụ trách).
 - Xác nhận hình thức nộp, định dạng video và có cần chiếu video trong 20 phút hay chỉ nộp kèm.
-- Hoàn tất phần học P1 trước khi viết chương; chỉ viết kết luận theo kết quả thực tế.
+- Tự kiểm tra hiểu phần học trong `notes/p1_kien_thuc.md`; cập nhật kết luận khi có kết quả thực nghiệm thật từ P2–P6.
