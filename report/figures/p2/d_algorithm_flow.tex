@@ -1,0 +1,19 @@
+% Chỉ dùng các thư viện TikZ đã có trong main.tex của P1.
+\begin{tikzpicture}[>=Stealth,
+  every node/.style={font=\scriptsize,align=center},
+  p2box/.style={draw,rounded corners,minimum height=7mm,text width=2.5cm}]
+\node[p2box] (fault) at (0,0) {Chọn PDCF\\kích hoạt lỗi};
+\node[p2box] (imply) at (3.1,0) {Implication\\giao cube, kiểm tra};
+\node[p2box] (drive) at (6.2,0) {Chọn PDC\\lan truyền tới PO};
+\node[p2box] (justify) at (9.3,0) {Singular cover\\justify tới PI};
+\node[p2box] (back) at (3.1,-1.15) {Xung đột: khôi phục\\thử cube khác};
+\node[p2box] (done) at (9.3,-1.15) {PO có D/D'; J rỗng\\thành công};
+\draw[->] (fault)--(imply);
+\draw[->] (imply)--(drive);
+\draw[->] (drive)--(justify);
+\draw[->] (justify)--(done);
+\draw[->] (imply)--(back);
+\draw[->] (back.west) to[bend left=35] node[left]{thử lại} (imply.west);
+\draw[->] (drive.north) to[bend right=25] node[above]{imply lại} (imply.north);
+\draw[->] (justify.south west)--(back.north east);
+\end{tikzpicture}

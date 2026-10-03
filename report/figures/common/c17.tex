@@ -1,0 +1,8 @@
+% P2: tái sử dụng hình mach_c17.jpg do người dùng cung cấp, không vẽ lại.
+% Wrapper dùng được từ report/main.tex và slides/main.tex.
+% Hình thể hiện cube tổng quát hóa (X,1,0,X,X).
+\IfFileExists{figures/common/mach_c17.jpg}{%
+  \includegraphics[width=0.72\linewidth]{figures/common/mach_c17.jpg}%
+}{%
+  \includegraphics[width=0.72\linewidth]{../report/figures/common/mach_c17.jpg}%
+}
