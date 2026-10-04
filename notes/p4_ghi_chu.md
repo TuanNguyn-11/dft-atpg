@@ -19,7 +19,7 @@ Với `N3/SA0`, chuỗi `(1,0),(1,0)` phát hiện lỗi trong 2 khung bất k�
 
 - Module P4 chỉ dùng các trường `Circuit.name, inputs, outputs, gates, fanout, topo_order, level`; `Gate.output,type,inputs`; `Fault.net,stuck_at,branch_to`.
 - `full_scan(c)`, `unroll(c,k)` trả `Circuit` tổ hợp; `fault_in_frames(fault,k)` trả `list[Fault]`. PODEM của P5 phải nhận danh sách lỗi cùng xuất hiện trên mạch trải khung.
-- Branch fault vào cổng tổ hợp ánh xạ `net@t -> gate@t`. Branch vào DFF cần xử lý riêng ở biên khung; giao diện `fault_in_frames(fault,k)` không nhận `Circuit` để biết nhánh đích là DFF, nên hiện chỉ kiểm chứng lỗi stem.
+- `fault_in_frames(fault,k)` chỉ ánh xạ lỗi stem; lỗi nhánh đi vào cổng tổ hợp hoặc DFF đều bị từ chối bằng `ValueError`. Hàm không nhận `Circuit` nên không thể xác minh cạnh đích; đặc biệt cạnh vào DFF phải đi từ `D@t` sang `Q@(t+1)` và không tồn tại sau khung cuối. Khi P5/P6 bàn giao, cần thống nhất giao diện tích hợp có thông tin mạch trước khi hỗ trợ lỗi nhánh.
 - P6 chưa có parser/fault simulator/CLI trên `main` lúc viết. `tests/test_unroll.py` dùng mô hình khớp hợp đồng, và script P4 vét cạn độc lập; cần chạy lại tích hợp khi P5/P6 đưa code lên.
 
 ## Nguồn đã kiểm tra

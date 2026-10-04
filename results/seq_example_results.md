@@ -47,11 +47,13 @@ Mỗi hàng là mẫu đầu tiên theo thứ tự vét cạn, không khẳng đ
 
 **Tổng:** full scan `18/18 = 100%`; không scan `18/18 = 100%` với chuỗi tối đa **3 khung** trong giới hạn tìm 4 khung. Coverage chỉ áp dụng cho fault universe 18 stem nói trên.
 
+Full scan dùng **bộ mẫu vét cạn**, chọn mẫu riêng cho từng lỗi. Tám vector `(A,B,Q)` theo thứ tự nhị phân phát hiện lần lượt `3, 3, 3, 3, 8, 7, 9, 8` lỗi; một vector phát hiện nhiều nhất `9/18`, còn hợp của bộ mẫu phát hiện `18/18`.
+
 Theo giới hạn độ dài chuỗi: `k=1`: **1/18**; `k=2`: **13/18**; `k=3`: **18/18**; `k=4`: **18/18**. Vì vậy không được gán con số 100% cho riêng lần chạy `--unroll 2`. Các lỗi chưa phát hiện ở k nhỏ không đồng nghĩa untestable.
 
 ## Kiểm thử code P4
 
-`python tests/test_unroll.py`: **8/8 phép thử qua**. Bao gồm 3192 trường hợp đối chiếu mạch do `unroll()` sinh với mô phỏng tuần tự độc lập (toàn bộ chuỗi dài 1–3 khung, hai giá trị Q0, 18 lỗi và trường hợp không lỗi), 152 trường hợp full scan, cập nhật đồng thời hai DFF, ví dụ phản chứng khi tùy ý gán Q0, cấu trúc đồ thị và đầu vào k không hợp lệ. Cũng có thể chạy bằng `pytest tests/test_unroll.py` khi đã cài pytest; lần rà soát này chạy trực tiếp bằng Python, chưa chạy qua pytest.
+`python tests/test_unroll.py`: **10/10 phép thử qua**. Bao gồm 3192 trường hợp đối chiếu mạch do `unroll()` sinh với mô phỏng tuần tự độc lập (toàn bộ chuỗi dài 1–3 khung, hai giá trị Q0, 18 lỗi và mạch không lỗi), 152 trường hợp full scan, cập nhật đồng thời hai DFF, ví dụ phản chứng khi tùy ý gán Q0, cấu trúc đồ thị, đầu vào k không hợp lệ và kiểm tra k=1,2 cho lỗi stem/nhánh. Lỗi nhánh bị từ chối rõ; `evaluate()` không mô phỏng lỗi nhánh. `python -m pytest tests/test_unroll.py -q` chưa chạy được trong môi trường hiện tại vì thiếu `pytest`; bộ test được chạy trực tiếp bằng Python chuẩn.
 
 ## Tích hợp cần chạy khi P5/P6 bàn giao
 

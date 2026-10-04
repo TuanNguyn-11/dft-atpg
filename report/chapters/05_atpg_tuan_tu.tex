@@ -161,6 +161,6 @@ Khi P5/P6 bàn giao \texttt{Circuit}, \texttt{Fault}, \texttt{podem} và
 chứng pattern PODEM bằng fault simulator. Với mạch đã trải, tham số lỗi
 phải là danh sách vị trí trên mọi khung. Kết quả vét cạn ở trên là mốc
 độc lập để phát hiện sai khác; không được thay cho coverage do PODEM báo.
-Hàm \texttt{fault\_in\_frames} ánh xạ trực tiếp lỗi trên net và nhánh đi
-vào cổng tổ hợp; nhánh đi vào DFF cần ánh xạ riêng sang FF ở khung kế tiếp
-và nằm ngoài thí nghiệm stem này.
+Hàm \texttt{fault\_in\_frames} chỉ ánh xạ lỗi stem. Lỗi nhánh bị từ chối
+vì giao diện hiện không nhận mạch để xác minh cổng đích; riêng nhánh vào
+DFF phải nối sang FF ở khung kế tiếp và nằm ngoài thí nghiệm này.

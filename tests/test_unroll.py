@@ -194,10 +194,35 @@ def test_assuming_initial_state_can_produce_an_invalid_physical_test():
     assert not reference.detects_without_scan(((1, 0),), ("N4", 0))
 
 
-def test_branch_fault_names_and_invalid_frame_count():
-    assert fault_in_frames(Fault("N3", 1, "D"), 2) == [
-        Fault("N3@0", 1, "D@0"), Fault("N3@1", 1, "D@1")
-    ]
+def test_stem_faults_map_to_existing_nets_for_one_and_two_frames():
+    original = read_example()
+    for k in (1, 2):
+        expanded = unroll(original, k)
+        for source in [*original.inputs, *original.gates]:
+            faults = fault_in_frames(Fault(source, 0), k)
+            assert faults == [Fault(f"{source}@{t}", 0) for t in range(k)]
+            assert all(f.net in expanded.inputs or f.net in expanded.gates for f in faults)
+
+
+def test_combinational_and_dff_branch_faults_are_rejected_for_one_and_two_frames():
+    original = read_example()
+    for k in (1, 2):
+        expanded = unroll(original, k)
+        assert "N3@0" in expanded.gates["D@0"].inputs
+        if k == 2:
+            assert "D@0" in expanded.gates["Q@1"].inputs
+            assert "Q@0" in expanded.inputs
+            assert "D@1" not in expanded.gates["Q@1"].inputs
+        for fault in (Fault("N3", 1, "D"), Fault("D", 0, "Q")):
+            try:
+                fault_in_frames(fault, k)
+            except ValueError as error:
+                assert "loi nhanh" in str(error) and "Circuit" in str(error)
+            else:
+                raise AssertionError(f"Loi nhanh {fault} khong duoc phep anh xa thieu Circuit")
+
+
+def test_invalid_frame_count():
     for operation in (lambda: unroll(read_example(), 0), lambda: fault_in_frames(Fault("N3", 0), 0)):
         try:
             operation()

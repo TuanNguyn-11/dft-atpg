@@ -135,18 +135,23 @@ chuỗi khởi tạo đưa FF tới trạng thái mà mẫu cần.
 
 
 def fault_in_frames(fault: Fault, k: int) -> list[Fault]:
-    """Sao lỗi vật lý ở một net/nhánh sang từng khung thời gian.
+    """Sao lỗi stem vật lý sang từng khung thời gian.
 
-Với lỗi nhánh đi vào DFF, nhánh khung cuối không có FF kế tiếp trong
-unroll(k), nên danh sách trả về chỉ dùng trực tiếp cho nhánh cổng tổ hợp.
+    Không nhận lỗi nhánh: thiếu Circuit nên không thể phân biệt đích là
+    cổng tổ hợp hay DFF (đích DFF phải thuộc khung kế tiếp).
     """
     if not isinstance(k, int) or isinstance(k, bool) or k < 1:
         raise ValueError("k phai la so nguyen duong")
+    if fault.branch_to is not None:
+        raise ValueError(
+            "fault_in_frames chi ho tro loi stem; loi nhanh can Circuit "
+            "de kiem tra canh dich, dac biet khi dich la DFF"
+        )
     return [
         type(fault)(
             net=f"{fault.net}@{t}",
             stuck_at=fault.stuck_at,
-            branch_to=f"{fault.branch_to}@{t}" if fault.branch_to is not None else None,
+            branch_to=None,
         )
         for t in range(k)
     ]
