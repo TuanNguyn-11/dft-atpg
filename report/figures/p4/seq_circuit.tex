@@ -1,0 +1,9 @@
+\begin{tikzpicture}[>=Latex, node distance=13mm, font=\small]
+  \node[draw, rounded corners, minimum width=36mm, minimum height=18mm, align=center] (logic) {Logic tổ hợp\\$N_1,N_2,N_3,D,N_4,Y$};
+  \node[draw, rectangle, right=30mm of logic, minimum width=16mm, minimum height=16mm, align=center] (ff) {DFF\\$Q$};
+  \draw[->] ([xshift=-18mm,yshift=5mm]logic.west) node[left] {$A$} -- ([yshift=5mm]logic.west);
+  \draw[->] ([xshift=-18mm,yshift=-5mm]logic.west) node[left] {$B$} -- ([yshift=-5mm]logic.west);
+  \draw[->] ([yshift=5mm]logic.east) -- node[above] {$D$} ([yshift=5mm]ff.west);
+  \draw[->] ([yshift=-5mm]logic.east) -- ++(15mm,0) node[right] {$Y$};
+  \draw[->] (ff.north) -- ++(0,10mm) -| node[pos=.25,above] {$Q$} (logic.north);
+\end{tikzpicture}

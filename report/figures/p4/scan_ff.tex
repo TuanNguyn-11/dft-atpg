@@ -1,0 +1,11 @@
+\begin{tikzpicture}[>=Latex, font=\small, node distance=17mm]
+  \node[draw, trapezium, trapezium left angle=70, trapezium right angle=70,
+        minimum width=18mm, minimum height=20mm, align=center] (mux) {MUX};
+  \node[draw, rectangle, right=24mm of mux, minimum width=15mm, minimum height=17mm] (ff) {DFF};
+  \draw[->] ([xshift=-19mm,yshift=5mm]mux.west) node[left] {$D$} -- ([yshift=5mm]mux.west);
+  \draw[->] ([xshift=-19mm,yshift=-5mm]mux.west) node[left] {SI} -- ([yshift=-5mm]mux.west);
+  \draw[->] (mux.south) ++(0,-9mm) node[below] {SE} -- (mux.south);
+  \draw[->] (mux.east) -- (ff.west);
+  \draw[->] (ff.east) -- ++(20mm,0) node[right] {$Q$ / SO};
+  \node[below=16mm of ff,align=center] {$SE=1$: shift qua SI,SO;\quad $SE=0$: capture từ $D$.};
+\end{tikzpicture}

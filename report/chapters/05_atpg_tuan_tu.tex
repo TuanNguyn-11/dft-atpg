@@ -1,4 +1,166 @@
 \chapter{ATPG cho mạch tuần tự}
 \label{sec:p4-atpg-tuan-tu}
-% P4 phụ trách. Bổ sung nội dung sau khi hoàn thành phần tìm hiểu.
-% Không khai báo gói hoặc định nghĩa lại lệnh trong file chương.
+
+\section{Vì sao bài toán tuần tự khó hơn}
+\label{sec:p4-kho-khan}
+Một mạch tổ hợp cho cùng một ngõ ra khi đặt cùng một vector ngõ vào. Mạch tuần
+tự còn phụ thuộc trạng thái lưu trong flip-flop (FF). Với FF loại D, tại cạnh
+xung đồng hồ ta có $Q(t+1)=D(t)$. Trạng thái $Q(0)$ lúc cấp nguồn có thể chưa
+biết; không thể tùy ý coi $Q$ là ngõ vào chính (PI), cũng không thể đo trực
+tiếp $D$ như ngõ ra chính (PO). Vì thế mẫu kiểm thử thường là \emph{chuỗi}
+vector: các chu kỳ đầu khởi tạo trạng thái, chu kỳ tiếp theo kích hoạt lỗi, và
+những chu kỳ sau đưa sai khác ra PO \cite{p4_nptel_seq}.
+
+Giả thiết của chương này là mạch đồng bộ một đồng hồ, FF lý tưởng, lỗi
+stuck-at trên net (stem) của logic và các ngõ Q/D; không mô hình lỗi clock,
+thời gian thiết lập, hoặc lỗi bên trong FF. Cần phân biệt ``chưa tìm được
+chuỗi'' trong giới hạn $k$ khung với ``untestable'' cho mọi độ dài chuỗi.
+
+\section{Mạch ví dụ \texttt{seq\_example}}
+\label{sec:p4-mach-vi-du}
+Mạch tự thiết kế tại \texttt{circuits/seq\_example.bench} có hai PI $A,B$,
+một PO $Y$, sáu cổng tổ hợp và một DFF. Hình~\ref{fig:p4-seq-circuit}
+cho thấy vòng phản hồi trạng thái; các phương trình dưới đây xác định chính
+xác từng net, tránh phụ thuộc vào cách vẽ hình:
+\begin{align}
+N_1&=A\land Q, &N_2&=\neg B, &N_3&=N_1\lor N_2,\\
+D&=\neg(N_3\land A), &Q(t+1)&=D(t),\\
+N_4&=Q\oplus B, &Y&=N_4\land A.
+\end{align}
+\begin{figure}[H]
+\centering\input{figures/p4/seq_circuit}
+\caption{Mạch tuần tự một DFF dùng trong thực nghiệm P4.}
+\label{fig:p4-seq-circuit}
+\end{figure}
+
+\section{Trải khung thời gian (time-frame expansion)}
+\label{sec:p4-unroll}
+Sao khối tổ hợp thành $C_0,\ldots,C_{k-1}$; các PI độc lập theo chu kỳ,
+còn trạng thái bị ràng buộc bởi $Q_{t+1}=D_t$. Đầu ra quan sát được là
+$Y_0,\ldots,Y_{k-1}$. Trong mã, net tại khung $t$ mang hậu tố
+\texttt{@t}; ví dụ \texttt{N3@1}. FF được thay bằng kết nối BUFF từ
+\texttt{D@t} sang \texttt{Q@(t+1)}, nên đồ thị kết quả là tổ hợp, có thứ tự
+topo. Cùng một lỗi vật lý ở $N_3$ phải được cấy vào $N_{3,0},\ldots,
+N_{3,k-1}$; đây là bài toán nhiều vị trí lỗi trong mạch đã trải, dù chỉ có
+\emph{một} lỗi trên chip \cite{p4_nptel_seq}.
+\begin{figure}[H]
+\centering\input{figures/p4/time_frames}
+\caption{Trải ba khung thời gian: $D_t$ điều khiển $Q_{t+1}$.}
+\label{fig:p4-time-frames}
+\end{figure}
+
+\paragraph{Trạng thái đầu và chọn số khung.}
+\texttt{Q@0} được biểu diễn là PI \emph{hình thức} để thuật toán tổ hợp có
+thể nhận mạch đã trải. Nó không phải chân có thể điều khiển trên chip không
+scan. Nếu PODEM gán \texttt{Q@0=1}, mẫu chỉ hợp lệ khi đã có reset hoặc chuỗi
+khởi tạo đưa FF về 1. Một cách kiểm chứng mạnh hơn cho mạch một FF là mô
+phỏng cả $Q(0)=0$ và $Q(0)=1$: tập vết PO của mạch tốt phải rời tập vết PO
+của mạch lỗi. Nếu chưa phát hiện được, tăng $k$; mọi kết luận vẫn chỉ đúng
+trong giới hạn $k$ đã thử. Số cổng tăng xấp xỉ theo $k$, nên không nên chọn
+$k$ lớn tùy tiện.
+
+\paragraph{Ví dụ tay, $k=2$, lỗi $N_3/SA0$.}
+Đặt $(A_0,B_0)=(1,0)$ và $(A_1,B_1)=(1,0)$. Vì $B_0=0$ nên
+$N_{2,0}=1$ và $N_{3,0}=1$ ở mạch tốt, bất kể $Q_0$. Lỗi ép
+$N_{3,0}=0$, tạo $D_0=0$ ở mạch tốt và $D_0=1$ ở mạch lỗi.
+Sau cạnh clock, $Q_1$ lần lượt là 0 và 1. Ở khung 1, $B_1=0,A_1=1$
+cho $Y_1=Q_1$, do đó lỗi xuất hiện tại PO.
+\begin{table}[H]
+\centering\small
+\begin{tabular}{@{}c c c c c c@{}}
+\toprule
+Khung & $(A,B)$ & $N_3$ tốt/lỗi & $D$ tốt/lỗi & $Q$ tốt/lỗi & $Y$ tốt/lỗi\\
+\midrule
+0 & $(1,0)$ & $1/0$ & $0/1$ & $Q_0/Q_0$ & $Q_0/Q_0$\\
+1 & $(1,0)$ & $1/0$ & $0/1$ & $0/1$ & $0/1$\\
+\bottomrule
+\end{tabular}
+\caption{Lỗi được kích hoạt ở khung 0 và quan sát ở khung 1, độc lập $Q_0$.}
+\label{tab:p4-trace-2}
+\end{table}
+Nếu muốn minh họa pha \emph{khởi tạo} riêng, dùng ba khung:
+$(0,0),(1,1),(1,0)$. Khung 0 ép $D_0=1$ nên $Q_1=1$ ở cả hai mạch;
+khung 1 kích hoạt $N_3/SA0$; khung 2 quan sát $Y_2=0/1$.
+
+\section{Full scan}
+\label{sec:p4-full-scan}
+Trong full scan, mỗi FF có đường chọn giữa $D$ chức năng và dữ liệu dịch
+SI. Khi scan enable (SE) bằng 1, các FF nối thành thanh ghi dịch để nạp
+trạng thái mong muốn và đọc trạng thái đã chụp; khi SE bằng 0, chúng hoạt
+động bình thường. Quá trình kiểm thử điển hình là \emph{shift in}
+$\rightarrow$ \emph{capture} $\rightarrow$ \emph{shift out}
+\cite{p4_eichelberger1977,p4_nptel_scan}.
+\begin{figure}[H]
+\centering\input{figures/p4/scan_ff}
+\caption{Một scan FF: MUX chọn dữ liệu chức năng hoặc dữ liệu dịch.}
+\label{fig:p4-scan-ff}
+\end{figure}
+\begin{figure}[H]
+\centering\input{figures/p4/scan_timing}
+\caption{Ba pha kiểm thử scan trên mạch ví dụ một DFF.}
+\label{fig:p4-scan-timing}
+\end{figure}
+
+Về mặt ATPG cho logic tổ hợp, cắt FF tại Q và D: Q thành pseudo-PI có thể
+đặt qua scan, D thành pseudo-PO có thể đọc sau capture và shift out. Với
+$N_3/SA0$, chọn $A=1,B=0,Q=0$. Khi đó $N_3=1/0$ và $D=0/1$;
+chỉ một mẫu tổ hợp đã phân biệt được lỗi ở pseudo-PO $D$. ``Một mẫu'' ở đây
+không có nghĩa là một xung kiểm thử vật lý: còn cần thời gian shift và
+capture. Full scan cải thiện controllability và observability nhưng tốn
+MUX, đường scan và thời gian dịch; partial scan giảm phần cứng nhưng vẫn
+để lại trạng thái không trực tiếp điều khiển/quan sát được
+\cite{p4_nptel_scan}.
+
+\begin{table}[H]
+\centering\small
+\begin{tabular}{@{}p{3.0cm}p{4.2cm}p{4.2cm}@{}}
+\toprule
+Tiêu chí & Trải khung không scan & Full scan\\
+\midrule
+Biến trạng thái & $Q_0$ chưa biết; $Q_{t+1}=D_t$ & $Q$ điều khiển qua shift\\
+Quan sát lỗi ở D & Cần clock tiếp và lan truyền ra PO & Capture rồi shift out\\
+Mẫu ATPG & Chuỗi PI theo thời gian & Vector PI và pseudo-PI\\
+Chi phí chính & Tìm kiếm nhiều khung, khởi tạo & MUX/đường scan, shift time\\
+\bottomrule
+\end{tabular}
+\caption{Hai cách quy đổi bài toán ATPG tuần tự.}
+\label{tab:p4-compare}
+\end{table}
+
+\section{Cài đặt và kiểm chứng trên mạch nhỏ}
+\label{sec:p4-thuc-nghiem}
+Module \texttt{src/atpg/unroll.py} cung cấp
+\texttt{full\_scan(c)}, \texttt{unroll(c,k)} và
+\texttt{fault\_in\_frames(fault,k)} theo giao diện chung. Module tạo lại
+\texttt{fanout}, \texttt{topo\_order}, \texttt{level} và không sửa mạch
+đầu vào. Tám phép thử trong \texttt{tests/test\_unroll.py} kiểm tra
+giao diện, liên kết $D_t\rightarrow Q_{t+1}$ và cập nhật đồng thời hai DFF.
+Có 3192 phép đối chiếu mạch trải với mô phỏng tuần tự trên mọi chuỗi dài
+1--3 khung, hai trạng thái đầu và 18 lỗi (kèm trường hợp không lỗi);
+152 phép đối chiếu full scan; và ví dụ phản chứng khi gán tùy ý $Q_0$.
+Khi chưa có module PODEM/fault simulator của P5/P6 trên
+\texttt{main}, script \texttt{scripts/p4\_seq\_experiment.py} dùng mô
+phỏng nhị phân độc lập và vét cạn để tạo mốc đối chiếu; đây \emph{không}
+phải số liệu chạy PODEM.
+
+Fault universe trong thí nghiệm gồm hai stuck-at trên mỗi stem của 9 net
+($A,B,N_1,N_2,N_3,D,Q,N_4,Y$): tổng 18 lỗi, chưa fault collapsing và
+chưa xét lỗi nhánh. Với mỗi lỗi, vét cạn các mẫu full scan và các chuỗi
+PI dài tối đa bốn khung. Một chuỗi không scan chỉ được tính là phát hiện
+khi tập vết PO của mạch tốt và lỗi rời nhau với cả hai khả năng $Q_0$.
+Kết quả: full scan $18/18$; không scan $18/18$ trong tối đa ba khung
+(không cần tới khung 4). Nếu chỉ cho phép một hoặc hai khung, số lỗi phát
+hiện tương ứng là $1/18$ và $13/18$. Các lỗi chưa phát hiện trong giới hạn
+đó chưa thể kết luận là untestable. Bảng chi tiết và các mẫu nằm trong
+\texttt{results/seq\_example\_results.md}; có thể chạy lại bằng
+\texttt{python scripts/p4\_seq\_experiment.py}.
+
+\paragraph{Giới hạn tích hợp.}
+Khi P5/P6 bàn giao \texttt{Circuit}, \texttt{Fault}, \texttt{podem} và
+\texttt{fault\_sim}, cần chạy lại cùng netlist qua CLI của nhóm và kiểm
+chứng pattern PODEM bằng fault simulator. Với mạch đã trải, tham số lỗi
+phải là danh sách vị trí trên mọi khung. Kết quả vét cạn ở trên là mốc
+độc lập để phát hiện sai khác; không được thay cho coverage do PODEM báo.
+Hàm \texttt{fault\_in\_frames} ánh xạ trực tiếp lỗi trên net và nhánh đi
+vào cổng tổ hợp; nhánh đi vào DFF cần ánh xạ riêng sang FF ở khung kế tiếp
+và nằm ngoài thí nghiệm stem này.
