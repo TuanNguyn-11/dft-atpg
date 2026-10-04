@@ -1,0 +1,11 @@
+\begin{tikzpicture}[>=Latex, font=\small]
+  \foreach \t/\x in {0/0,1/4.2,2/8.4} {
+    \node[draw,rounded corners,minimum width=28mm,minimum height=18mm,align=center] (c\t) at (\x,0) {$C_{\t}$\\logic tổ hợp};
+    \draw[->] (\x,-1.5) node[below] {$A_{\t},B_{\t}$} -- (c\t.south);
+    \draw[->] (c\t.north) -- ++(0,0.7) node[above] {$Y_{\t}$};
+  }
+  \draw[->] (-2.0,0) node[left] {$Q_0=X$} -- (c0.west);
+  \draw[->] (c0.east) -- node[above] {$D_0=Q_1$} (c1.west);
+  \draw[->] (c1.east) -- node[above] {$D_1=Q_2$} (c2.west);
+  \node[below=17mm of c1,align=center] {Cùng một lỗi vật lý được đặt tại net tương ứng\\ở mỗi khung thời gian.};
+\end{tikzpicture}
