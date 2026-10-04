@@ -6,11 +6,14 @@ MiniCircuit chỉ hiện thực đúng các thuộc tính trong hợp đồng ch
 
 from dataclasses import dataclass, field
 from pathlib import Path
+from itertools import product
 import re
 import sys
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 from atpg.unroll import fault_in_frames, full_scan, unroll
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
+import p4_seq_experiment as reference
 
 
 @dataclass
@@ -119,7 +122,7 @@ def test_unroll_two_frames_wires_state_and_detects_n4_fault():
         assert bad == {"Y@0": 0, "Y@1": 0}
 
 
-def test_three_frame_n3_fault_requires_state_transfer_and_is_initial_state_independent():
+def test_three_frame_n3_fault_initializes_then_propagates_independent_of_initial_state():
     expanded = unroll(read_example(), 3)
     assert expanded.gates["Q@2"].inputs == ["D@1"]
     assert len(expanded.gates) == 20
@@ -135,6 +138,60 @@ def test_three_frame_n3_fault_requires_state_transfer_and_is_initial_state_indep
         bad = evaluate(expanded, pattern, faults)
         assert good == {"Y@0": 0, "Y@1": 0, "Y@2": 0}
         assert bad == {"Y@0": 0, "Y@1": 0, "Y@2": 1}
+
+
+def test_all_stem_faults_match_independent_sequential_simulation():
+    original = read_example()
+    faults = [None] + [Fault(net, stuck) for net in [*original.inputs, *original.gates] for stuck in (0, 1)]
+    comparisons = 0
+    for k in (1, 2, 3):
+        expanded = unroll(original, k)
+        for sequence in product(tuple(product((0, 1), repeat=2)), repeat=k):
+            for initial in (0, 1):
+                pattern = {f"{net}@{t}": value for t, pair in enumerate(sequence) for net, value in zip(("A", "B"), pair)}
+                pattern["Q@0"] = initial
+                for fault in faults:
+                    reference_fault = (fault.net, fault.stuck_at) if fault else None
+                    expected = reference.output_trace(sequence, initial, reference_fault)
+                    outputs = evaluate(expanded, pattern, fault_in_frames(fault, k) if fault else [])
+                    actual = tuple(outputs[f"Y@{t}"] for t in range(k))
+                    assert actual == expected, (k, sequence, initial, fault, actual, expected)
+                    comparisons += 1
+    assert comparisons == 3192
+
+
+def test_all_scan_patterns_and_faults_match_reference():
+    original = read_example()
+    scan = full_scan(original)
+    faults = [None] + [Fault(net, stuck) for net in [*original.inputs, *original.gates] for stuck in (0, 1)]
+    for a, b, q in product((0, 1), repeat=3):
+        for fault in faults:
+            expected = reference.one_cycle(a, b, q, (fault.net, fault.stuck_at) if fault else None)
+            actual = evaluate(scan, {"A": a, "B": b, "Q": q}, [fault] if fault else [])
+            assert (actual["Y"], actual["D"]) == expected
+
+
+def test_two_dffs_transfer_simultaneously_without_changing_source():
+    original = Circuit("swap", [], ["Q1", "Q2"], {
+        "Q1": Gate("Q1", "DFF", ["Q2"]),
+        "Q2": Gate("Q2", "DFF", ["Q1"]),
+    })
+    expanded = unroll(original, 3)
+    assert evaluate(expanded, {"Q1@0": 0, "Q2@0": 1}) == {
+        "Q1@0": 0, "Q2@0": 1, "Q1@1": 1, "Q2@1": 0, "Q1@2": 0, "Q2@2": 1,
+    }
+    expanded.gates["Q1@1"].inputs.append("unused")
+    assert original.gates["Q1"].inputs == ["Q2"]
+    assert full_scan(original).gates == {}
+
+
+def test_assuming_initial_state_can_produce_an_invalid_physical_test():
+    expanded = unroll(read_example(), 1)
+    fault = Fault("N4", 0)
+    pattern = {"A@0": 1, "B@0": 0, "Q@0": 1}
+    assert evaluate(expanded, pattern) != evaluate(expanded, pattern, fault_in_frames(fault, 1))
+    # Q0 không phải PI vật lý: cùng mẫu này không phân biệt được hai tập vết.
+    assert not reference.detects_without_scan(((1, 0),), ("N4", 0))
 
 
 def test_branch_fault_names_and_invalid_frame_count():

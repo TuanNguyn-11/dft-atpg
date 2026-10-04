@@ -47,9 +47,11 @@ Mỗi hàng là mẫu đầu tiên theo thứ tự vét cạn, không khẳng đ
 
 **Tổng:** full scan `18/18 = 100%`; không scan `18/18 = 100%` với chuỗi tối đa **3 khung** trong giới hạn tìm 4 khung. Coverage chỉ áp dụng cho fault universe 18 stem nói trên.
 
+Theo giới hạn độ dài chuỗi: `k=1`: **1/18**; `k=2`: **13/18**; `k=3`: **18/18**; `k=4`: **18/18**. Vì vậy không được gán con số 100% cho riêng lần chạy `--unroll 2`. Các lỗi chưa phát hiện ở k nhỏ không đồng nghĩa untestable.
+
 ## Kiểm thử code P4
 
-`python tests/test_unroll.py`: 4/4 phép thử qua, gồm cấu trúc full scan, nối DFF qua hai/ba khung, mẫu phát hiện lỗi với hai giá trị `Q0`, và đầu vào `k` không hợp lệ. Cũng có thể chạy bằng `pytest tests/test_unroll.py` khi đã cài pytest.
+`python tests/test_unroll.py`: **8/8 phép thử qua**. Bao gồm 3192 trường hợp đối chiếu mạch do `unroll()` sinh với mô phỏng tuần tự độc lập (toàn bộ chuỗi dài 1–3 khung, hai giá trị Q0, 18 lỗi và trường hợp không lỗi), 152 trường hợp full scan, cập nhật đồng thời hai DFF, ví dụ phản chứng khi tùy ý gán Q0, cấu trúc đồ thị và đầu vào k không hợp lệ. Cũng có thể chạy bằng `pytest tests/test_unroll.py` khi đã cài pytest; lần rà soát này chạy trực tiếp bằng Python, chưa chạy qua pytest.
 
 ## Tích hợp cần chạy khi P5/P6 bàn giao
 

@@ -99,14 +99,20 @@ def main():
     print("fault | scan A,B,Q | sequence A,B (Q0 bat ky)")
     print("--- | --- | ---")
     scan_detected = seq_detected = 0
+    sequence_lengths = []
     for fault in faults:
         scan = first_scan_pattern(fault)
         seq = first_sequence(fault)
         scan_detected += scan is not None
         seq_detected += seq is not None
+        if seq is not None:
+            sequence_lengths.append(len(seq))
         print(f"{fault[0]}/SA{fault[1]} | {scan} | {seq}")
     print(f"Full scan: {scan_detected}/{len(faults)}")
     print(f"Unroll <=4 khung, test doc lap Q0: {seq_detected}/{len(faults)}")
+    for k in (1, 2, 3, 4):
+        count = sum(length <= k for length in sequence_lengths)
+        print(f"Gioi han {k} khung: {count}/{len(faults)}")
 
 
 if __name__ == "__main__":

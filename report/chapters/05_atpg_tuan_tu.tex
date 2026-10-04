@@ -133,9 +133,12 @@ Module \texttt{src/atpg/unroll.py} cung cấp
 \texttt{full\_scan(c)}, \texttt{unroll(c,k)} và
 \texttt{fault\_in\_frames(fault,k)} theo giao diện chung. Module tạo lại
 \texttt{fanout}, \texttt{topo\_order}, \texttt{level} và không sửa mạch
-đầu vào. Bốn phép thử trong \texttt{tests/test\_unroll.py} kiểm tra
-giao diện, liên kết $D_t\rightarrow Q_{t+1}$, số cổng/net và hai vector
-phát hiện lỗi. Khi chưa có module PODEM/fault simulator của P5/P6 trên
+đầu vào. Tám phép thử trong \texttt{tests/test\_unroll.py} kiểm tra
+giao diện, liên kết $D_t\rightarrow Q_{t+1}$ và cập nhật đồng thời hai DFF.
+Có 3192 phép đối chiếu mạch trải với mô phỏng tuần tự trên mọi chuỗi dài
+1--3 khung, hai trạng thái đầu và 18 lỗi (kèm trường hợp không lỗi);
+152 phép đối chiếu full scan; và ví dụ phản chứng khi gán tùy ý $Q_0$.
+Khi chưa có module PODEM/fault simulator của P5/P6 trên
 \texttt{main}, script \texttt{scripts/p4\_seq\_experiment.py} dùng mô
 phỏng nhị phân độc lập và vét cạn để tạo mốc đối chiếu; đây \emph{không}
 phải số liệu chạy PODEM.
@@ -146,7 +149,9 @@ chưa xét lỗi nhánh. Với mỗi lỗi, vét cạn các mẫu full scan và 
 PI dài tối đa bốn khung. Một chuỗi không scan chỉ được tính là phát hiện
 khi tập vết PO của mạch tốt và lỗi rời nhau với cả hai khả năng $Q_0$.
 Kết quả: full scan $18/18$; không scan $18/18$ trong tối đa ba khung
-(không cần tới khung 4). Bảng chi tiết và các mẫu nằm trong
+(không cần tới khung 4). Nếu chỉ cho phép một hoặc hai khung, số lỗi phát
+hiện tương ứng là $1/18$ và $13/18$. Các lỗi chưa phát hiện trong giới hạn
+đó chưa thể kết luận là untestable. Bảng chi tiết và các mẫu nằm trong
 \texttt{results/seq\_example\_results.md}; có thể chạy lại bằng
 \texttt{python scripts/p4\_seq\_experiment.py}.
 
