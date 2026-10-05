@@ -1,5 +1,31 @@
 # Biên bản kiểm tra P2 — 03/10/2026
 
+## Sửa theo feedback P1 — 05/10/2026
+
+- Mã giả trả Result với status/pattern, truyền DETECTED và ABORTED qua mọi
+  lời gọi; chỉ restore khi nhánh thất bại. Chỉ mức gốc trả UNTESTABLE khi hết
+  toàn bộ PDCF/nhánh con.
+- Lưu đồ ghi điều kiện xung đột, PO có sai khác, J rỗng, còn lựa chọn và
+  kết thúc; cube mới quay lại implication, giới hạn dẫn tới ABORTED riêng.
+- `common/c17.tex` đã là bản vẽ TikZ sáu NAND, chỉnh kích thước/giá trị bằng
+  macro local. JPG giữ làm đối chiếu; nhận xét wrapper JPG bên dưới là lịch sử.
+- Slide thứ ba bỏ cột hẹp, dùng hình rộng 0.86 linewidth. Đã render và xem
+  ở 1600 pixel: nhãn 11=D, 16=D-bar, 22=D đọc rõ, không chồng chữ.
+- Hai script P1/P2 đều PASS; bộ kiểm tra bàn giao P3 cũng PASS, riêng netlist
+  c17 của P6 vẫn PENDING. Không thay đổi dữ liệu/trace đã được review đúng.
+- Build trên P2 trước cập nhật main trả mã 0, không undefined/citation,
+  missing character hoặc overfull. Đã cập nhật `origin/main` tại `bbf2efd`
+  bằng merge không xung đột, giữ nguyên phần P3/P4.
+- Build tích hợp XeLaTeX/Biber trả mã 0: báo cáo **13 trang PDF** (2 bìa,
+  1 mục lục, 10 trang nội dung), slide **13 trang**. Không có undefined
+  reference/citation hoặc missing character. Overfull ngoài P2 vẫn tồn tại:
+  Chương P4 dòng 132–145 (59.60092 pt), 146–157 (73.97719 pt), bibliography
+  nguồn FAN (0.16591 pt). Script build strict của nhóm sẽ chặn các cảnh báo
+  đó; chưa nhận build tích hợp đạt mọi kiểm tra strict. Không sửa file P4/P1
+  hoặc bibliography P3 ngoài phạm vi feedback. P1 cần cân đối trang khi thêm P5/P6.
+
+Phần dưới ghi kết quả lần bàn giao 03/10, không phải trạng thái tích hợp mới.
+
 ## Sản phẩm
 
 - Chương 3: D-calculus, singular cover, PDCF/PDC, giao cube, frontier,

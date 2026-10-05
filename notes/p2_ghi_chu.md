@@ -82,15 +82,16 @@ generate_test(fault):
         result = search(initial cube intersect PDCF)
         if result.status == DETECTED: return result
         if result.status == ABORTED: return result
-    return UNTESTABLE  # only after every PDCF and descendant is exhausted
+    return Result(status=UNTESTABLE)  # all PDCFs and descendants exhausted
 
 search(cube):
-    if the resource limit is reached: return ABORTED
+    if the resource limit is reached: return Result(status=ABORTED)
     apply forward/backward implication with the fault injected
-    if conflicting requirements: return BRANCH_FAILED
+    if conflicting requirements: return Result(status=BRANCH_FAILED)
     refresh D-frontier and J-frontier
     if a PO carries D or D':
-        if J-frontier is empty: return DETECTED with a consistent PI test cube
+        if J-frontier is empty:
+            return Result(status=DETECTED, pattern=consistent PI test cube)
         choose an unjustified gate
         for each compatible singular-cover alternative:
             save state
@@ -99,7 +100,7 @@ search(cube):
             if result.status == ABORTED: return result
             restore state  # only a failed branch tries another choice
     else:
-        if D-frontier is empty: return BRANCH_FAILED
+        if D-frontier is empty: return Result(status=BRANCH_FAILED)
         choose a propagation gate (with a possible route to PO)
         for each compatible PDC and each alternative gate:
             save state
@@ -107,7 +108,7 @@ search(cube):
             if result.status == DETECTED: return result
             if result.status == ABORTED: return result
             restore state
-    return BRANCH_FAILED  # caller tries remaining choices
+    return Result(status=BRANCH_FAILED)  # caller tries remaining choices
 ```
 
 Đây là trình bày rút gọn của kích hoạt → D-drive → consistency.
