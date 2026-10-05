@@ -1,4 +1,83 @@
-\chapter{PODEM}
+\chapter{Thuật toán PODEM}
 \label{sec:p3-podem}
-% P3 phụ trách. Bổ sung nội dung sau khi hoàn thành phần tìm hiểu.
-% Không khai báo gói hoặc định nghĩa lại lệnh trong file chương.
+% Bản ngắn theo README/kế hoạch P1; chi tiết trong notes/p3_*.
+\textbf{Nguyên lý.}
+PODEM (Goel, 1981) chỉ ra quyết định nhị phân tại PI; các net nội bộ
+được suy ra bằng mô phỏng, nên không cần J-frontier như D-algorithm
+\cite{p3_goel1981,p3_wang2006}. Cây tìm kiếm trên $n$ PI có tối đa $2^n$
+vector đầy đủ; trường hợp xấu vẫn cần tìm kiếm theo hàm mũ.
+\emph{Objective} chọn $(l,1-s)$ để kích hoạt lỗi $l/\mathrm{SA}s$;
+sau kích hoạt, chọn đầu vào X của D-frontier về giá trị không điều khiển
+(1 cho AND/NAND, 0 cho OR/NOR).
+\emph{Backtrace} đưa mục tiêu về PI chưa gán, đảo bit qua NAND/NOR/NOT;
+\emph{imply} tính lại toàn mạch bằng logic $0,1,X,D,\overline D$.
+P3-v1 chọn cổng theo topo ổn định và đầu vào X đầu tiên trong netlist,
+không dùng SCOAP. XOR/XNOR cần xử lý parity riêng.
+
+\textbf{Dừng và quay lui.}
+Có $D/\overline D$ ở PO thì thành công. Khi lỗi đã kích hoạt nhưng không
+còn đường X từ D-frontier tới PO, nhánh thất bại; có X-path chỉ là điều kiện
+cần. Frontier rỗng trước kích hoạt chưa đủ để loại nhánh.
+Mã giả: \emph{imply $\to$ kiểm tra PO/khả thi $\to$ objective/backtrace
+$\to$ thử PI $b$ $\to$ nếu thất bại, kiểm tra giới hạn rồi thử $1-b$
+$\to$ nếu cả hai thất bại, trả PI về X và quay về cha}.
+Xóa quyết định con trước khi đảo cha. Đếm backtrack bằng số phép đảo PI;
+hết cây mới kết luận UNTESTABLE, hết giới hạn là ABORTED.
+Lưu đồ và cây đầy đủ ở \nolinkurl{report/figures/p3/}; giải thích trong
+\nolinkurl{notes/p3_ly_thuyet.md}.
+
+\textbf{c17, lỗi stem $11/\mathrm{SA0}$.}
+Theo PI $(1,2,3,6,7)$, P3-v1 cho Bảng~\ref{tab:p3-c17}.
+
+\begin{table}[htbp]\centering\small
+\caption{Hai phép gán PI; các net chưa liệt kê giữ X.}
+\label{tab:p3-c17}
+\begin{tabular}{@{}clll@{}}\toprule
+Bước & Objective; PI & Net xác định sau imply & D-frontier\\\midrule
+1 & $(11,1)$; $3=0$ & $10=1,11=D$ & $\{16,19\}$\\
+2 & $(2,1)$; $2=1$ & $10=1,11=D,16=\overline D,22=D$ & $\{19,23\}$\\\bottomrule
+\end{tabular}
+\end{table}
+
+Vì $3=0$ nên NAND11 tốt bằng 1; $2=1$ truyền $D$ qua NAND16 thành
+$\overline D$, rồi qua NAND22 thành $D$. Pattern $X10XX$, 0 backtrack;
+8/8 cách điền X phát hiện lỗi tại 22. Điền X=0 được $01000$,
+PO tốt $(1,1)$, lỗi $(0,0)$. PO23 còn X trong trace là xấp xỉ bảo thủ.
+
+% P2 bb3756d: common/c17.tex chỉ chứa includegraphics, không phải float.
+\begin{figure}[htbp]\centering
+\begin{minipage}{0.49\linewidth}\centering
+\IfFileExists{figures/common/c17.tex}{\resizebox{\linewidth}{!}{\input{figures/common/c17.tex}}}{%
+\resizebox{\linewidth}{!}{\input{figures/p3/c17_state.tex}}}
+\end{minipage}\hfill
+\begin{minipage}{0.49\linewidth}\centering
+\resizebox{\linewidth}{!}{\input{figures/p3/decision_tree.tex}}
+\end{minipage}
+\caption{Trái: c17 ở trạng thái cuối (hình P2 nếu có;
+dự phòng P3: mọi khối là NAND).
+Phải: cây quyết định mạch phụ, thử $a=1$ rồi đảo $a=0$.}
+\label{fig:p3-examples}
+\end{figure}
+
+\textbf{Ví dụ quay lui.}
+Mạch phụ $t=a+b$, $n=\overline a$, $out=tn$, lỗi stem $t/\mathrm{SA0}$:
+thử $a=1$ cho $(t,n,out)=(D,0,0)$, nhánh thất bại với mọi $b$;
+đảo $a=0$ cho $(X,1,X)$; chọn lại objective $(t,1)$, gán $b=1$
+cho $(D,1,D)$. Kết quả $01$, ba hàng gán/đảo, một backtrack.
+Giới hạn 0 phải ABORTED trước phép đảo, không phải UNTESTABLE.
+Hai trace đủ bảy cột ở \nolinkurl{results/golden_trace_c17_11sa0.md}
+và \nolinkurl{results/golden_trace_backtrack.md}.
+
+\textbf{So sánh và đối chiếu nhóm.}
+Trace tay P2 trên nhánh \nolinkurl{p2-d-algorithm} có 4 lần chọn cube
+(không đếm implication), 3 PI được gán, 0 backtrack, pattern $X100X$;
+sau tổng quát hóa được $X10XX$. P3 có 2 phép gán PI, 0 backtrack.
+Hai đơn vị đếm khác nhau, không suy ra tỷ lệ tăng tốc.
+D-algorithm cần justification các quyết định nội bộ; PODEM dùng backtrace
+và imply. FAN cải tiến lựa chọn bằng cấu trúc fanout và multiple backtrace
+\cite{p3_fujiwara1983}; nhóm chưa cài FAN.
+Bộ kiểm chứng P3 duyệt 32 vector c17, 4 vector mạch phụ và 22 lỗi stem;
+đạt các kỳ vọng trên. \textbf{Chờ đối chiếu}: chưa có trace/code P5 và
+xác nhận simulator P6; chưa kết luận toàn bộ tiêu chí P3 hoàn tất.
+Nguồn P2, khác biệt heuristic và danh sách đầu vào thiếu ở
+\nolinkurl{notes/p3_doi_chieu_P5.md}.
