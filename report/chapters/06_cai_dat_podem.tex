@@ -1,4 +1,87 @@
 \chapter{Cài đặt PODEM}
 \label{sec:p5-cai-dat-podem}
-% P5 phụ trách. Bổ sung nội dung sau khi hoàn thành phần tìm hiểu.
-% Không khai báo gói hoặc định nghĩa lại lệnh trong file chương.
+
+\section{Kiến trúc cài đặt}
+
+Phần P5 triển khai lõi thuật toán PODEM trên mạch logic tổ hợp với mô hình
+logic năm giá trị. Giao diện chính nhận một mạch \texttt{Circuit} và một
+\texttt{Fault}, đồng thời hỗ trợ danh sách fault tương ứng với các khung
+thời gian sau khi mạch tuần tự được unroll.
+
+Luồng xử lý chính gồm các bước Imply, kiểm tra phát hiện fault, Objective,
+Backtrace, gán Primary Input và Backtrack khi nhánh hiện tại thất bại.
+
+\section{Logic năm giá trị}
+
+Hệ thống sử dụng năm giá trị $0$, $1$, $X$, $D$ và $D'$.
+
+Trong đó $D$ biểu diễn cặp giá trị good/faulty là $(1,0)$ và $D'$ biểu diễn
+$(0,1)$. Giá trị $X$ biểu diễn trạng thái chưa xác định.
+
+Sau mỗi lần thay đổi pattern, mạch được implication lại theo thứ tự topo.
+
+\section{Objective và Backtrace}
+
+Khi fault chưa được kích hoạt, Objective đặt net lỗi về giá trị đối lập với
+stuck-at value.
+
+Sau khi fault được kích hoạt, Objective được chọn trên D-frontier nhằm lan
+truyền giá trị $D$ hoặc $D'$ đến Primary Output.
+
+Backtrace đưa Objective từ net trung gian về Primary Input chưa được quyết
+định. Thứ tự lựa chọn được giữ ổn định theo thứ tự ngõ vào của gate.
+
+Đối với NAND, NOR và NOT, giá trị Objective được đảo. Đối với AND, OR và BUFF,
+giá trị Objective được giữ nguyên.
+
+\section{Backtrack}
+
+Các quyết định Primary Input được lưu trong decision stack.
+
+Khi nhánh hiện tại thất bại, quyết định được đảo sang giá trị còn lại và
+thuật toán tiếp tục tìm kiếm.
+
+Biến đếm backtrack chỉ tăng khi thuật toán thực sự chuyển sang một nhánh mới.
+
+\section{D-frontier và điều kiện dừng}
+
+D-frontier gồm các gate có đầu ra đang là $X$ và có đầu vào mang giá trị $D$
+hoặc $D'$.
+
+Thuật toán kết thúc thành công khi một Primary Output có giá trị $D$ hoặc
+$D'$.
+
+\section{Hỗ trợ fault-frame}
+
+Để tương thích với phần P4, PODEM có thể nhận danh sách fault tương ứng với
+các frame của mạch sau khi unroll.
+
+\section{Kết quả kiểm thử}
+
+Với mạch c17 và fault 11/SA0, thuật toán tạo pattern
+
+\[
+X10XX
+\]
+
+với $0$ backtrack và trạng thái \texttt{DETECTED}.
+
+Với ví dụ backtrack, thuật toán tạo pattern
+
+\[
+01
+\]
+
+với $1$ backtrack.
+
+Bộ kiểm thử hiện tại đạt:
+
+\[
+\boxed{194\ \text{passed}}
+\]
+
+\section{Tóm tắt}
+
+Phần P5 đã triển khai các thành phần chính của PODEM gồm logic năm giá trị,
+Objective, Backtrace, implication, D-frontier, Backtrack và trace. Kết quả
+được kiểm tra bằng bộ test của project.
