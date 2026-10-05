@@ -1,0 +1,12 @@
+# Mach tuan tu P4: 2 PI, 1 PO, 6 cong to hop, 1 DFF.
+# Q(t+1) = D(t); trang thai Q(0) chua biet neu khong dung scan.
+INPUT(A)
+INPUT(B)
+OUTPUT(Y)
+N1 = AND(A, Q)
+N2 = NOT(B)
+N3 = OR(N1, N2)
+D = NAND(N3, A)
+Q = DFF(D)
+N4 = XOR(Q, B)
+Y = AND(N4, A)

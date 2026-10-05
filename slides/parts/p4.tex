@@ -1,2 +1,53 @@
-% P4: bổ sung 2--3 frame cho phần của mình.
-% Không khai báo documentclass, gói, begin{document} hoặc end{document} ở đây.
+\begin{frame}{P4 -- Vì sao ATPG tuần tự khó?}
+\small
+\begin{itemize}
+  \item DFF lưu trạng thái: $Q(t+1)=D(t)$; $Q(0)$ có thể chưa biết.
+  \item Không scan: khó điều khiển $Q$, khó quan sát $D$; cần chuỗi PI
+        qua nhiều chu kỳ để khởi tạo, kích hoạt và lan truyền lỗi.
+  \item Mạch ví dụ P4: 2 PI, 1 PO, 6 cổng tổ hợp, 1 DFF.
+\end{itemize}
+\vspace{1mm}
+\centering
+\resizebox{0.7\textwidth}{!}{\input{../report/figures/p4/seq_circuit}}
+\end{frame}
+
+\begin{frame}{P4 -- Trải khung và ví dụ $N_3/SA0$}
+\small
+\begin{itemize}
+  \item Thay DFF bằng ràng buộc $Q_{t+1}=D_t$; cùng một lỗi hiện diện
+        tại mỗi khung của mạch đã trải.
+  \item Dùng hai khung: $(A_0,B_0)=(1,0)$, $(A_1,B_1)=(1,0)$.
+\end{itemize}
+\begin{center}
+\begin{tabular}{@{}c c c c@{}}
+\toprule
+Khung & $N_3$ tốt/lỗi & $D$ tốt/lỗi & $Y$ tốt/lỗi\\
+\midrule
+0 & $1/0$ & $0/1$ & $Q_0/Q_0$\\
+1 & $1/0$ & $0/1$ & $0/1$\\
+\bottomrule
+\end{tabular}
+\end{center}
+\centering Lỗi quan sát tại PO ở khung 1, với cả $Q_0=0$ và $Q_0=1$.
+\end{frame}
+
+\begin{frame}{P4 -- Full scan và kết quả kiểm chứng}
+\small
+\begin{itemize}
+  \item Scan FF: shift in $Q$ $\rightarrow$ capture $D$ $\rightarrow$ shift out.
+        ATPG tổ hợp xem $Q$ là pseudo-PI, $D$ là pseudo-PO.
+  \item Với $N_3/SA0$: $A=1,B=0,Q=0$ cho $D=0/1$.
+\end{itemize}
+\begin{center}
+\begin{tabular}{@{}lcc@{}}
+\toprule
+Mô hình & Fault universe & Phát hiện\\
+\midrule
+Full scan, bộ vector vét cạn & 18 stem SA & 18/18\\
+Không scan, tối đa 4 khung & 18 stem SA & 18/18 (tối đa 3 khung)\\
+\bottomrule
+\end{tabular}
+\end{center}
+\footnotesize Số liệu từ vét cạn và mô phỏng độc lập trên mạch nhỏ;
+chưa phải kết quả chạy PODEM của P5/P6.
+\end{frame}

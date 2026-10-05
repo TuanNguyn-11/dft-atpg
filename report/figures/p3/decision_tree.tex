@@ -1,0 +1,9 @@
+\begin{tikzpicture}[every node/.style={font=\small,align=center},level distance=1.6cm,sibling distance=5.8cm]
+\node[draw,rounded corners] {Objective $t=1$\\Chọn PI $a$}
+ child {node[draw] {$a=1$: $t=D$, $n=0$\\$out=0$: nhánh thất bại}
+ edge from parent node[left] {thử trước}}
+ child {node[draw] {$a=0$: $t=X$, $n=1$}
+ child {node[draw,rounded corners] {$b=1$: $out=D$\\DETECTED, vector $01$}
+ edge from parent node[right] {objective $t=1$}}
+ edge from parent node[right] {đảo 1 lần}};
+\end{tikzpicture}

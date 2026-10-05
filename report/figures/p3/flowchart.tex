@@ -1,0 +1,11 @@
+\begin{tikzpicture}[node distance=0.7cm,every node/.style={font=\small,align=center},box/.style={draw,rounded corners,text width=7cm,minimum height=0.7cm},arr/.style={->,>=stealth}]
+\node[box] (s) {Imply từ các PI hiện tại};
+\node[box,below=of s] (p) {Có $D/\overline D$ tại PO? Có: trả thành công};
+\node[box,below=of p] (f) {Nhánh bất khả thi? Có: trả thất bại nhánh};
+\node[box,below=of f] (o) {Objective; backtrace về PI $i$, giá trị $b$};
+\node[box,below=of o] (a) {Gán $i=b$; tìm kiếm đệ quy};
+\node[box,below=of a] (r) {Nhánh đầu thất bại: kiểm tra giới hạn\\Đủ giới hạn: ABORTED; còn lượt: đảo $i$};
+\node[box,below=of r] (b) {Gán $i=1-b$; tìm kiếm đệ quy};
+\node[box,below=of b] (z) {Cả hai thất bại: trả $i=X$, imply lại\\Trả thất bại về mức cha};
+\foreach \x/\y in {s/p,p/f,f/o,o/a,a/r,r/b,b/z} \draw[arr] (\x)--(\y);
+\end{tikzpicture}
