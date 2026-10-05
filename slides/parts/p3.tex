@@ -1,2 +1,46 @@
-% P3: bổ sung 2--3 frame cho phần của mình.
-% Không khai báo documentclass, gói, begin{document} hoặc end{document} ở đây.
+\begin{frame}{PODEM tìm vector bằng quyết định tại PI}
+\begin{itemize}
+\item Objective xác định net và giá trị cần đạt.
+\item Backtrace đưa mục tiêu về một PI chưa gán.
+\item Imply mô phỏng tiến, kiểm tra lỗi tại PO.
+\item Nhánh thất bại: đảo PI; hết cả hai nhánh: quay về mức cha.
+\end{itemize}
+\begin{block}{Khác với D-algorithm}
+PODEM chỉ quyết định tại PI; net nội bộ được suy ra qua mô phỏng. Vẫn cần tìm kiếm và có thể gặp độ phức tạp hàm mũ.
+\end{block}
+\small Nguồn: Goel (1981); Wang, Wu và Wen (2006), mục 4.4.4.
+\end{frame}
+
+\begin{frame}{c17: hai quyết định phát hiện 11/SA0}
+\begin{center}
+\begin{tabular}{ccll}
+\hline
+Bước & Objective & Gán PI & Kết quả chính\\\hline
+1 & $(11,1)$ & $3=0$ & $11=D$, $10=1$\\
+2 & $(2,1)$ & $2=1$ & $16=\overline D$, $22=D$\\\hline
+\end{tabular}
+\end{center}
+\begin{block}{Kết quả theo thứ tự PI $(1,2,3,6,7)$}
+Pattern $X10XX$; 0 backtrack. Điền X bằng 0: $01000$.
+\end{block}
+\begin{itemize}
+\item Cả 8 cách điền X đều phát hiện lỗi tại PO22.
+\item Frontier cuối vẫn là $\{19,23\}$; có $D$ tại PO là đủ dừng.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Một lần quay lui dẫn tới vector 01}
+\[
+t=a+b,\quad n=\overline a,\quad out=t\cdot n;\qquad t/SA0.
+\]
+\begin{enumerate}
+\item Thử $a=1$: $t=D$, nhưng $n=0$ làm $out=0$.
+\item Đảo $a=0$: $n=1$, $t=X$; tiếp tục kích hoạt.
+\item Gán $b=1$: $t=D$, $out=D$; phát hiện lỗi.
+\end{enumerate}
+\begin{block}{Điểm kiểm tra code P5}
+3 hàng gán/đảo, 1 backtrack; pattern $(a,b)=01$. Giới hạn 0 phải trả ABORTED, không phải UNTESTABLE.
+\end{block}
+\small P2: 4 lần chọn cube, 0 backtrack; P3: 2 phép gán PI trên c17.
+Khác đơn vị đếm, chưa suy ra tốc độ. Chờ trace P5 và simulator P6.
+\end{frame}
