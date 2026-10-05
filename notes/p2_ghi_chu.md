@@ -77,27 +77,42 @@ trước khi giao; không tự đổi cực của net đã được cấy lỗi.
 ### Mã giả khái niệm (không phải API Python)
 
 ```text
-for each PDCF of the target fault:
-    search(initial cube intersect PDCF)
+generate_test(fault):
+    for each PDCF of the target fault:
+        result = search(initial cube intersect PDCF)
+        if result.status == DETECTED: return result
+        if result.status == ABORTED: return result
+    return UNTESTABLE  # only after every PDCF and descendant is exhausted
 
 search(cube):
+    if the resource limit is reached: return ABORTED
     apply forward/backward implication with the fault injected
-    if conflicting requirements: fail this branch
+    if conflicting requirements: return BRANCH_FAILED
     refresh D-frontier and J-frontier
     if a PO carries D or D':
-        if J-frontier is empty: return a consistent PI test cube
+        if J-frontier is empty: return DETECTED with a consistent PI test cube
         choose an unjustified gate
         for each compatible singular-cover alternative:
-            save state; search(cube intersect cover); restore on failure
+            save state
+            result = search(cube intersect cover)
+            if result.status == DETECTED: return result
+            if result.status == ABORTED: return result
+            restore state  # only a failed branch tries another choice
     else:
-        if D-frontier is empty: fail this branch
+        if D-frontier is empty: return BRANCH_FAILED
         choose a propagation gate (with a possible route to PO)
         for each compatible PDC and each alternative gate:
-            save state; search(cube intersect PDC); restore on failure
-    fail after exhausting all alternatives
+            save state
+            result = search(cube intersect PDC)
+            if result.status == DETECTED: return result
+            if result.status == ABORTED: return result
+            restore state
+    return BRANCH_FAILED  # caller tries remaining choices
 ```
 
 Đây là trình bày rút gọn của kích hoạt → D-drive → consistency.
+DETECTED và ABORTED được trả lên mọi tầng. BRANCH_FAILED chỉ thất bại một
+nhánh; chỉ mức gốc trả UNTESTABLE sau khi duyệt hết mọi PDCF và nhánh con.
 Trong trường hợp tổng quát, justification có thể phải xét riêng mạch tốt/lỗi
 khi đầu vào mang sai khác; không dùng cover nhị phân để ép D thành 0/1.
 Ví dụ dưới đây chỉ cần justify cổng 10, có đầu vào nhị phân.
@@ -135,12 +150,24 @@ mọi yêu cầu đã justify. Cube PI cuối: **(X,1,0,0,X)**.
 ### Trạng thái cuối và kiểm chứng nhị phân
 
 `report/figures/p2/c17_values.tex` chứa bảng net cuối và một cách điền cụ thể.
-Hình người dùng cung cấp `C:\DFT\mach_c17.jpg` được sao chép vào
-`report/figures/common/mach_c17.jpg`. Wrapper `common/c17.tex` dùng lại hình
-trong báo cáo và slide. Đã đối chiếu đủ sáu cổng và các nhánh với netlist.
-Hình thể hiện cube **sau tổng quát hóa**, có 6=X; trace trước đó giữ 6=0.
-Theo yêu cầu dùng hình đã vẽ, wrapper chèn JPG thay cho bản vẽ TikZ mới:
-đây là khác biệt có chủ đích với yêu cầu TikZ của P2.md, cần P1 biết khi review.
+Sau feedback P1, `report/figures/common/c17.tex` là bản vẽ TikZ đúng sáu NAND,
+các net và fanout; dùng được ở báo cáo/slide mà không thêm gói vào main.tex.
+JPG người dùng cung cấp vẫn giữ làm ảnh đối chiếu, không còn được wrapper chèn.
+Mặc định hình thể hiện cube **sau tổng quát hóa**, có 6=X; trace giữ 6=0.
+Có thể đổi kích thước và giá trị net trong group, không làm rò cấu hình:
+
+```latex
+\begingroup
+\def\pTwoCSeventeenWidth{\linewidth}
+\def\pTwoCSeventeenSix{0}
+\input{figures/common/c17}
+\endgroup
+```
+
+Các macro giá trị: `One`, `Two`, `Three`, `Six`, `Seven`, `Ten`, `Eleven`,
+`Sixteen`, `Nineteen`, `TwentyTwo`, `TwentyThree`, có tiền tố
+`\pTwoCSeventeen`; nội dung là biểu thức toán học, ví dụ `\overline D`.
+Slide nạp `../report/figures/common/c17`, đặt chiều rộng 0.86 linewidth.
 
 | PI (1,2,3,6,7) | PO tốt (22,23) | PO lỗi (22,23) |
 |---|---|---|

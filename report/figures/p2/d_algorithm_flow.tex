@@ -1,19 +1,39 @@
-% Chỉ dùng các thư viện TikZ đã có trong main.tex của P1.
+% Luồng khái niệm nhất quán với mã giả P2.
 \begin{tikzpicture}[>=Stealth,
-  every node/.style={font=\scriptsize,align=center},
-  p2box/.style={draw,rounded corners,minimum height=7mm,text width=2.5cm}]
-\node[p2box] (fault) at (0,0) {Chọn PDCF\\kích hoạt lỗi};
-\node[p2box] (imply) at (3.1,0) {Implication\\giao cube, kiểm tra};
-\node[p2box] (drive) at (6.2,0) {Chọn PDC\\lan truyền tới PO};
-\node[p2box] (justify) at (9.3,0) {Singular cover\\justify tới PI};
-\node[p2box] (back) at (3.1,-1.15) {Xung đột: khôi phục\\thử cube khác};
-\node[p2box] (done) at (9.3,-1.15) {PO có D/D'; J rỗng\\thành công};
-\draw[->] (fault)--(imply);
-\draw[->] (imply)--(drive);
-\draw[->] (drive)--(justify);
-\draw[->] (justify)--(done);
-\draw[->] (imply)--(back);
-\draw[->] (back.west) to[bend left=35] node[left]{thử lại} (imply.west);
-\draw[->] (drive.north) to[bend right=25] node[above]{imply lại} (imply.north);
-\draw[->] (justify.south west)--(back.north east);
+ every node/.style={font=\scriptsize,align=center},
+ box/.style={draw,rounded corners,text width=2.2cm,minimum height=6mm},
+ check/.style={draw,diamond,aspect=2.8,inner sep=1pt,text width=1.7cm}]
+\node[box] (start) at (0,0) {Chọn PDCF đầu tiên};
+\node[check] (limit) at (0,-0.85) {Hết giới hạn?};
+\node[box] (imply) at (0,-1.75) {Implication tiến/lùi\\cập nhật frontier};
+\node[check] (conflict) at (0,-2.65) {Xung đột?};
+\node[check] (po) at (0,-3.65) {PO có D/D'?};
+\node[check] (j) at (0,-4.65) {J rỗng?};
+\node[box] (success) at (0,-5.65) {DETECTED\\trả lên mọi tầng};
+\node[box] (abort) at (3.3,-0.85) {ABORTED\\trả lên mọi tầng};
+\node[box] (back) at (3.3,-2.65) {Backtrack: khôi phục\\về lựa chọn trước};
+\node[check] (choices) at (6.3,-2.65) {Còn lựa chọn?};
+\node[box] (retry) at (6.3,-1.3) {Thử cube tiếp theo\\kể cả PDCF còn lại};
+\node[box] (fail) at (6.3,-4) {Hết ở mức gốc:\\UNTESTABLE};
+\node[box] (cover) at (3.3,-4.65) {Chọn cover justify\\lưu trạng thái};
+\node[box] (drive) at (-3.3,-3.65) {Chọn PDC khả dụng\\lưu trạng thái};
+\draw[->] (start)--(limit);
+\draw[->] (limit)--node[right]{không}(imply);
+\draw[->] (limit)--node[above]{có}(abort);
+\draw[->] (imply)--(conflict);
+\draw[->] (conflict)--node[right]{không}(po);
+\draw[->] (conflict)--node[above]{có}(back);
+\draw[->] (po)--node[right]{có}(j);
+\draw[->] (po)--node[above]{không}(drive);
+\draw[->] (j)--node[right]{có}(success);
+\draw[->] (j)--node[above]{không}(cover);
+\draw[->] (back)--(choices);
+\draw[->] (choices)--node[right]{có}(retry);
+\draw[->] (choices)--node[right]{không}(fail);
+\draw[->] (retry.north)--(6.3,0.5)--(-1.7,0.5)|-(limit.west);
+\draw[->] (drive.north)--(-3.3,-0.85)--(limit.west);
+\draw[->] (cover.east)--(4.8,-4.65)--(4.8,-1.75)--(imply.east)
+ node[pos=0.4,right,font=\tiny]{kiểm tra giới hạn};
+\draw[->,dashed] (drive.south)--(-3.3,-6.3)--(3.3,-6.3)--(back.south);
+\node[font=\tiny,fill=white] at (0,-6.3) {Không có PDC khả dụng: thất bại nhánh};
 \end{tikzpicture}
