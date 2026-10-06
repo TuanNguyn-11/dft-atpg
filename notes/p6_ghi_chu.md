@@ -38,16 +38,16 @@
 
 ## 7. Nén tập test
 - Duyệt pattern, giữ pattern phát hiện thêm lỗi mới; duyệt thêm lượt ngược để loại pattern thừa.
-- c17 (22 lỗi sau gộp, bản tham chiếu vét cạn): 22 pattern → 7 pattern, vẫn coverage 100%.
+- c17 bằng PODEM: 22 lỗi sau gộp, 22 pattern → 6 pattern; 34 lỗi không gộp → 7 pattern; vẫn coverage 100%, backtrack trung bình 0.
 
 ## 8. Lệnh/CLI và công cụ
 - `argparse`: `--fault NET SV [--branch GATE]`, `--all`, `--trace`, `--unroll K`, `--md FILE`.
 - Beamer: `slides/main.tex` dùng `\input{parts/pX}`.
 
 ## 9. Việc còn mở
-- [ ] Đối chiếu `Circuit`/`Fault` với P4, P5 (mục 8 prompt.md).
-- [ ] Đối chiếu vector của P2, P3 cho 11/SA0 bằng `--pattern`.
-- [ ] Chạy lại `--all` khi `podem.py` của P5 có mặt.
+- [x] Đối chiếu `Circuit`/`Fault` với P4, P5 (mục 8 prompt.md): ghép P4, P5 chạy đúng, 302 test pass.
+- [x] Đối chiếu vector của P2, P3 cho 11/SA0 bằng `--pattern`: `X10XX` phát hiện với mọi cách điền X.
+- [x] Chạy lại `--all` bằng PODEM của P5: `results/c17_all_faults.md`.
 
 ## 10. Mạch tuần tự: trạng thái đầu chưa biết
 - Sau `unroll`, `Q@0` chỉ là đầu vào hình thức. Trên chip không scan/reset không tự đặt được `Q@0`.

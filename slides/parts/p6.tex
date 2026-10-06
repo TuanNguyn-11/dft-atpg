@@ -15,27 +15,27 @@
 \begin{frame}{P6 -- Kết quả c17 và mạch tuần tự}
 \small
 \begin{center}
-\begin{tabular}{@{}lc@{}}
+\begin{tabular}{@{}lcc@{}}
 \toprule
-c17 (tham chiếu vét cạn) & Giá trị\\
+c17, PODEM & Sau gộp & Không gộp\\
 \midrule
-Số lỗi trước / sau gộp & 34 / 22\\
-Fault coverage & 22/22 = 100\%\\
-Pattern trước / sau nén & 22 / 7\\
-Pattern kiểm chứng sai & 0\\
+Fault coverage & 22/22 & 34/34\\
+Backtrack trung bình & 0 & 0\\
+Pattern trước / sau nén & 22 / 6 & 34 / 7\\
+Pattern kiểm chứng sai & 0 & 0\\
 \bottomrule
 \end{tabular}
 
 \vspace{2mm}
 \begin{tabular}{@{}cccc@{}}
 \toprule
-\texttt{seq\_example} & $k=1$ & $k=2$ & $k=3$\\
+\texttt{seq\_example}, 18 lỗi & $k=1$ & $k=2$ & $k=3$\\
 \midrule
-Phát hiện bảo đảm (18 lỗi) & 1/18 & 13/18 & 18/18\\
+Phát hiện bảo đảm & 1/18 & 13/18 & 18/18\\
 \bottomrule
 \end{tabular}
 \end{center}
-\footnotesize Số liệu chưa phải kết quả chạy PODEM; khớp vét cạn độc lập của P4.
+\footnotesize Mọi pattern PODEM được fault simulation xác nhận; kết quả tuần tự khớp vét cạn độc lập của P4.
 \end{frame}
 
 \begin{frame}{P6 -- Demo và hỏi đáp}
