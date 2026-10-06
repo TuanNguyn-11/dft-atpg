@@ -1,4 +1,115 @@
 \chapter{Kết quả và kiểm chứng}
 \label{sec:p6-ket-qua}
-% P6 phụ trách. Bổ sung nội dung sau khi hoàn thành phần tìm hiểu.
-% Không khai báo gói hoặc định nghĩa lại lệnh trong file chương.
+% P6 phụ trách. Số liệu dưới đây là kết quả của bản tham chiếu vét cạn.
+% Khi lõi PODEM (Chương 6) được merge: chạy lại
+%   python -m atpg.run circuits/c17.bench --all --md results/c17_all_faults.md
+% rồi thay số trong bảng tab:p6-c17 và đổi câu mô tả nguồn pattern.
+
+\section{Mạch thử và danh sách lỗi}
+\label{sec:p6-mach-loi}
+Hai mạch được đọc từ định dạng ISCAS \texttt{.bench} bằng trình đọc riêng của
+nhóm (\texttt{circuit.py}): c17 (mạch tổ hợp) và \texttt{seq\_example} (mạch
+tuần tự của Chương~\ref{sec:p4-atpg-tuan-tu}). Trình đọc tính bảng fanout,
+mức (level) và thứ tự topo của các cổng; mã chỉ dùng thư viện chuẩn Python 3.10
+trở lên và \texttt{pytest}.
+\begin{table}[H]
+\centering
+\caption{Mạch dùng trong thực nghiệm.}
+\label{tab:p6-mach}
+\begin{tabular}{@{}lcccc@{}}
+\toprule
+Mạch & PI & PO & Cổng tổ hợp & DFF\\
+\midrule
+c17 & 5 & 2 & 6 (NAND) & 0\\
+\texttt{seq\_example} & 2 & 1 & 6 & 1\\
+\bottomrule
+\end{tabular}
+\end{table}
+Với c17, mỗi net có hai lỗi stem (SA0, SA1): 11 net cho 22 lỗi. Ba net rẽ
+nhánh (3, 11, 16), mỗi net hai nhánh, thêm 12 lỗi nhánh; tổng ban đầu là
+\textbf{34 lỗi}. Gộp tương đương theo từng loại cổng (với NAND, SA0 ở ngõ vào
+tương đương SA1 ở ngõ ra) tạo sáu lớp, mỗi lớp ba lỗi, nên còn \textbf{22 lỗi};
+lỗi mẫu \texttt{11/SA0} không thuộc lớp nào và được giữ. Số 22 sau gộp chỉ
+ngẫu nhiên trùng với 22 lỗi stem: hai đại lượng khác nhau. Mạch tuần tự đã trải
+khung chỉ dùng 18 lỗi stem vật lý (9 net), sao sang mọi khung, không gộp và
+không có lỗi nhánh, vì ánh xạ lỗi nhánh vào DFF cần xác định đúng cạnh theo
+từng khung; các lớp tương đương của mạch tổ hợp cũng không mặc nhiên đúng cho
+mô hình tuần tự.
+
+\section{Phương pháp kiểm chứng}
+\label{sec:p6-kiem-chung}
+Bộ mô phỏng lỗi (\texttt{fault\_sim.py}) tính giá trị mọi net theo thứ tự topo
+cho mạch tốt và mạch lỗi: lỗi stem ép giá trị cả net, lỗi nhánh chỉ ép giá trị
+tại ngõ vào của cổng nhận nhánh. Một pattern phát hiện lỗi nếu ít nhất một PO
+khác nhau giữa hai mạch. Bộ mô phỏng độc lập với bộ sinh pattern: mọi pattern,
+dù do PODEM hay do bản tham chiếu vét cạn sinh ra, đều được mô phỏng lại. Theo
+quy ước nhóm, $X$ được điền $0$ trước khi mô phỏng nhị phân. Ngoài ra, một
+pattern có $X$ chỉ được xác nhận đúng với \emph{mọi} cách điền $X$ khi đã vét
+cạn các cách điền; kết quả có ba mức: có, không (có phản ví dụ), hoặc chưa kiểm
+chứng hết khi quá 16 bit $X$. Thử riêng hai mẫu toàn $0$ và toàn $1$ không đủ:
+với $y=a\land\mathrm{XNOR}(x_0,x_1)$, hai mẫu đó cùng phát hiện lỗi
+$a/\mathrm{SA0}$ nhưng mẫu $x_0=0,x_1=1$ thì không. Kết luận \texttt{UNTESTABLE}
+cũng được đối chiếu bằng vét cạn khi mạch có tối đa 16 PI.
+
+Các chỉ số tính theo $DT$ (số lỗi phát hiện), $UT$ (số lỗi chứng minh không
+thể phát hiện) và $|F|$: fault coverage $=DT/|F|$, test coverage
+$=DT/(|F|-UT)$, fault efficiency $=(DT+UT)/|F|$.
+
+\section{Kết quả trên c17}
+\label{sec:p6-c17}
+\begin{table}[H]
+\centering
+\caption{Kết quả toàn bộ lỗi c17 (bản tham chiếu vét cạn, chưa phải PODEM).}
+\label{tab:p6-c17}
+\begin{tabular}{@{}lc@{}}
+\toprule
+Chỉ số & Giá trị\\
+\midrule
+Số lỗi trước / sau gộp & 34 / 22\\
+Fault coverage & 22/22 = 100\%\\
+Test coverage, fault efficiency & 100\%, 100\% ($UT=0$)\\
+Pattern trước / sau nén & 22 / 7 (vẫn phủ 22/22 lỗi)\\
+Pattern bị kiểm chứng sai & 0\\
+\bottomrule
+\end{tabular}
+\end{table}
+Bảng~\ref{tab:p6-c17} là kết quả của bản tham chiếu, dùng để kiểm chứng chứ
+không phải số liệu của lõi PODEM. Riêng \texttt{11/SA0}, có 18 trong 32 vector
+phát hiện được lỗi. Mẫu $X10XX$ (thứ tự PI $1,2,3,6,7$; điền $X=0$ thành
+$01000$) cho $11=D$, $16=\overline D$, và $22$, $23$ đều mang $D$, khớp trace
+chạy tay của Chương~\ref{sec:p3-podem}.
+
+\section{Kết quả mạch tuần tự}
+\label{sec:p6-tuan-tu}
+Mạch được trải $k$ khung; $Q@0$ là trạng thái đầu \emph{chưa biết}. Mạch tốt và
+mạch lỗi là hai chip riêng, mỗi chip có thể bắt đầu ở trạng thái bất kỳ. Một
+chuỗi chỉ được tính là phát hiện \emph{bảo đảm} khi mọi vết PO của mạch tốt
+khác mọi vết PO của mạch lỗi, với mọi cặp trạng thái đầu và mọi cách điền $X$.
+Chuỗi chỉ đúng khi $Q@0$ có giá trị cụ thể là kết quả \emph{có điều kiện}, được
+tách riêng.
+\begin{table}[H]
+\centering
+\caption{\texttt{seq\_example}, 18 lỗi stem, bản tham chiếu vét cạn.}
+\label{tab:p6-seq}
+\begin{tabular}{@{}cccc@{}}
+\toprule
+Số khung $k$ & Bảo đảm & Chỉ có điều kiện $Q@0$ & Nếu $Q@0$ điều khiển được\\
+\midrule
+1 & 1/18 & 9 & 10/18\\
+2 & 13/18 & 5 & 18/18\\
+3 & 18/18 & 0 & 18/18\\
+\bottomrule
+\end{tabular}
+\end{table}
+Số phát hiện bảo đảm (1, 13, 18) trùng kết quả vét cạn độc lập của P4 trên
+cùng 18 lỗi; không được gán con số 100\% riêng cho lần chạy hai khung. Lỗi chưa
+phát hiện ở $k$ nhỏ chưa phải \texttt{untestable}: chỉ là chưa phát hiện được
+trong giới hạn $k$ khung.
+
+\section{Nhận xét và giới hạn}
+\label{sec:p6-nhan-xet}
+Bộ mô phỏng độc lập cho phép đối chiếu mọi pattern và phát hiện sai khác giữa
+các cách đánh giá. Giới hạn: vét cạn chỉ dùng được với mạch ít PI nên chỉ là
+mốc tham chiếu, không thay thế ATPG; c17 nhỏ nên coverage 100\% chưa nói lên
+hiệu năng; gộp lỗi mới ở mức tương đương, chưa gộp trội (dominance); chế độ
+tuần tự chưa có lỗi nhánh, chưa gộp lỗi, và kết quả phụ thuộc số khung $k$.
