@@ -1,71 +1,116 @@
-# Phiếu đối chiếu — chưa nhận trace code P5
+# Phiếu đối chiếu P3 ↔ code P5/P6 — 06/10/2026
 
-## Nguồn kiểm tra ngày 05/10/2026
+## Trạng thái và nguồn thực thi
 
-- Main: `f95d60949b35b20833b168c7f618b03367db71c5`.
-- P2: `bb3756de9b434f2aaf91f194f3c05cdc61b9b58e`, nhánh
-  [p2-d-algorithm](https://github.com/TuanNguyn-11/dft-atpg/tree/bb3756de9b434f2aaf91f194f3c05cdc61b9b58e).
-  Đã đọc `notes/p2_ghi_chu.md`, `notes/p2_review.md`, Chương 3,
-  bảng logic, bộ kiểm chứng và wrapper hình `report/figures/common/c17.tex`.
-  Dữ liệu P2 chưa nằm trên main; chỉ đưa vào bản kiểm tra tạm, không chép
-  các file P2 vào branch P3.
-- Các nhánh remote có main, P1, P2, P4; chưa có nhánh P5/P6.
-  Main không có `src/atpg/podem.py`, `logic.py`, `circuit.py`,
-  `fault_sim.py`, `faults.py`, `run.py`, `circuits/c17.bench`,
-  `results/trace_c17_11sa0.md` hoặc `results/c17_all_faults.md`.
-  ZIP P3 và thư mục cung cấp cũng không có sản phẩm P5/P6.
+Đã đối chiếu hai golden trace với API P5 và file exporter; simulator P6
+xác nhận các vector. Không còn phụ thuộc “chưa nhận P5/P6”.
 
-## Đối chiếu với P2 đã có
+- Base: `8564678cd360594cbd540389d49c99021525ac08` (origin/main sau fetch),
+  mới hơn mốc feedback `eb6694d`; đã có exporter và trace backtrack.
+- P5 remote `5b461af`; exporter đưa vào tại `94ee04a`. Đọc thêm
+  [bàn giao P5](p5_ghi_chu.md); đây là bằng chứng trong repo, không phải
+  xác nhận cá nhân qua tin nhắn.
+- Python 3.12.10, pytest 9.1.1 trên Windows: `342 passed`.
+- [Bằng chứng 35 ô chi tiết](../results/p3_doi_chieu_code.md) sinh bằng
+  [script P3](p3_doi_chieu_code.py), gọi trực tiếp `Circuit.from_bench`
+  P6, `podem(..., trace=True)` P5, `simulate/detects` P6. Không dùng
+  implementation tham chiếu P3 làm kết quả lõi P5.
+- File P5: [c17](../results/trace_c17_11sa0.md),
+  [backtrack](../results/trace_backtrack.md). Tái sinh bằng exporter trong
+  bộ nhớ và so toàn nội dung với file đã commit: khớp (chuẩn hóa newline).
 
-P2 chọn PDCF với 6=0; PDC với 2=1; yêu cầu nội bộ 10=1; sau đó justify
-bằng 3=0. Có **4 lần chọn cube, 3 PI được gán, 0 backtrack**. Không đếm
-khởi tạo, implication và tổng quát hóa sau kiểm chứng vào số chọn cube.
-Mẫu X100X gồm bốn vector; tổng quát hóa bỏ 6=0 thành X10XX gồm tám vector.
-P3-v1 chọn 3=0 ngay đầu nên không phải gán 6 và không cần quyết định nội bộ
-10=1. Đây là khác biệt lựa chọn và cơ chế tìm kiếm, không phải lỗi logic.
+## Đối chiếu đủ bảy cột
 
-| Đại lượng | Trace tay P2 | Trace P3-v1 |
+| Cột | Golden mong đợi | API P5 thực tế | File exporter P5 | Kết luận |
+|---|---|---|---|---|
+| Bước | c17: 1,2; phụ: 1,2,3 | Cùng thứ tự và số hàng | Cùng thứ tự | Khớp |
+| Objective | c17: (11,1),(2,1); phụ: (t,1),—,(t,1) | Tuple tương ứng; None tại hàng đảo | Tuple và — | Khớp ngữ nghĩa; golden thêm chú thích đảo |
+| Backtrace → PI | c17: 3=0,2=1; phụ: a=1,—,b=1, có diễn giải đường đi | Tuple (3,0),(2,1); (a,1),None,(b,1) | Tuple và — | Khớp PI/bit, không giống nguyên văn |
+| Gán PI | 3=0,2=1; a=1,a=0,b=1 | Đúng từng phép gán | Đúng từng phép gán | Khớp |
+| Mọi net sau imply | Các trạng thái dưới đây | So toàn bộ dict PI/net, không chỉ PO | PI viết gộp thành tuple | Khớp sau chuẩn hóa cách viết PI |
+| D-frontier | c17: [16,19],[19,23]; phụ: rỗng cả 3 hàng | Đúng cả nội dung lẫn thứ tự | Cùng nội dung | Khớp |
+| Hành động | c17: tiếp tục/thành công; phụ: backtrack/tiếp tục/thành công | c17 khớp; phụ: tiếp tục/backtrack/thành công | Đã chuẩn hóa đúng golden | Hai khác biệt API có giải thích |
+
+### Mọi net theo từng hàng
+
+Các giá trị sau đều đã so bằng assertion giữa golden, API và exporter:
+
+| Mạch/hàng | PI theo .bench | Toàn bộ net cổng (mong đợi = thực tế) |
 |---|---|---|
-| Quyết định được đếm | 4 lần chọn cube | 2 phép gán PI |
-| PI được gán | 6=0, 2=1, 3=0 | 3=0, 2=1 |
-| Backtrack | 0 | 0 |
-| Pattern trước tổng quát hóa | X100X | X10XX |
-| Net cuối 10/11/16/19/22/23 | 1/D/D'/X/D/X | 1/D/D'/X/D/X |
-| D-frontier cuối | {19,23} | {19,23} |
-| J-frontier cuối | Rỗng | Không sử dụng |
+| c17/1 | (X,X,0,X,X) | 10=1,11=D,16=X,19=X,22=X,23=X |
+| c17/2 | (X,1,0,X,X) | 10=1,11=D,16=D',19=X,22=D,23=X |
+| phụ/1 | (1,X) | t=D,n=0,out=0 |
+| phụ/2 | (0,X) | t=X,n=1,out=X |
+| phụ/3 | (0,1) | t=D,n=1,out=D |
 
-Đã chạy bộ kiểm chứng P2 tại snapshot trên trong thư mục tạm: 160 ô logic,
-bốn trạng thái trace, D/J-frontier, 4/4 và 8/8 completions, đáp ứng PO đều PASS.
-Đây là chạy lại kiểm chứng dữ liệu P2, không phải xác nhận simulator P6.
-Không có số đo thời gian, không tính tỷ lệ tăng tốc 4/2.
+Kết quả c17: DETECTED, X10XX, 0 backtrack; mạch phụ: DETECTED, 01,
+1 backtrack. Không giữ t=D từ nhánh cũ sau khi đảo a.
 
-## P5: từng cột còn chờ
+### Chốt cách đọc hành động cùng bản bàn giao P5
 
-Không điền “khớp” trước khi nhận và kiểm tra dữ liệu thật.
+Giữ golden nguyên vẹn. Golden mô tả việc cần làm sau trạng thái một hàng;
+API ghi thao tác vừa thực hiện. Vì vậy hàng a=1 chưa đảo PI nhưng golden
+ghi backtrack; hàng a=0 đã đảo nên API ghi backtrack, golden ghi tiếp tục.
+Exporter P5 đã chuyển sang quy ước golden: đẩy nhãn backtrack về hàng dẫn
+tới bế tắc, đổi nhãn hàng đảo thành tiếp tục. Không đổi lõi hoặc exporter
+của P5, không tuyên bố raw API khớp chuỗi hoàn toàn. Script bảo vệ chính xác
+hai khác biệt này; không bỏ qua toàn bộ cột hành động.
 
-| Mục | Kỳ vọng P3 | Kết quả P5 | Trạng thái |
-|---|---|---|---|
-| c17 bước 1 | obj(11,1), PI3=0, 11=D, frontier16/19 | Chưa nhận | Chờ |
-| c17 bước 2 | obj(2,1), PI2=1, 16=D', 22=D, frontier19/23 | Chưa nhận | Chờ |
-| c17 kết quả | DETECTED, X10XX, 0 backtrack | Chưa nhận | Chờ |
-| phụ bước 1 | a=1, t=D, n=0, out=0 | Chưa nhận | Chờ |
-| phụ bước 2 | đảo a=0, t=X, n=1, out=X | Chưa nhận | Chờ |
-| phụ bước 3 | obj(t,1), b=1, out=D | Chưa nhận | Chờ |
-| phụ kết quả | DETECTED, 01, 1 backtrack | Chưa nhận | Chờ |
-| phụ giới hạn 0 | ABORTED, 0 backtrack | Chưa nhận | Chờ |
-| phụ giới hạn 1 | DETECTED, 1 backtrack | Chưa nhận | Chờ |
+Với giới hạn 0, API có hàng kết thúc không gán PI, nhãn “thất bại”, nhưng
+`status=ABORTED`. Exporter giữ một hàng gán, nhãn backtrack bị chặn và lý do
+ABORTED ở kết luận. Không suy ra UNTESTABLE từ chữ “thất bại” trong một hàng.
 
-Thứ tự xử lý khác biệt: kiểm tra netlist/lỗi và thứ tự PI; kiểm tra heuristic; kiểm tra thời điểm ghi trace; kiểm tra logic/cấy lỗi; cuối cùng kiểm chứng nhị phân độc lập. Một vector khác nhưng phát hiện được lỗi không tự động chứng minh trace chuẩn sai. Không dùng nhánh thiếu do ABORTED làm bằng chứng UNTESTABLE.
+## Xác nhận simulator P6 và điều kiện dừng
 
-Khi có trace P5, đối chiếu toàn bộ bảy cột từng hàng với hai file golden:
-objective, backtrace về PI, gán PI, mọi net, thứ tự D-frontier, hành động;
-cuối cùng so status/pattern/backtracks. Bảng rút gọn trên không thay thế
-đối chiếu từng net và không đánh dấu khớp trước khi có dữ liệu.
+| Kiểm tra thật | Kết quả |
+|---|---|
+| c17 cube X10XX | 8/8 cách điền được detects xác nhận |
+| c17 01000; PO (22,23) | Tốt (1,1), lỗi (0,0) |
+| Mạch phụ 01; PO out | Tốt 1, lỗi 0 |
+| Mạch phụ max_backtracks=0 | ABORTED, pattern 1X, 0 backtrack; đã thử nhánh đầu |
+| Mạch phụ max_backtracks=1 | DETECTED, pattern 01, 1 backtrack |
 
-## P6: xác nhận còn thiếu
+## So sánh P2 và P3
 
-Cần `circuit.py`, `faults.py`, `fault_sim.py`, netlist c17 đúng quy định
-và kết quả thực thi `detects` cho stem 11/SA0 với 01000 (PO tốt 11, lỗi 00),
-stem t/SA0 với 01 (PO tốt 1, lỗi 0). Đề nghị kiểm tra thêm 8 completions
-của X10XX. Ghi commit/code/lệnh và kết quả thật khi nhận được.
-Hiện **chờ đối chiếu**; số liệu P3/P2 không thay cho xác nhận này.
+P2 đã tích hợp; chạy lại `notes/p2_kiem_chung.py` đạt 160 ô logic,
+bốn trạng thái trace/frontier, cube 4/4 và 8/8 completions, bốn cặp PO.
+Nguồn mô tả các bước: [ghi chú P2](p2_ghi_chu.md).
+
+| Tiêu chí | D-algorithm P2 | PODEM P3/P5 |
+|---|---|---|
+| Nơi quyết định | PI và net nội bộ qua cube | PI |
+| Biện minh | Justification, J-frontier | Backtrace về PI, imply net nội bộ |
+| Tìm kiếm | Chọn cube và giải ràng buộc nội bộ | Cây quyết định nhị phân PI |
+| c17 11/SA0 | 4 lần chọn cube, 3 PI, 0 backtrack | 2 phép gán PI, 0 backtrack |
+| Pattern | X100X; tổng quát hóa thành X10XX | X10XX |
+
+Không đếm implication/tổng quát hóa là chọn cube. Không suy ra tỷ lệ tăng tốc
+4/2. P3-v1 dùng input X đầu tiên và topo ổn định, không dùng SCOAP; số liệu
+không đại diện mọi heuristic. Xấu nhất PODEM vẫn có tìm kiếm theo hàm mũ.
+
+## Lệnh tái lập
+
+Từ gốc checkout, dùng Python >=3.10; môi trường đã chạy `.venv` Python 3.12.10:
+
+```powershell
+$env:PYTHONPATH = (Join-Path (Get-Location) 'src')
+$env:PYTHONIOENCODING = 'utf-8'
+.\.venv\Scripts\python.exe -B notes/p3_doi_chieu_code.py
+.\.venv\Scripts\python.exe -B notes/p3_kiem_chung.py
+.\.venv\Scripts\python.exe -B notes/p3_kiem_tra_ban_giao.py
+.\.venv\Scripts\python.exe -B notes/p2_kiem_chung.py
+.\.venv\Scripts\python.exe -m pytest -q
+.\.venv\Scripts\python.exe -m atpg.run circuits/c17.bench --fault 11 0 --trace
+.\.venv\Scripts\python.exe -m atpg.run circuits/backtrack_example.bench --fault t 0 --trace
+.\.venv\Scripts\python.exe -m atpg.run circuits/backtrack_example.bench --fault t 0 --max-backtracks 0 --trace
+.\.venv\Scripts\python.exe -m atpg.run circuits/backtrack_example.bench --fault t 0 --max-backtracks 1 --trace
+```
+
+## Lịch sử và giới hạn
+
+Phiếu ngày 05/10 trên base `f95d609` ghi chưa nhận P5/P6 là đúng ở thời
+điểm đó; bản cũ lưu trong lịch sử Git trước bản cập nhật này. Góp ý về
+khác biệt nhãn API vẫn đúng; việc thiếu file exporter đã được P5 giải quyết.
+XOR/XNOR đã được P5 triển khai P3-v1.1, kiểm thử trong bộ 342 test; hai
+golden này không tự chứng minh XOR/branch/multiple faults đúng trên mọi mạch.
+Không nhận đã có cuộc trao đổi trực tiếp hay xác nhận cá nhân của P2/P5/P6.

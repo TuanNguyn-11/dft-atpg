@@ -34,7 +34,8 @@ SCOAP CC0/CC1 càng nhỏ thì giá trị tương ứng càng dễ đạt. Nếu
 đầu vào mang giá trị không điều khiển, có thể chọn mục tiêu khó trước để
 phát hiện bế tắc sớm. Đây là heuristic, không phải duy nhất.
 P3-v1 chỉ dùng thứ tự netlist/topo ổn định và đầu vào X đầu tiên, không dùng
-SCOAP hoặc level. Hợp đồng này là đề xuất P3, chưa được P5 xác nhận áp dụng.
+SCOAP hoặc level. Code P5 tích hợp đã áp dụng; đối chiếu API và exporter
+ngày 06/10/2026 ở `p3_doi_chieu_P5.md` ghi rõ khác biệt nhãn hành động.
 
 ## D-frontier, X-path và năm giá trị
 
@@ -74,7 +75,8 @@ Mỗi lời gọi con trả FAIL phải xóa các quyết định do nó tạo r
 thành UNTESTABLE ở mức gốc. ABORTED truyền nguyên lên cha, không thử nhánh
 khác như thể đã chứng minh thất bại. Đếm backtrack bằng số lần thực sự đảo
 PI; không đếm lần gán đầu hoặc reset. Bộ kiểm chứng P3 hiện không cài giới
-hạn backtrack: ABORTED 0/1 là kỳ vọng hợp đồng còn chờ kiểm tra bằng code P5.
+hạn backtrack; script `p3_doi_chieu_code.py` riêng đã chạy code P5 thật:
+giới hạn 0 trả ABORTED, giới hạn 1 trả DETECTED trên mạch phụ.
 
 Mạch phụ có out=(a+b)NOT(a)=NOT(a)b. Với t/SA0, out lỗi luôn bằng 0.
 a=1 kích hoạt t nhưng n=0 chặn AND cuối với mọi b. Đảo a=0 phục hồi n=1,
@@ -108,5 +110,5 @@ tiến hoặc số đo của bài báo là kết quả nhóm.
 3. Giải thích X10XX có năm bit theo thứ tự (1,2,3,6,7); X=0 cho 01000.
 4. Minh họa a=1 tự chặn đường lỗi, đảo a=0 rồi b=1; phân biệt ba hàng với
    một backtrack, ABORTED với UNTESTABLE.
-5. Nêu P2 có đơn vị đếm khác; P5/P6 còn chờ, không công bố tốc độ hoặc
-   xác nhận simulator khi chưa có dữ liệu.
+5. Nêu P2 có đơn vị đếm khác; đã đối chiếu P5/P6. API ghi thao tác vừa làm,
+   golden ghi việc kế tiếp; exporter chuẩn hóa nhãn. Không suy ra tốc độ.

@@ -57,7 +57,7 @@ $D'$, rồi qua NAND22 thành $D$. Pattern $X10XX$, 0 backtrack;
 8/8 cách điền X phát hiện lỗi tại 22. Điền X=0 được $01000$,
 PO tốt $(1,1)$, lỗi $(0,0)$. PO23 còn X trong trace là xấp xỉ bảo thủ.
 
-% P2 bb3756d: common/c17.tex chỉ chứa includegraphics, không phải float.
+% Hình common hiện là TikZ P2, không chứa figure; wrapper do P3 cung cấp.
 \begin{figure}[htbp]\centering
 \begin{minipage}{0.49\linewidth}\centering
 \IfFileExists{figures/common/c17.tex}{\resizebox{\linewidth}{!}{\input{figures/common/c17.tex}}}{%
@@ -90,8 +90,10 @@ D-algorithm cần justification các quyết định nội bộ; PODEM dùng bac
 và imply. FAN cải tiến lựa chọn bằng cấu trúc fanout và multiple backtrace
 \cite{p3_fujiwara1983}; nhóm chưa cài FAN.
 Bộ kiểm chứng P3 duyệt 32 vector c17, 4 vector mạch phụ và 22 lỗi stem;
-đạt các kỳ vọng trên. Bộ kiểm thử tích hợp đã đối chiếu trace P5 đủ bảy
-cột, hai phép gán PI trên c17 và một backtrack trên mạch phụ;
-simulator P6 xác nhận cả hai mẫu.
-Nguồn P2, khác biệt heuristic và danh sách đầu vào thiếu ở
+đạt các kỳ vọng trên. Đối chiếu API và exporter P5 đủ bảy cột:
+giá trị net khớp; API ghi thao tác vừa làm, golden ghi hành động kế tiếp.
+Exporter đã chuẩn hóa hai nhãn ở ví dụ quay lui; không đổi golden.
+Simulator P6 xác nhận cube c17 8/8 và mẫu phụ 01; giới hạn 0/1 lần lượt
+cho ABORTED/DETECTED. Số liệu chỉ áp dụng heuristic đã công bố.
+Nguồn P2 và bằng chứng đối chiếu có thể tái lập ở
 \nolinkurl{notes/p3_doi_chieu_P5.md}.

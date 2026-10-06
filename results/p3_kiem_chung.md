@@ -9,7 +9,7 @@
 - 113 phép so sánh cặp tốt/lỗi cho giá trị net xác định của hai golden trace trên mọi cách điền X đều đúng.
 - Kiểm tra bổ sung 22 lỗi stem c17: mọi pattern tham chiếu khớp oracle nhị phân, mọi hàng trace có giá trị xác định hợp lệ. Không phát sinh backtrack theo P3-v1.
 - Phạm vi không bao gồm branch fault. Không phải kết quả thực thi code P5/P6.
-- Các kỳ vọng ABORTED tại giới hạn 0 được suy ra từ hợp đồng, chưa chạy trên code P5 vì chưa nhận code đó.
+- Script tham chiếu này không kiểm giới hạn; kết quả code P5 thật và ABORTED 0/1 ở results/p3_doi_chieu_code.md (chạy notes/p3_doi_chieu_code.py).
 
 | Lỗi stem c17 | Pattern tham chiếu | Backtracks | Số vector phát hiện /32 |
 |---|---|---:|---:|

@@ -44,8 +44,12 @@ Quy định repo mới rút toàn báo cáo còn 5–10 trang, hạn 08/10/2026,
 nội bộ 05/10. Chương P3 được rút gọn; đọc thêm `p3_ly_thuyet.md` và hợp đồng
 P3-v1. Kết quả build thực tế và phần còn thiếu ghi trong `p3_review.md`.
 
-## Việc chờ nhóm
-- P1 review/tích hợp hình và chương P2; dữ liệu P2 đã được P3 đối chiếu từ branch.
-- P5 áp dụng P3-v1, gửi trace cả hai ví dụ và kết quả giới hạn 0/1.
-- P6 xác nhận vector bằng fault simulator của nhóm.
-- P1 tích hợp chương, nạp gói và .bib; P6 ghép 3 frame.
+## Trạng thái sau tích hợp — 06/10/2026, base 8564678
+- P2/P5/P6 đã tích hợp; P5 áp dụng P3-v1.1 và có exporter cả hai trace.
+- Đã chạy code thật đối chiếu 35 ô và P6 xác nhận cube 8/8, mẫu phụ 01;
+  giới hạn 0/1 đạt ABORTED/DETECTED. Xem `p3_doi_chieu_P5.md`.
+- API và golden khác cách ghi hành động; exporter đã chuẩn hóa. Không
+  nói raw trace khớp nguyên văn, không dùng tham chiếu P3 thay code P5.
+- Các ghi chú ngày 05/10 phía trên là lịch sử. P1 đã tích hợp chương/bib,
+  hình TikZ P2 và slide; còn review bản cập nhật P3, build PDF cuối và việc
+  con người trong checklist `p3_ban_giao.md`.
