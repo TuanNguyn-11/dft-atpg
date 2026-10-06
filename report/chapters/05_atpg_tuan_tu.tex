@@ -47,12 +47,15 @@ Chế độ chỉ đặt được $Q@0$ vẫn quan sát qua Y, nên khác full s
 \label{sec:p4-thuc-nghiem}
 Ba hàm \texttt{full\_scan}, \texttt{unroll} và
 \texttt{fault\_in\_frames} trong module \nolinkurl{src/atpg/unroll.py}
-giữ nguyên mạch đầu vào, tạo lại fanout và thứ tự topo. Kiểm chứng qua API thật được lưu tại
-\nolinkurl{results/p1_full_scan.md}; đối chiếu độc lập dùng
-\nolinkurl{scripts/p4_seq_experiment.py}. Full scan đạt $18/18$ lỗi stem.
-Trải khung qua CLI dùng PODEM và vét cạn chuỗi bổ sung, đạt lần lượt
-$1/18$, $13/18$, $18/18$ khi $k=1,2,3$ từ trạng thái chưa biết;
-phân nguồn cụ thể ở Chương~\ref{sec:p6-ket-qua}.
+giữ nguyên mạch đầu vào, tạo lại fanout và thứ tự topo. Mười phép thử
+\texttt{unroll} và hai phép thử tích hợp dùng API thật; kết quả full scan
+được lưu tại \nolinkurl{results/seq_integrated_full_scan.md} và đối chiếu với
+\nolinkurl{scripts/p4_seq_experiment.py}. PODEM phát hiện $18/18$ lỗi stem;
+mọi cube được simulator và oracle độc lập xác nhận, bộ mẫu sau điền $X=0$
+phủ $18/18$. Trải khung qua CLI dùng PODEM và vét cạn chuỗi bổ sung,
+đạt $1/18$, $13/18$, $18/18$ khi $k=1,2,3$ từ trạng thái chưa biết;
+phân nguồn từng hàng ở các tệp \nolinkurl{results/seq_integrated_k1.md}
+đến \nolinkurl{results/seq_integrated_k3.md} và Chương~\ref{sec:p6-ket-qua}.
 Chi tiết sơ đồ, trace và phép đối chiếu được giữ trong
 \nolinkurl{notes/p1_chi_tiet/05_atpg_tuan_tu.tex} và kết quả P4;
 mốc vét cạn độc lập không được gọi là kết quả PODEM.

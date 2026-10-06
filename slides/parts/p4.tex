@@ -39,15 +39,18 @@ Khung & $N_3$ tốt/lỗi & $D$ tốt/lỗi & $Y$ tốt/lỗi\\
   \item Với $N_3/SA0$: $A=1,B=0,Q=0$ cho $D=0/1$.
 \end{itemize}
 \begin{center}
-\begin{tabular}{@{}lcc@{}}
+\begin{tabular}{@{}lc@{}}
 \toprule
-Mô hình & Fault universe & Phát hiện\\
+Mô hình (18 stem SA) & Phát hiện bảo đảm\\
 \midrule
-Full scan, bộ vector vét cạn & 18 stem SA & 18/18\\
-Không scan, tối đa 4 khung & 18 stem SA & 18/18 (tối đa 3 khung)\\
+Full scan, bộ mẫu PODEM & 18/18\\
+Không scan, $k=1$ & 1/18\\
+Không scan, $k=2$ & 13/18\\
+Không scan, $k=3$ & 18/18\\
 \bottomrule
 \end{tabular}
 \end{center}
-\footnotesize Mốc vét cạn độc lập của P4. Full scan đã chạy lại qua
-PODEM + simulator P6: 18/18 (\texttt{results/p1\_full\_scan.md}).
+\footnotesize Full scan: PODEM và simulator, coverage của cả bộ mẫu.
+Không scan: $Q_0$ chưa biết; PODEM + vét cạn chuỗi bổ sung.
+Chi tiết và nguồn từng hàng trong \texttt{results/seq\_integrated\_*.md}.
 \end{frame}
