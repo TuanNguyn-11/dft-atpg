@@ -1,4 +1,8 @@
-# Hợp đồng trace P3 → P5 — phiên bản P3-v1, 05/10/2026
+# Hợp đồng trace P3 → P5 — phiên bản P3-v1.1, 06/10/2026
+
+Bổ sung cho lỗi số 1: [quy tắc XOR/XNOR](p3_xor_xnor.md), gồm parity,
+imply, objective lan truyền, backtrace và bốn ví dụ kỳ vọng. P3-v1.1
+kế thừa toàn bộ quy tắc P3-v1 dưới đây; hai golden trace cũ không đổi.
 
 Đây là đặc tả do P3 bàn giao để P5 triển khai, chưa phải xác nhận P5 đã áp dụng. Không thay chữ ký API của prompt.md. Phạm vi golden trace: một lỗi stem trên mạch tổ hợp AND/NAND/OR/NOR/NOT/BUFF. Phần XOR/XNOR, branch fault và danh sách lỗi trải khung thuộc phạm vi lõi chung nhưng chưa được hai golden trace này kiểm chứng.
 
@@ -14,6 +18,15 @@
 Nếu lỗi chưa kích hoạt và giá trị tại vị trí lỗi còn X, objective = (fault.net, 1-stuck_at). Nếu net đã bằng stuck_at (0/1 xác định), nhánh hiện tại thất bại. Sau kích hoạt, objective đặt một ngõ vào X của cổng D-frontier về giá trị không điều khiển: AND/NAND là 1; OR/NOR là 0.
 
 Backtrace đi từ objective về một PI chưa gán. Mỗi khi đi qua NAND/NOR/NOT, đảo giá trị mục tiêu đúng một lần; AND/OR/BUFF không đảo. Không ghi trực tiếp objective vào net nội bộ. Với AND cần 1 hoặc OR cần 0, gán một ngõ vào mới chưa chắc đủ đạt objective: imply rồi chọn objective tiếp. Quy tắc đảo này không áp dụng nguyên xi cho XOR/XNOR.
+
+**XOR/XNOR (P3-v1.1):** objective lan truyền chọn đầu vào X đầu tiên,
+ưu tiên 0. Backtrace mục tiêu đầu ra v: đặt q=0 cho XOR, q=1 cho XNOR,
+p là XOR các bit mạch tốt đã biết (D→1, D'→0). Nếu còn đúng một X,
+đưa đầu vào đó về v ⊕ q ⊕ p; nếu còn nhiều X, chọn X đầu tiên và thử 0.
+Imply rồi tính lại; không coi X còn lại là 0. Nếu không còn X, kiểm tra
+mục tiêu đã đạt/mâu thuẫn, không sinh thêm quyết định từ cổng đó.
+Không có giá trị điều khiển; sai khác có thể triệt tiêu khi nhiều D/D'
+gặp nhau. Chi tiết, điều kiện áp dụng và ví dụ ở tài liệu bổ sung.
 
 PI trong pattern chỉ là 0/1/X. Sau mỗi lần gán, đảo hoặc khôi phục PI, mô phỏng lại từ PI theo topo và cấy lỗi. Stem fault tác động đến tất cả nhánh fanout. 0=(0,0), 1=(1,1), D=(1,0), D'=(0,1), X=(X,X). Một cặp chỉ xác định được một thành phần, như (X,0), được trừu tượng hóa bảo thủ thành X trong logic 5 giá trị; không tự biến nó thành 0. Cần giữ giá trị mạch tốt trước cấy lỗi khi kiểm tra kích hoạt nếu dùng mô phỏng hai rail.
 

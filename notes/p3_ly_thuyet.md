@@ -20,8 +20,12 @@ NAND(1,D)=D', NAND(1,D')=D: sai khác tới PO22 sau hai phép gán.
 
 Một lần backtrace không nhất thiết đạt objective ngay. AND cần ra 1 phải
 đưa mọi đầu vào về 1; sau một quyết định PI, imply rồi tiếp tục chọn mục tiêu.
-Các cổng XOR/XNOR cần xử lý parity riêng; không dùng quy tắc cổng đơn điệu
-để tuyên bố đã hỗ trợ chúng.
+Các cổng XOR/XNOR dùng `y = XOR(các đầu vào) ⊕ q`, với q=0/1 tương ứng.
+Backtrace mục tiêu y=v khi chỉ còn một X dùng `v ⊕ q ⊕ p`, với p là
+parity các bit tốt đã biết. Khi còn nhiều X, ưu tiên X đầu tiên bằng 0,
+imply rồi tính lại. Objective lan truyền cũng thử X đầu tiên bằng 0;
+không gọi đó là giá trị không điều khiển. Bảng logic, trường hợp triệt
+tiêu D/D' và bốn ví dụ nằm trong [bổ sung P3-v1.1](p3_xor_xnor.md).
 
 ## Controllability và heuristic
 
