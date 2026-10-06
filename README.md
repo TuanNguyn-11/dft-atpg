@@ -6,13 +6,13 @@ Repo chung của nhóm gồm báo cáo LaTeX, slide và chương trình minh h�
 
 ## Trạng thái
 
-**Trạng thái hiện tại (P1, 06/10/2026):** PR P6 #11 và P1 #12 đã merge; đã phát hành [release `v1.0`](https://github.com/TuanNguyn-11/dft-atpg/releases/tag/v1.0) tại `99bd39a`. Sau đó merge PR P2 #14 và P4 #15 (bằng chứng tích hợp, cập nhật Chương 5/slide P4); PDF build lại, phát hành `v1.0.1`; sau đó sửa bìa (Bộ môn Kỹ thuật Máy tính) và thụt lề đoạn, phát hành `v1.0.2`; sau đó dàn lại Hình 3.1, phát hành `v1.0.3`; sau đó tách danh mục viết tắt ra trang riêng (số La Mã), Chương 1 bắt đầu trang 1, phát hành `v1.0.4` — bản dùng để nộp.
+**Trạng thái hiện tại (P1, 06/10/2026):** PR P6 #11 và P1 #12 đã merge; đã phát hành [release `v1.0`](https://github.com/TuanNguyn-11/dft-atpg/releases/tag/v1.0) tại `99bd39a`. Sau đó merge PR P2 #14 và P4 #15 (bằng chứng tích hợp, cập nhật Chương 5/slide P4); PDF build lại, phát hành `v1.0.1`; sau đó sửa bìa (Bộ môn Kỹ thuật Máy tính) và thụt lề đoạn, phát hành `v1.0.2`; sau đó dàn lại Hình 3.1, phát hành `v1.0.3`; sau đó tách danh mục viết tắt ra trang riêng (số La Mã), Chương 1 bắt đầu trang 1, phát hành `v1.0.4`; sau đó merge nhánh P5 (exporter trace, cập nhật Chương 6/slide P5, P1 biên tập cho vừa trang), phát hành `v1.0.5` — bản dùng để nộp.
 
-- Code P2–P6 đã tích hợp; CLI `python -m atpg.run` chạy được. `pytest` đạt **334 passed** trên Python 3.12.15/pytest 9.1.1 (mốc review trên main: 302; tăng do test tích hợp P6 và P4).
+- Code P2–P6 đã tích hợp; CLI `python -m atpg.run` chạy được. `pytest` đạt **342 passed** trên Python 3.12.15/pytest 9.1.1 (mốc review trên main: 302; tăng do test tích hợp P6, P4 và exporter trace P5).
 - Số liệu thực đo: c17 PODEM 34/34 lỗi gốc, 22/22 đại diện sau gộp; nén 34→7 hoặc 22→6 pattern. Full scan 18/18 lỗi stem qua API thật. Trải khung từ trạng thái đầu chưa biết: 1/18, 13/18, 18/18 tại k=1,2,3 (PODEM kết hợp vét cạn chuỗi bổ sung, không phải PODEM thuần).
 - Báo cáo 8 chương đã biên tập về 14 trang PDF (2 bìa + mục lục trang i + danh mục viết tắt trang ii + 10 trang đánh số từ Chương 1; nội dung ~9 trang, tài liệu tham khảo trang 9–10). Slide 19 trang: bìa + 18 frame của 6 người. `scripts/build_documents.ps1` PASS cục bộ.
 - Chương 7/slide P6 đã merge vào `main` (PR #11). P1 rút gọn Chương 5–7 để vừa số trang; bản chi tiết gốc ở `notes/p1_chi_tiet/`, P4/P5/P6 nên đọc lại.
-- **Còn thiếu:** P1 duyệt PDF cuối, video Hình 4.5 (mới có kịch bản/lời giải, **chưa có bằng chứng đã quay**), xác nhận giờ/kênh/định dạng nộp, diễn tập 20 phút, nộp bài. Nếu sửa tiếp nội dung, phát hành bản vá mới (`v1.0.5`…).
+- **Còn thiếu:** P1 duyệt PDF cuối, video Hình 4.5 (mới có kịch bản/lời giải, **chưa có bằng chứng đã quay**), xác nhận giờ/kênh/định dạng nộp, diễn tập 20 phút, nộp bài. Nếu sửa tiếp nội dung, phát hành bản vá mới (`v1.0.6`…).
 
 Tái lập toàn bộ kiểm chứng P1 (test, kiểm chứng P2/P3/P4, demo CLI, full scan qua API thật):
 

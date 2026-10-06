@@ -2,103 +2,36 @@
 \label{sec:p5-cai-dat-podem}
 \textbf{Kiến trúc.}
 Lõi P5 hiện thực PODEM~\cite{p3_goel1981}, nhận \texttt{Circuit},
-\texttt{Fault}, giới hạn backtrack và tùy chọn trace. Mô phỏng năm giá trị
-$0,1,X,D,D'$ theo topo sau mỗi lần đổi PI; pattern PI chỉ chứa $0,1,X$.
-Luồng tìm kiếm gồm imply, kiểm tra PO/khả thi, objective, backtrace,
-gán PI và quay lui. Chọn cổng và đầu vào theo thứ tự ổn định, chưa dùng SCOAP.
+\texttt{Fault}, giới hạn quay lui \texttt{max\_backtracks} (mặc định 1000)
+và tùy chọn trace. Sau mỗi lần gán PI, \texttt{imply} khởi tạo PI chưa gán
+bằng $X$, cấy lỗi và mô phỏng năm giá trị $0,1,X,D,D'$ theo thứ tự topo;
+pattern PI chỉ chứa $0,1,X$. \texttt{unroll} của P4 biến mạch tuần tự thành
+mạch tổ hợp nhiều khung; \texttt{run} của P6 đọc netlist, gọi PODEM và kiểm
+tra kết quả bằng \texttt{fault\_sim}. Cổng và đầu vào được chọn theo thứ tự
+netlist ổn định, chưa dùng SCOAP.
 
-\textbf{Kiến trúc.}
-PODEM nhận \texttt{Circuit}, \texttt{Fault} và giới hạn quay lui; sau mỗi
-lần gán PI, hàm \texttt{imply} mô phỏng logic năm giá trị theo thứ tự topo.
-\texttt{unroll} của P4 biến mạch tuần tự thành mạch tổ hợp nhiều khung;
-\texttt{run} của P6 đọc netlist, gọi PODEM và kiểm tra kết quả bằng
-\texttt{fault\_sim}. Luồng tìm kiếm của PODEM theo thuật toán
-Goel~\cite{p5_goel1981}.
+\textbf{Objective và backtrace.}
+Trước kích hoạt, objective yêu cầu net lỗi bằng giá trị ngược stuck-at.
+Sau kích hoạt, PODEM chọn cổng D-frontier đầu tiên còn X-path tới PO và
+input $X$ đầu tiên của nó; AND/NAND cần 1, OR/NOR cần 0 để truyền sai biệt.
+Backtrace đưa mục tiêu về PI: NAND/NOR/NOT đảo giá trị, AND/OR/BUFF giữ
+nguyên. Với XOR/XNOR, objective lan truyền chọn input $X$ đầu tiên và thử 0;
+khi backtrace gặp cổng còn đúng một $X$, giá trị được tính từ parity rail tốt
+đã biết ($D\mapsto1$, $D'\mapsto0$; $q=0$ với XOR, $q=1$ với XNOR). Còn nhiều
+$X$ thì chọn $X$ đầu tiên, thử 0 và để imply tính lại, không giả định các
+$X$ còn lại bằng 0.
 
-\begin{center}
-\begin{tikzpicture}[>=Latex, node distance=13mm,
-  box/.style={draw,rounded corners,align=center,inner sep=4pt}]
-  \node[box] (bench) {mạch \,\texttt{.bench}};
-  \node[box,right=of bench] (podem) {\texttt{podem}\\Objective, backtrace, imply};
-  \node[box,right=of podem] (sim) {\texttt{fault\_sim}\\kiểm tra độc lập};
-  \node[box,above=of podem] (run) {\texttt{run}\\đọc vào, điều phối};
-  \node[box,below=of podem] (unroll) {\texttt{unroll} (P4)\\mở rộng khung tuần tự};
-  \draw[->] (bench) -- (podem);
-  \draw[->] (podem) -- (sim);
-  \draw[->] (run) -- (podem);
-  \draw[->] (bench) |- (run);
-  \draw[->] (unroll) -- (podem);
-\end{tikzpicture}
-\end{center}
-
-\textbf{Imply, objective và backtrace.}
-Imply khởi tạo PI chưa gán bằng $X$, cấy lỗi và tính lại các net theo topo.
-Trước kích hoạt, objective yêu cầu net lỗi bằng giá trị đối lập với
-stuck-at. Sau kích hoạt, PODEM chọn cổng D-frontier đầu tiên còn X-path tới
-PO và chọn input $X$ đầu tiên theo thứ tự trong netlist; AND/NAND cần 1,
-OR/NOR cần 0 để truyền sai biệt. Backtrace đưa mục tiêu qua gate về PI:
-NAND/NOR/NOT đảo giá trị, AND/OR/BUFF giữ nguyên.
-
-Với XOR/XNOR, objective lan truyền chọn input $X$ đầu tiên và thử 0.
-Ở bước backtrace, khi còn đúng một $X$, giá trị được tính từ parity của
-rail tốt đã biết ($D\mapsto1$, $D'\mapsto0$; $q=0$ với XOR, $q=1$ với
-XNOR). Nếu còn nhiều $X$, chọn $X$ đầu tiên và thử 0; imply sau đó tính
-lại trạng thái, không giả định các $X$ còn lại bằng 0.
-
-\begin{verbatim}
-values = imply(circuit, pattern, fault)
-objective = choose_objective(values, fault)
-pi, bit = backtrace(circuit, values, objective)
-decision_stack.push(pi, bit)
-pattern[pi] = bit
-if branch_failed:
-    if backtracks == max_backtracks: return ABORTED
-    decision_stack.backtrack()  # bỏ con, đảo PI gần nhất
-    imply(circuit, pattern, fault)
-\end{verbatim}
-
-Khi nhánh thất bại, decision stack bỏ các quyết định con rồi đảo PI gần
-nhất còn giá trị chưa thử; PODEM imply lại toàn mạch từ pattern mới.
-Trace xuất một hàng cho mỗi lần gán hoặc đảo PI. Hành động \texttt{backtrack}
-được ghi ở hàng dẫn đến ngõ cụt; hàng đảo quyết định dùng \texttt{—} cho
-objective/backtrace. Quy ước này khớp hợp đồng trace P3.
-
-\textbf{Trace và điều kiện dừng.}
-Bảng~\ref{tab:p5-trace} rút gọn trace chạy trên c17; file Markdown có đủ
-bảy cột, metadata và các net ở từng bước
-(\href{../results/trace_c17_11sa0.md}{trace đầy đủ}).
-
-\begin{table}[H]
-\centering\small
-\caption{Trace PODEM thật cho c17, 11/SA0}
-\label{tab:p5-trace}
-\begin{tabular}{cclll}
-\hline
-Bước & Objective & Gán PI & Net tiêu biểu & Hành động\\
-\hline
-1 & $(11,1)$ & $3=0$ & $11=D$, frontier $\{16,19\}$ & tiếp tục\\
-2 & $(2,1)$ & $2=1$ & $16=D'$, $22=D$ & thành công\\
-\hline
-\end{tabular}
-\end{table}
-
-PODEM dừng thành công khi PO có $D$ hoặc $D'$. Sau kích hoạt lỗi, nhánh
-không còn D-frontier có X-path bị loại. Hết toàn bộ cây quyết định cho kết
-quả \texttt{UNTESTABLE}; chạm \texttt{max\_backtracks} cho kết quả
-\texttt{ABORTED}, không phải \texttt{UNTESTABLE}. Mặc định giới hạn là
-1000 lần đảo nhánh. Giới hạn này kiểm soát thời gian tìm kiếm, không khẳng
-định mọi vector đều đã được thử.
-
-\textbf{Kết quả và giới hạn.}
-Trên c17 (5 PI, 6 cổng NAND), lỗi 11/SA0 cho $X10XX$, 0 backtrack;
-mạch phụ P3 (2 PI, 3 cổng) cho $01$, 1 backtrack. Mạch tuần tự P4 (2 PI,
-6 cổng tổ hợp, 1 DFF) được kiểm trên các bản unroll $k=1,2,3$; lỗi được
-trải theo danh sách fault-frame. $Q@0$ là PI giả định, nên trạng thái đầu
-chưa biết được báo riêng theo kết quả bảo đảm hoặc có điều kiện. Các số đo
-này giới hạn ở mạch và fault đã nêu; chưa hỗ trợ nhánh fault qua DFF, FAN
-hay heuristic SCOAP.
-Logic năm giá trị được trình bày theo mô hình trong giáo trình
-\cite[Ch.~3--4]{p5_wang2006}.
+\textbf{Quay lui, trace và điều kiện dừng.}
+Khi nhánh thất bại, decision stack bỏ các quyết định con, đảo PI gần nhất
+còn giá trị chưa thử rồi imply lại toàn mạch. Trace xuất một hàng bảy cột
+cho mỗi lần gán hoặc đảo PI; hàng dẫn tới ngõ cụt ghi \texttt{backtrack},
+hàng đảo quyết định dùng ``—'' cho objective/backtrace, khớp hợp đồng P3.
+Trace thật trên c17 trùng hai bước ở Bảng~\ref{tab:p3-c17}; bản đầy đủ tái
+sinh bằng \nolinkurl{scripts/export_podem_trace.py}.
+PODEM trả \texttt{DETECTED} khi PO có $D/D'$; sau kích hoạt, nhánh không còn
+D-frontier có X-path bị loại. Hết cây quyết định là \texttt{UNTESTABLE};
+chạm \texttt{max\_backtracks} là \texttt{ABORTED}, không phải
+\texttt{UNTESTABLE}, vì chưa thử hết mọi vector.
 
 \textbf{Cấy lỗi và fault-frame.}
 Stem tác động mọi fanout; branch chỉ tác động ngõ vào cổng đích.
@@ -108,9 +41,11 @@ fault-instance; objective/backtrace lần lượt chọn fault-frame làm mục 
 PODEM có thể gán $Q@0$, nên bộ kiểm chứng tuần tự phải phân biệt kết quả
 có điều kiện và chuỗi bảo đảm, không tự coi trạng thái đầu là điều khiển được.
 
-\textbf{Kết quả kiểm thử.}
+\textbf{Kiểm thử và giới hạn.}
 Logic năm giá trị và xử lý lỗi theo mô hình trong giáo trình
-\cite[Ch.~3--4]{p5_wang2006}. Trên checkout tích hợp ngày 06/10/2026,
-toàn bộ bộ test đạt \textbf{342 passed} trên Python 3.14.8/pytest 9.1.1;
-riêng logic và PODEM đạt 255 passed. Đây là số đo của toàn repo, không
-chỉ riêng P5.
+\cite[Ch.~3--4]{p1_wang2006}. Ngày 06/10/2026, toàn repo đạt 342 test
+(Python 3.12.15 và 3.14.8, pytest 9.1.1), riêng logic và PODEM 255 test.
+Với c17 $11/SA0$: $X10XX$, 0 backtrack, hai phép gán PI; mạch phụ P3
+$t/SA0$: $01$, một backtrack (giới hạn 0 trả \texttt{ABORTED}). Simulator
+P6 độc lập xác nhận các mẫu. Chưa hỗ trợ lỗi nhánh qua DFF, FAN hay
+heuristic SCOAP.

@@ -6,12 +6,12 @@ Che do: trang thai dau Q@0 CHUA BIET (khong scan/reset). `DETECTED` nghia la pha
 
 - Lenh tai tao (tu goc repo, PYTHONPATH=src): `python -m atpg.run circuits/seq_example.bench --unroll 3 --all --md results/p1_seq_k3.md`
 - Python 3.12.15 (CPython), Windows 11
-- Commit ma nguon: cb2be0e
-- Thoi diem chay: 2026-10-06T20:36:39
+- Commit ma nguon: b107d79
+- Thoi diem chay: 2026-10-06T22:06:29
 - Thu tu PI trong cot pattern: A, B
 - Pham vi loi: 18 loi stem vat ly, moi loi cay vao ca 3 khung
 - Nguon pattern theo hang (cot Thuat toan): PODEM, vet can chuoi (tham chieu)
-- Tong thoi gian (sinh + kiem chung bao dam): 0.0389 s (time.perf_counter). So do phu thuoc may chay.
+- Tong thoi gian (sinh + kiem chung bao dam): 0.0398 s (time.perf_counter). So do phu thuoc may chay.
 
 Pham vi: 18 loi stem vat ly cua seq_example (moi net 2 loi), moi loi duoc sao sang ca 3 khung; khong gop loi (equivalence cua mach to hop khong mac nhien dung cho mach tuan tu), khong co loi nhanh, mau so = 18.
 
