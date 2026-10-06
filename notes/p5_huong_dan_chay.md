@@ -1,5 +1,78 @@
 # Hướng dẫn chạy P5 — PODEM
 
+## Trạng thái hiện tại sau merge — 06/10/2026
+
+Đang ở branch `p5-podem-code`, merge commit
+`6a5d0153c6e961b1de0a5d1ed379699829aa87d3` (P5 `94ee04a` + main
+`53374fb`). Checkout này đã có Circuit/Fault, `run`, fault simulator,
+`unroll` và hai bench thật; các lệnh dưới đây chạy trực tiếp tại repo root.
+
+### Môi trường đã kiểm tra
+
+- Python 3.14.8; pytest 9.1.1.
+- PowerShell:
+
+```powershell
+$env:PYTHONPATH = (Join-Path (Get-Location) 'src')
+$env:PYTHONIOENCODING = 'utf-8'
+```
+
+### Kiểm chứng đã chạy trên checkout hiện tại
+
+```powershell
+.\.venv\Scripts\python.exe -m pytest tests/test_logic.py tests/test_podem.py -q
+.\.venv\Scripts\python.exe -m atpg.run circuits/c17.bench --fault 11 0 --trace
+.\.venv\Scripts\python.exe -m atpg.run circuits/backtrack_example.bench --fault t 0 --trace
+.\.venv\Scripts\python.exe -m pytest -q
+```
+
+- Logic/PODEM: **255 passed**.
+- Toàn repo: **342 passed, 0 skipped**.
+- c17 `11/SA0`: `DETECTED`, `X10XX`, 0 backtrack; fault simulation xác nhận.
+- `backtrack_example` `t/SA0`: `DETECTED`, `01`, 1 backtrack; fault simulation xác nhận.
+
+Kiểm tra tích hợp/review chéo:
+
+```powershell
+.\.venv\Scripts\python.exe -m pytest tests/test_integration.py tests/test_p4_integration.py tests/test_input_validation.py -q
+.\.venv\Scripts\python.exe notes/p2_kiem_chung.py --integrated
+```
+
+- Tích hợp PODEM/P4/P6/input validation: **32 passed**.
+- P2: Markdown đối chiếu `atpg.logic.eval_gate` **160/160**; `X100X` **4/4** và `X10XX` **8/8** cách điền được phát hiện; vector `01000` cho PO tốt `(1,1)` và PO lỗi `(0,0)`.
+- `test_sequential.py` có fixture tham chiếu tắt PODEM. Bằng chứng gọi PODEM thật qua unroll là `test_sequential_with_real_podem_and_unroll` trong `tests/test_integration.py`; P4 kiểm thêm trong `tests/test_p4_integration.py`.
+- P6 validation: test từ chối SV=2, net sai, branch không tồn tại hoặc không nối với net. Đây là xác nhận trên code P6 đã merge, không phải thay đổi P5.
+
+### Tái sinh trace P5
+
+```powershell
+.\.venv\Scripts\python.exe scripts/export_podem_trace.py --bench circuits/c17.bench --fault 11 0 --output results/trace_c17_11sa0.md
+.\.venv\Scripts\python.exe scripts/export_podem_trace.py --bench circuits/backtrack_example.bench --fault t 0 --output results/trace_backtrack.md
+```
+
+Hai lệnh đã chạy thành công trên checkout này. Exporter gọi `podem(trace=True)`;
+các hàng được dựng từ `PodemResult.steps`, có đúng 7 cột, ổn định theo thứ tự
+PI/net. Test xác nhận xuất lặp lại, trạng thái backtrack/ABORTED và lỗi đầu vào/
+ghi file. Trace mạch phụ ghi hàng `a=1` là `backtrack`; hàng đảo `a=0` có
+Objective/Backtrace `—`, net `t=X,n=1,out=X`, hành động `tiếp tục`.
+Golden trace P3 trong `results/golden_trace_*.md` được giữ nguyên.
+
+### Bàn giao còn mở
+
+- Chưa build XeLaTeX/Biber (`xelatex`, `biber` không có trong PATH).
+- Cần P2 xác nhận trực tiếp khi phối hợp; kiểm tra độc lập 160/160 đã chạy,
+  nhưng không được xem là lời xác nhận của thành viên.
+- P1 biên tập/dàn trang cuối; nhóm tập demo/thuyết trình 20 phút và P1 làm
+  video 2–3 phút; xác nhận giờ/kênh nộp trước hạn 08/10/2026.
+- Merge commit đang local; push chưa hoàn tất do thao tác push cần quyền đã
+  bị từ chối.
+
+## Hướng dẫn lịch sử trước merge
+
+Phần dưới được giữ làm hướng dẫn/ghi nhận của snapshot cũ. Các nhận định rằng
+checkout P5 thiếu Circuit/bench hoặc chưa merge main và các con số 265/5
+skipped, 340 thuộc về những snapshot lịch sử, không mô tả checkout hiện tại.
+
 ## Môi trường
 
 - Python **3.10 trở lên** và `pytest`.

@@ -151,7 +151,11 @@ $env:PYTHONPATH = "src"
 python -m pytest -q
 ```
 
-## Cập nhật trạng thái P5 — 06/10/2026
+## Lịch sử trạng thái trước merge — 06/10/2026
+
+Phần dưới ghi lại kết quả trên checkout P5 trước khi tích hợp `origin/main`.
+Các câu “không merge”, thiếu Circuit/CLI và số test snapshot tạm chỉ mô tả
+trạng thái lịch sử; xem **Trạng thái hiện tại sau merge** ở cuối file.
 
 ### Cơ sở và phạm vi
 
@@ -190,7 +194,7 @@ python -m pytest -q
 - **Kiểm chứng:** ghi rõ lệnh và kết quả tại `notes/p5_huong_dan_chay.md`; tách test P5 trên checkout khỏi test tích hợp snapshot.
 - **Giới hạn:** exporter cần các module Circuit/Fault/CLI của snapshot tích hợp; P1 quyết định rút gọn/dàn trang cuối; phần demo/trình bày/nộp do người trong nhóm thực hiện.
 
-### Checklist P5
+### Checklist P5 tại snapshot trước merge
 
 - [x] P5-01 exporter, trace c17/backtrack, tính lặp lại, 7 cột và trạng thái ABORTED: đạt trên snapshot tích hợp; test CLI trên branch riêng được skip do thiếu module P6.
 - [x] P5-02 Chương 6 và ba frame P5: đã thêm kiến trúc, mã giả, quy tắc XOR/XNOR, bảng trace, giới hạn, citation và số test đúng phạm vi.
@@ -198,3 +202,42 @@ python -m pytest -q
 - [x] P5-03 ghi chú chạy, môi trường, evidence; P4/P6 review và tuần tự PODEM thật: đã kiểm tra qua review artifacts/tests trên snapshot tích hợp.
 - [x] P5-03 160 ô logic P2: review P2 đã lưu ghi 160/160 PASS; không có xác nhận cá nhân mới ngoài artifact đó.
 - [ ] Người thực hiện: P1 biên tập/dàn trang cuối; thành viên phụ trách demo, luyện thuyết trình và nộp bài.
+
+## Trạng thái hiện tại sau merge — 06/10/2026
+
+### Cơ sở hiện tại
+
+- Branch: `p5-podem-code`; merge commit local `6a5d0153c6e961b1de0a5d1ed379699829aa87d3` có hai parent là P5 `94ee04aaee6fccc93bb1fdd583a56d3ffe7987d3` và `origin/main` `53374fbf3f2a1b4bc711db312d4bdbf4c43ffd46`.
+- Mã nguồn sau merge có `Circuit`, `Fault`, `fault_sim`, `run`, `unroll` và bench thật; lệnh CLI/exporter chạy trực tiếp trên checkout tích hợp, không còn dùng snapshot overlay.
+- API PODEM vẫn là `podem(c, fault, max_backtracks=1000, trace=False)`; không đổi các trường `PodemResult`.
+
+### Bằng chứng chạy lại
+
+- Môi trường: Python 3.14.8, pytest 9.1.1, Windows; `PYTHONPATH=src`, `PYTHONIOENCODING=utf-8`.
+- `python -m pytest tests/test_logic.py tests/test_podem.py -q`: **255 passed**.
+- `python -m pytest -q`: **342 passed**, **0 skipped**. Lần chạy cần quyền truy cập thư mục tạm của pytest; không có lỗi test.
+- `python -m pytest tests/test_integration.py tests/test_p4_integration.py tests/test_input_validation.py -q`: **32 passed**. Bao gồm PODEM thật cùng unroll, full-scan P4, fault validation P6 và test CLI tích hợp.
+- `python notes/p2_kiem_chung.py --integrated`: **160/160** ô Markdown khớp `atpg.logic.eval_gate`; cube `X100X` phát hiện **4/4**, `X10XX` **8/8**, và vector `01000` cho PO tốt `(1,1)`, PO lỗi `(0,0)`.
+- Hai CLI nghiệm thu: c17 `11/SA0` → `DETECTED`, `X10XX`, 0 backtrack; backtrack `t/SA0` → `DETECTED`, `01`, 1 backtrack. Cả hai đều được fault simulation xác nhận.
+- Hai lệnh exporter sinh lại trace thành công. Mỗi bảng có đúng 7 cột; `scripts/export_podem_trace.py` duyệt `result.steps`, không hard-code các hàng. Test exporter kiểm tính lặp lại, hành động backtrack, trạng thái `ABORTED`, SV sai và lỗi ghi file.
+- Nội dung trace P3 được giữ nguyên; quy ước nhãn backtrack đối chiếu với `notes/p3_quy_tac_P5.md` và kiểm tra qua test exporter/integration. Hai trace P5 không ghi đè `results/golden_trace_*.md`.
+- P4: `tests/test_p4_integration.py` kiểm full-scan 18 lỗi bằng PODEM thật, simulator và oracle; `tests/test_integration.py` kiểm `unroll`/fault-frame k=1–3.
+- P6: `tests/test_input_validation.py` xác nhận từ chối SV=2, net sai và branch không tồn tại/không nối đúng. Đây là phần validation P6; P5 exporter tự kiểm tra SV/fault trước khi ghi.
+- `test_sequential.py` vẫn có fixture tham chiếu tắt PODEM, nên không dùng file đó đơn lẻ làm bằng chứng. Bằng chứng PODEM tuần tự thật là `test_sequential_with_real_podem_and_unroll` trong `tests/test_integration.py` cùng test P4 tích hợp.
+
+### Checklist cập nhật feedback
+
+- [x] P5-01: exporter dùng Circuit/PODEM thật, giao diện `--bench/--fault/--output`, trace 7 cột, dữ liệu từ steps, thứ tự ổn định, kiểm lặp lại/lỗi/ABORTED; hai artifact tái sinh.
+- [x] P5-02: Chương 6 có sơ đồ kiến trúc, mã giả, XOR/XNOR tách Objective/Backtrace, trace thật, X-path/điều kiện dừng, giới hạn multi-frame/kích thước mạch, citation và số liệu tích hợp đúng phạm vi; slide có 3 frame kiến trúc/trace/kết quả.
+- [ ] Build XeLaTeX/Biber: chưa chạy, `xelatex` và `biber` không có trong PATH tại checkout này.
+- [x] P5-03: P4/P6 và tích hợp tuần tự được chạy kiểm tra trên code đã merge; P2 được kiểm lại bằng script tích hợp 160/160.
+- [ ] Xác nhận trực tiếp từ thành viên P2: chưa có trong lượt này; bằng chứng 160/160 ở trên là kiểm tra độc lập có thể tái lập, không thay thế xác nhận cá nhân.
+- [ ] Việc con người: P1 biên tập/dàn trang cuối; nhóm tập demo/thuyết trình 20 phút; P1 làm video 2–3 phút; xác nhận giờ/kênh nộp trước hạn 08/10/2026.
+
+### Bàn giao PR đề xuất
+
+- **Vấn đề:** thiếu lệnh tái sinh trace; Chương 6/slide thiếu mô tả triển khai và bằng chứng thực nghiệm đồng bộ với code tích hợp.
+- **Thay đổi:** exporter và test tái lập; hai trace P5; cập nhật Chương 6, slide và ghi chú chạy/bằng chứng sau merge.
+- **Kiểm chứng:** 342 test toàn repo; 255 test logic/PODEM; 32 test integration/P4/input validation; P2 Markdown-to-logic 160/160; hai CLI và hai exporter thành công.
+- **Giới hạn:** chưa build XeLaTeX/Biber; lỗi branch qua DFF, FAN, SCOAP không thuộc phạm vi; P1/nhóm còn các đầu việc con người bên trên.
+- **Trạng thái Git:** merge commit hiện có trong checkout local. Push chưa hoàn tất do yêu cầu cấp quyền push bị từ chối; không ghi nhận là đã push.
