@@ -1,5 +1,38 @@
 # Biên bản kiểm tra P3 — 05/10/2026
 
+## Bổ sung 06/10/2026 — lỗi số 1: thiếu quy tắc XOR/XNOR
+
+- Đọc lại prompt.md/P3.md và sản phẩm P3. Xác nhận P3-v1 chỉ cảnh báo
+  cần parity riêng, chưa cung cấp quy tắc đủ để P5 triển khai.
+- Đối chiếu nhánh P5 tại `92845c3aeeba3ab802ac748107d3e72b28acd1d6`:
+  objective bỏ qua XOR/XNOR với chú thích P3-v1 chưa quy định;
+  backtrace báo chưa hỗ trợ loại cổng. Góp ý thiếu lý thuyết là có cơ sở.
+- Bổ sung `notes/p3_xor_xnor.md`, nâng hợp đồng lên P3-v1.1,
+  cập nhật lý thuyết, bàn giao và Chương 4 (nhãn `sec:p3-xor-xnor`).
+  Có parity nhiều đầu vào, logic tốt/lỗi, triệt tiêu, objective,
+  backtrace một/nhiều X và bốn ví dụ có kết quả kỳ vọng.
+- Kiểm tra trực tiếp bảng Markdown bằng Python: 30 ô kết quả đúng;
+  duyệt 2.720 trường hợp parity/triệt tiêu với 2–5 đầu vào đã xác định,
+  kiểm tra công thức backtrace bit cuối và trạng thái cuối bốn ví dụ.
+  Đây là kiểm tra đại số độc lập, không phải chạy lõi P5.
+- Chạy lại `python -B notes/p3_kiem_chung.py` và
+  `python -B notes/p3_kiem_tra_ban_giao.py`: PASS; hai golden trace không đổi.
+  Nhánh P3 chưa tích hợp netlist P6 nên kiểm tra bàn giao vẫn báo PENDING c17.
+- Build bản sao khung report bằng XeLaTeX → Biber → XeLaTeX hai lượt:
+  exit 0, PDF 13 trang; không thiếu ký tự, citation hoặc reference.
+  Vẫn còn cảnh báo font mono đậm P4, hai overfull P4 và overfull nhỏ
+  bibliography như biên bản cũ. Không có overfull trong phần bổ sung P3.
+  Biber ban đầu gọi nhầm kpsewhich của MiKTeX; chạy lại với PATH riêng
+  của tiến trình ưu tiên TeX Live đã thành công, không đổi PATH hệ thống.
+  PDF/log ở `.p3-work/xor-review/report` ngoài repo, không commit.
+- Đã có nhánh P5/P6 trên remote ngày 06/10; các ghi nhận “chưa có nhánh”
+  bên dưới và trong phiếu đối chiếu là snapshot ngày 05/10. Phiên bổ sung
+  này không xác nhận hoàn tất đối chiếu lõi P5/P6 hoặc sửa code của họ.
+- Đồng bộ fast-forward từ main `d8b254c` trước bổ sung. Không sửa file
+  thuộc P1/P2/P4/P5/P6 và không sửa các bản bàn giao cũ ngoài repo.
+
+Các mục tiếp theo là biên bản lịch sử ngày 05/10.
+
 ## Đầu vào và phạm vi
 
 - Đọc đầy đủ `DFT_ATPG/prompt.md` (không tìm thấy file tên `prompt(1).md`),

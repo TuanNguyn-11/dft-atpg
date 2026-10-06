@@ -1,5 +1,9 @@
 # Bàn giao P3 — 05/10/2026
 
+**Bổ sung 06/10/2026:** bàn giao [quy tắc XOR/XNOR P3-v1.1](p3_xor_xnor.md)
+để xử lý thiếu sót lý thuyết ở lỗi số 1. Đọc kèm hợp đồng đã cập nhật;
+hai golden trace vẫn dùng các lựa chọn P3-v1. Chưa xác nhận P5 đã áp dụng.
+
 P3 cung cấp lý thuyết PODEM, hợp đồng lựa chọn P3-v1, hai golden trace,
 mạch backtrack, chương báo cáo ngắn, ba slide, hình TikZ và kiểm chứng
 độc lập. Chưa hoàn tất toàn bộ tiêu chí vì thiếu trace/code P5 và simulator P6.

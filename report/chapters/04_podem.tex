@@ -12,7 +12,21 @@ sau kích hoạt, chọn đầu vào X của D-frontier về giá trị không �
 \emph{Backtrace} đưa mục tiêu về PI chưa gán, đảo bit qua NAND/NOR/NOT;
 \emph{imply} tính lại toàn mạch bằng logic $0,1,X,D,\overline D$.
 P3-v1 chọn cổng theo topo ổn định và đầu vào X đầu tiên trong netlist,
-không dùng SCOAP. XOR/XNOR cần xử lý parity riêng.
+không dùng SCOAP.
+
+\textbf{Bổ sung XOR/XNOR (P3-v1.1).}
+\label{sec:p3-xor-xnor}
+Đặt $y=x_1\oplus\cdots\oplus x_n\oplus q$, với $q=0$ cho XOR,
+$q=1$ cho XNOR. Backtrace mục tiêu $y=v$: nếu chỉ còn một đầu vào X,
+giá trị cần tại đó là $v\oplus q\oplus p$, trong đó $p$ là parity
+các bit mạch tốt đã biết ($D\mapsto1$, $\overline D\mapsto0$).
+Nếu còn nhiều X, chọn X đầu tiên và thử 0, imply rồi tính lại.
+Objective lan truyền cũng ưu tiên X đầu tiên bằng 0; XOR/XNOR không có
+giá trị điều khiển. Ví dụ $D\oplus0=D$, $D\oplus1=\overline D$,
+nhưng $D\oplus D=0$: nhiều nhánh lỗi có thể triệt tiêu.
+XNOR đảo kết quả XOR đúng một lần. Quy tắc, bảng và ví dụ chi tiết ở
+\nolinkurl{notes/p3_xor_xnor.md}; đây là đặc tả bổ sung, chưa xác nhận
+P5 đã triển khai.
 
 \textbf{Dừng và quay lui.}
 Có $D/\overline D$ ở PO thì thành công. Khi lỗi đã kích hoạt nhưng không
