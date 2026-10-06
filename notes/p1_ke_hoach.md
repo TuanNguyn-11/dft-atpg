@@ -2,7 +2,7 @@
 
 ## Trạng thái hiện tại — 06/10/2026
 
-PR P6 #11, P1 #12, P2 #14, P4 #15 đã merge; release `v1.0` tại `99bd39a`, `v1.0.1` sau khi build lại PDF.
+PR P6 #11, P1 #12, P2 #14, P4 #15 đã merge; release `v1.0` tại `99bd39a`, `v1.0.1` sau khi build lại PDF, `v1.0.2` sau khi sửa bìa và thụt lề (bản nộp).
 
 - Code P2–P6 đã tích hợp, CLI `python -m atpg.run` chạy được; pytest 334 passed sau PR #14, #15 (mốc review trên main: 302). Bằng chứng: `results/p1_verification.md`.
 - P6 đã có bản nháp Chương 7 và 3 slide trên nhánh `p6-mo-phong-ket-qua`; P1 rút gọn để vừa ngân sách trang, bản chi tiết lưu ở `notes/p1_chi_tiet/`. Không giao lại việc “viết từ đầu”; PR P6 #11 đã merge, P6 nên đọc lại phần rút gọn.

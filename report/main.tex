@@ -9,6 +9,8 @@
 \setmonofont{texgyrecursor}[Extension=.otf,UprightFont=*-regular,
   BoldFont=*-bold,ItalicFont=*-italic,BoldItalicFont=*-bolditalic]
 \usepackage[vietnamese]{babel}
+% Thụt lề dòng đầu cho mọi đoạn, kể cả đoạn đầu sau tiêu đề chương/mục.
+\usepackage{indentfirst}
 % Khổ A4 đứng: 210 x 297 mm; áp dụng cho cả PDF xuất ra.
 \usepackage[a4paper,paperwidth=210mm,paperheight=297mm,margin=25mm]{geometry}
 % Báo cáo 5--10 trang: giữ lệnh chapter nhưng không ép sang trang mới.
@@ -40,6 +42,8 @@
 }
 \setlength{\parindent}{1.25cm}
 \setlength{\parskip}{0.3em}
+% Cho phép giãn thêm khi dòng có tên file/API đơn cách không ngắt được.
+\setlength{\emergencystretch}{1.5em}
 \renewcommand{\arraystretch}{1.2}
 % Dùng chung nội dung cho bìa ngoài có viền và bìa trong không viền.
 \newif\ifcoverborder
