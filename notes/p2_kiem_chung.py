@@ -1,8 +1,10 @@
 """Kiểm chứng dữ liệu P2 độc lập; không cài đặt ATPG hoặc thay test của P5/P6."""
 
+import argparse
 from itertools import product
 from pathlib import Path
 import runpy
+import sys
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -27,9 +29,60 @@ def oracle(gate, a, b=None):
     return ENCODE[next(iter(outputs))] if len(outputs) == 1 else "X"
 
 
-def main():
+def check_integrated(table_cells):
+    # Nạp code đã tích hợp, không thay oracle độc lập hoặc bảng chuẩn.
+    sys.path.insert(0, str(ROOT / "src"))
+    from atpg.circuit import Circuit
+    from atpg.faults import Fault
+    from atpg.fault_sim import detects, detects_cube, simulate
+    from atpg.logic import eval_gate
+
+    for gate, inputs, expected in table_cells:
+        actual = eval_gate(gate, inputs)
+        assert actual == expected, (
+            f"Markdown/P5 mismatch: gate={gate}, inputs={inputs}, "
+            f"expected={expected}, actual={actual}"
+        )
+    assert len(table_cells) == 160
+    print("PASS integrated: Markdown vs atpg.logic.eval_gate: 160/160 cells")
+
+    circuit = Circuit.from_bench(str(ROOT / "circuits/c17.bench"))
+    assert circuit.inputs == ["1", "2", "3", "6", "7"], circuit.inputs
+    assert circuit.outputs == ["22", "23"], circuit.outputs
+    fault = Fault("11", 0)
+    print("PI order: (1,2,3,6,7); PO order: (22,23); fault: stem 11/SA0")
+    for pattern, expected_count in (("X100X", 4), ("X10XX", 8)):
+        cube = dict(zip(circuit.inputs, pattern))
+        vectors = [dict(zip(circuit.inputs, bits))
+                   for bits in product((0, 1), repeat=5)
+                   if all(value == "X" or int(value) == bits[i]
+                          for i, value in enumerate(pattern))]
+        assert len(vectors) == expected_count
+        for vector in vectors:
+            good = simulate(circuit, vector)
+            bad = simulate(circuit, vector, fault)
+            good_po = tuple(good[o] for o in circuit.outputs)
+            bad_po = tuple(bad[o] for o in circuit.outputs)
+            assert detects(circuit, vector, fault) and good["22"] != bad["22"], (
+                f"P6 counterexample: cube={pattern}, vector={vector}, "
+                f"good_PO={good_po}, faulty_PO={bad_po}"
+            )
+        assert detects_cube(circuit, cube, fault) is True, pattern
+        print(f"PASS integrated: {pattern}: {len(vectors)}/{expected_count} "
+              "completions detected at PO22; detects_cube=True")
+    vector = dict(zip(circuit.inputs, (0, 1, 0, 0, 0)))
+    good = simulate(circuit, vector)
+    bad = simulate(circuit, vector, fault)
+    good_po = tuple(good[o] for o in circuit.outputs)
+    bad_po = tuple(bad[o] for o in circuit.outputs)
+    assert (good_po, bad_po) == ((1, 1), (0, 0)), (good_po, bad_po)
+    print(f"PASS integrated: 01000: good_PO={good_po}, faulty_PO={bad_po}")
+
+
+def main(integrated=False):
     text = (ROOT / "tests/data/five_valued_tables.md").read_text(encoding="utf-8")
     cells = 0
+    table_cells = []
     for gate in ("AND", "NAND", "OR", "NOR", "XOR", "XNOR", "NOT", "BUFF"):
         block = text.split("## " + gate + "\n")[1].split("## ")[0]
         rows = [line for line in block.splitlines() if line.startswith("|")][2:]
@@ -37,6 +90,7 @@ def main():
             assert len(rows) == 1, gate
             actual = [v.strip() for v in rows[0].split("|")[2:-1]]
             assert actual == [oracle(gate, a) for a in VALUES], gate
+            table_cells.extend((gate, [a], value) for a, value in zip(VALUES, actual))
             cells += 5
         else:
             assert len(rows) == 5, gate
@@ -44,6 +98,7 @@ def main():
                 assert row.split("|")[1].strip() == a, (gate, a)
                 actual = [v.strip() for v in row.split("|")[2:-1]]
                 assert actual == [oracle(gate, a, b) for b in VALUES], (gate, a)
+                table_cells.extend((gate, [a, b], value) for b, value in zip(VALUES, actual))
                 cells += 5
     assert cells == 160
     print("PASS: 160 cells vs independent binary-completion oracle")
@@ -89,7 +144,12 @@ def main():
     for v in ((0, 1, 0, 0, 0), (0, 1, 0, 0, 1), (1, 1, 0, 0, 0), (1, 1, 0, 0, 1)):
         assert simulate(v) == (1, 1) and simulate(v, ("11", 0)) == (0, 0)
     print("PASS: four documented binary PO pairs")
+    if integrated:
+        check_integrated(table_cells)
 
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--integrated", action="store_true",
+                        help="Đối chiếu Markdown và cube với code P5/P6 thật")
+    main(integrated=parser.parse_args().integrated)
