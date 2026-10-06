@@ -36,7 +36,7 @@ Môn: Kỹ thuật DFT và kiểm thử. Giảng viên: Nguyễn Văn Thành L�
 | P2 | Hà Quang Huy — 23119147 | Chương 3; D-algorithm; bảng logic 5 giá trị; hình c17 dùng chung | `p2-d-algorithm` |
 | P3 | Võ Trung Nguyên — 23119180 | Chương 4; PODEM lý thuyết; golden trace | `p3-podem-ly-thuyet` |
 | P4 | Phạm Trọng An Nam — 23119174 | Chương 5; mạch tuần tự; full scan và unroll | `p4-tuan-tu` |
-| P5 | Nguyễn Thị Thúy Hàng — 23119142 | Chương 6; logic 5 giá trị và lõi PODEM | `p5-podem-code` |
+| P5 | Nguyễn Thị Thúy Hằng — 23119142 | Chương 6; logic 5 giá trị và lõi PODEM | `p5-podem-code` |
 | P6 | Nguyễn Thị Thanh Tuyền — 23119222 | Chương 7; đọc mạch, mô phỏng lỗi, CLI, kiểm chứng; ghép slide | `p6-mo-phong-ket-qua` |
 
 ## Cấu trúc repo
