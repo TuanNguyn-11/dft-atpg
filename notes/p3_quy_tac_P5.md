@@ -4,7 +4,11 @@ Bổ sung cho lỗi số 1: [quy tắc XOR/XNOR](p3_xor_xnor.md), gồm parity,
 imply, objective lan truyền, backtrace và bốn ví dụ kỳ vọng. P3-v1.1
 kế thừa toàn bộ quy tắc P3-v1 dưới đây; hai golden trace cũ không đổi.
 
-Đây là đặc tả do P3 bàn giao để P5 triển khai, chưa phải xác nhận P5 đã áp dụng. Không thay chữ ký API của prompt.md. Phạm vi golden trace: một lỗi stem trên mạch tổ hợp AND/NAND/OR/NOR/NOT/BUFF. Phần XOR/XNOR, branch fault và danh sách lỗi trải khung thuộc phạm vi lõi chung nhưng chưa được hai golden trace này kiểm chứng.
+Đây là đặc tả do P3 bàn giao; code P5 tích hợp đã áp dụng P3-v1.1.
+Đối chiếu ngày 06/10/2026 ở [phiếu đối chiếu](p3_doi_chieu_P5.md).
+Không thay chữ ký API của prompt.md. Phạm vi hai golden trace: một lỗi
+stem trên mạch AND/NAND/OR/NOR/NOT/BUFF; chúng không tự kiểm chứng
+XOR/XNOR, branch fault hoặc danh sách lỗi trải khung.
 
 ## 1. Thứ tự xác định
 - PI, PO và ngõ vào mỗi cổng giữ đúng thứ tự trong .bench.
@@ -45,7 +49,16 @@ Giữ nguyên 7 cột của prompt. Một hàng cho mỗi gán/đảo PI sau imp
 
 Hành động mô tả bước xử lý sau trạng thái của hàng: thành công được ưu tiên nếu PO có D/D'; nếu nhánh bế tắc và còn lựa chọn thì backtrack; nếu còn tìm tiếp thì tiếp tục; nếu đã hết toàn cây thì thất bại. Với ABORTED giữ status riêng trong phần kết luận, không thêm một từ mới vào cột Hành động. Hàng cuối trước khi dừng giới hạn có thể vẫn ghi backtrack (hành động cần làm nhưng bị chặn); thêm lý do giới hạn ở dưới bảng.
 
-steps là list[dict] nhưng prompt chưa chốt key. Đề xuất P5 dùng: step, objective (list [net,int] hoặc null), backtrace (list [PI,int] hoặc null), assignment (dict PI→string), values (dict net→string), d_frontier (list[str]), action (4 từ đúng quy định). Đây là đề xuất bổ sung, không đổi PodemResult hay podem().
+Code P5 thực tế dùng bảy key tiếng Việt đúng tiêu đề bảng: Bước,
+Objective (net, giá trị), Backtrace → PI, Gán PI, Giá trị các net sau imply,
+D-frontier, Hành động. Objective/backtrace là tuple hoặc None; gán PI
+là chuỗi hoặc None; values là dict; frontier là list có thứ tự.
+Đề xuất key tiếng Anh ngày 05/10 không được áp dụng, không yêu cầu đổi API.
+
+Phân biệt raw API và bảng bàn giao: API ghi thao tác vừa thực hiện;
+golden ghi việc kế tiếp. Mạch phụ có nhãn API tiếp tục/backtrack/thành công,
+golden backtrack/tiếp tục/thành công. Exporter P5 đã chuẩn hóa theo golden
+và gộp hàng kết thúc không gán PI vào kết luận. Giữ golden, không sửa lõi.
 
 ## 6. Kết quả P5 cần tái hiện
 | Mạch/lỗi | PI theo thứ tự | Pattern | Hàng gán/đảo | Backtracks | PO quan sát |

@@ -7,7 +7,9 @@ parity riêng” chưa đủ để P5 cài objective và backtrace. P3-v1.1 bổ
 quy tắc dưới đây, giữ nguyên thứ tự topo, thứ tự Gate.inputs, DFS và
 cách đếm backtrack của [hợp đồng P3](p3_quy_tac_P5.md).
 Hai golden trace c17 và mạch phụ không chứa XOR/XNOR nên không đổi.
-Đây là đặc tả bàn giao, chưa phải xác nhận code P5 đã hỗ trợ hai cổng.
+Đây là đặc tả bàn giao. Cập nhật sau tích hợp 06/10/2026: P5 đã triển khai
+hai cổng; bộ kiểm thử tích hợp đạt 342 test trên base `8564678`.
+Chi tiết phạm vi kiểm chứng ở [phiếu đối chiếu](p3_doi_chieu_P5.md).
 
 ## 2. Parity và bảng chân trị
 
@@ -140,6 +142,6 @@ backtrack và giới hạn trước khi kết luận lõi hỗ trợ đầy đ�
   XOR là cộng modulo 2. Các công thức, bảng D/D' và quy tắc triệt tiêu
   ở đây được suy ra trực tiếp từ định nghĩa Boolean và cặp tốt/lỗi.
 - Ưu tiên X đầu tiên và bit 0 khi còn nhiều X là **quy ước P3-v1.1**,
-  không gán cho bài Goel, không gọi là SCOAP, chưa nhận xác nhận áp dụng từ P5.
+  không gán cho bài Goel, không gọi là SCOAP; đã được code P5 tích hợp áp dụng.
 - Bổ sung này không thay hợp đồng branch fault hoặc multiple faults;
   không dùng kết quả kiểm tra parity cục bộ để tuyên bố đã kiểm chứng lõi P5.

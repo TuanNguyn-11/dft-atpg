@@ -1,4 +1,70 @@
-# Biên bản kiểm tra P3 — 05/10/2026
+# Biên bản kiểm tra P3
+
+## Trạng thái hiện tại — xử lý feedback 06/10/2026
+
+Base thực thi `8564678cd360594cbd540389d49c99021525ac08`, sau fetch và
+fast-forward nhánh P3 từ main; working tree ban đầu sạch. Mốc này mới hơn
+feedback `eb6694d`: exporter P5 và trace phụ đã có, Chương 4 đã được P1
+cập nhật một phần. Giữ các sửa tích hợp đó, bổ sung bằng chứng còn thiếu.
+
+| Đầu việc | Kết quả và bằng chứng |
+|---|---|
+| P3-01 | Đạt: 35 ô của 5 hàng × 7 cột; mọi PI/net, frontier theo thứ tự; API và file P5 đối chiếu với golden thật |
+| P3-02 | Đạt: simulator P6 c17 8/8, 01000 tốt 11/lỗi 00; phụ 01 tốt 1/lỗi 0; giới hạn 0/1 ABORTED/DETECTED |
+| P3-03 | Đạt: Chương 4, ba slide và notes cập nhật; comment hình sửa thành TikZ; so sánh P2/P3 giữ đúng đơn vị |
+| Quy ước hành động | Giữ golden; raw API khác hai nhãn ở phụ, exporter P5 đã chuẩn hóa; có giải thích và assertion tường minh |
+| Phụ thuộc kỹ thuật | Không còn chờ code/trace/simulator P5/P6 trong phạm vi hai ví dụ |
+
+### Kiểm chứng thực chạy
+
+- Python **3.12.10**, venv riêng, pytest **9.1.1**; `python -m pytest -q`:
+  **342 passed in 3.70s**. Mốc 302 trong feedback là lịch sử, không phải
+  số cần ép kết quả về. Suite có các test XOR/XNOR do P5 bổ sung.
+- `python -B notes/p3_doi_chieu_code.py`: PASS; gọi Circuit.from_bench,
+  podem(trace=True), simulator P6 và exporter thật. File P5 tái sinh trùng
+  nội dung; không sửa exporter, lõi P5 hoặc golden. Bằng chứng chi tiết ở
+  `results/p3_doi_chieu_code.md`, diễn giải ở `p3_doi_chieu_P5.md`.
+- `notes/p3_kiem_chung.py`: PASS kiểm chứng tham chiếu c17/mạch phụ,
+  113 so sánh giá trị xác định; không đánh đồng script này với code P5.
+- `notes/p3_kiem_tra_ban_giao.py`: PASS cả netlist c17 thật, hai bảng,
+  nhãn/cite/chương và ba frame; không còn PENDING netlist.
+- `notes/p2_kiem_chung.py`: PASS 160 ô, bốn trạng thái, frontier,
+  cube 4/4 và 8/8, bốn cặp PO; số liệu 4 cube/3 PI/0 backtrack được đối chiếu
+  tài liệu P2 trong repo. Không nhận xác nhận cá nhân qua tin nhắn.
+- Bốn CLI trong `p3_doi_chieu_P5.md`: tất cả exit 0, báo thuật toán PODEM;
+  c17 DETECTED/X10XX/0; phụ mặc định và giới hạn 1 DETECTED/01/1;
+  giới hạn 0 ABORTED/1X/0. Log ngoài repo `.p3-work/feedback-cli-*.txt`.
+- Build bản sao khung thật: XeLaTeX → Biber → XeLaTeX hai lượt cho report,
+  hai lượt XeLaTeX cho slide, exit 0. Report **14 trang PDF = 4 trang đầu
+  + 10 trang đánh số nội dung/tài liệu tham khảo**; slide **19 trang**.
+  Log cuối không overfull, missing character hay undefined reference/citation.
+  Còn cảnh báo Babel mẫu ngắt từ tiếng Việt và Perl locale fallback.
+- Đã render/xem trang PDF báo cáo 8–9 (trang nội dung 4–5), slide P3 cuối:
+  không cắt/chồng chữ. PDF/log/ảnh ở `.p3-work/feedback-review`, không commit
+  PDF bản nộp; P1 phụ trách build/phát hành bản cuối sau tích hợp.
+- `git diff --check`: đạt (Git có thông báo chuẩn hóa LF/CRLF).
+
+### Các file thay đổi
+
+- `notes/p3_doi_chieu_code.py`, `results/p3_doi_chieu_code.md`: kiểm chứng
+  hợp đồng với code thật và bằng chứng chi tiết từng ô.
+- `notes/p3_doi_chieu_P5.md`: viết lại phiếu khớp/khác, simulator, nguồn,
+  commit và lệnh; giữ lịch sử thiếu code bằng nhãn ngày/base và lịch sử Git.
+- `report/chapters/04_podem.tex`, `slides/parts/p3.tex`: kết quả kiểm chứng,
+  quy ước API/exporter, số liệu P2 và comment hình TikZ.
+- `notes/p3_ban_giao.md`, `p3_review.md`, `p3_ghi_chu.md`, `p3_ly_thuyet.md`,
+  `p3_quy_tac_P5.md`, `p3_xor_xnor.md`: trạng thái hiện tại và giới hạn đúng.
+- `notes/p3_kiem_chung.py`, `results/p3_kiem_chung.md`: bỏ câu cũ “chưa nhận
+  code P5”, dẫn sang bằng chứng code thật; không đổi thuật toán tham chiếu.
+- `notes/p3_pr_feedback.md`: nội dung PR đề xuất, không tự gửi tin thành viên.
+
+Checklist con người và phạm vi đã hoàn tất ở `p3_ban_giao.md`. Không merge
+main, không tag release, không tự xác nhận diễn tập/quay video/nộp bài.
+
+## Lịch sử — bổ sung trước tích hợp 06/10/2026, commit 341f52a
+
+Các ghi nhận thiếu P5/P6 dưới đây thuộc lần chạy trước, không còn là trạng
+thái hiện tại. Mục 05/10 dùng base f95d609; mục bổ sung dùng base d8b254c.
 
 ## Bổ sung 06/10/2026 — lỗi số 1: thiếu quy tắc XOR/XNOR
 
