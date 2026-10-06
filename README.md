@@ -6,13 +6,13 @@ Repo chung của nhóm gồm báo cáo LaTeX, slide và chương trình minh h�
 
 ## Trạng thái
 
-**Trạng thái hiện tại (P1, 06/10/2026; base `main` `4abf964`, sau khi merge PR P6 #11):**
+**Trạng thái hiện tại (P1, 06/10/2026):** PR P6 #11 và P1 #12 đã merge; đã phát hành [release `v1.0`](https://github.com/TuanNguyn-11/dft-atpg/releases/tag/v1.0) tại commit `99bd39a`, kèm hai PDF.
 
 - Code P2–P6 đã tích hợp; CLI `python -m atpg.run` chạy được. `pytest` đạt **332 passed** trên Python 3.12.15/pytest 9.1.1 (mốc review trên main: 302; tăng do test tích hợp P6).
 - Số liệu thực đo: c17 PODEM 34/34 lỗi gốc, 22/22 đại diện sau gộp; nén 34→7 hoặc 22→6 pattern. Full scan 18/18 lỗi stem qua API thật. Trải khung từ trạng thái đầu chưa biết: 1/18, 13/18, 18/18 tại k=1,2,3 (PODEM kết hợp vét cạn chuỗi bổ sung, không phải PODEM thuần).
 - Báo cáo 8 chương đã biên tập về 13 trang PDF (2 bìa + 1 mục lục + 10 trang đánh số, ~9 trang nội dung kể cả tài liệu tham khảo). Slide 19 trang: bìa + 18 frame của 6 người. `scripts/build_documents.ps1` PASS cục bộ.
 - Chương 7/slide P6 đã merge vào `main` (PR #11). P1 rút gọn Chương 5–7 để vừa số trang; bản chi tiết gốc ở `notes/p1_chi_tiet/`, P4/P5/P6 nên đọc lại.
-- **Còn thiếu:** P1 duyệt PDF cuối và thông tin bìa, video Hình 4.5 (mới có kịch bản/lời giải, **chưa có bằng chứng đã quay**), xác nhận giờ/kênh/định dạng nộp, diễn tập 20 phút, release/tag `v1.0`.
+- **Còn thiếu:** P1 duyệt PDF cuối và thông tin bìa, video Hình 4.5 (mới có kịch bản/lời giải, **chưa có bằng chứng đã quay**), xác nhận giờ/kênh/định dạng nộp, diễn tập 20 phút, nộp bài. Nếu sửa bìa hoặc nội dung sau `v1.0`, phát hành lại `v1.0.1`.
 
 Tái lập toàn bộ kiểm chứng P1 (test, kiểm chứng P2/P3/P4, demo CLI, full scan qua API thật):
 
@@ -217,5 +217,6 @@ Theo thông tin P1 xác nhận và `Thang_diem_DFT_public.pdf` do giảng viên 
 - Duyệt bìa, thông tin nhóm, nội dung rút gọn Chương 5–7 cùng P4/P5/P6.
 - Quay và kiểm tra video Hình 4.5 theo lời giải đã kiểm tra.
 - Xác nhận giờ/kênh/định dạng nộp ngày 08/10/2026 và việc có chiếu video trong 20 phút hay không.
-- Diễn tập 20 phút cùng nhóm; sau đó release/tag `v1.0` và nộp, lưu bằng chứng. Checklist: [notes/p1_checklist_nop.md](notes/p1_checklist_nop.md).
+- (Đã xong 06/10) Release/tag [`v1.0`](https://github.com/TuanNguyn-11/dft-atpg/releases/tag/v1.0).
+- Diễn tập 20 phút cùng nhóm; nộp bài và lưu bằng chứng. Checklist: [notes/p1_checklist_nop.md](notes/p1_checklist_nop.md).
 - (Đã xong) Mời thành viên, tạo branch, build cục bộ XeLaTeX + Biber. Build trên TeXPage vẫn chưa xác nhận.

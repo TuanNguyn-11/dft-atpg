@@ -21,12 +21,13 @@ Lưu ý: PDF phải được build lại trên đúng commit phát hành (sau kh
 - [x] Merge PR P6 #11 vào `main` (agent, theo ủy quyền của P1, 06/10/2026; `4abf964`).
 - [ ] P6 đọc lại phần P1 rút gọn Chương 7/slide P6 (bản gốc ở `notes/p1_chi_tiet/07_ket_qua.tex`).
 - [ ] P4, P5 xem lại bản rút gọn Chương 5, 6 (bản gốc ở `notes/p1_chi_tiet/`).
-- [ ] P1 review và merge PR `p1-nguyen-ly`; chạy lại `python scripts/p1_verify_release.py` và `scripts/build_documents.ps1` trên `main` sau merge.
+- [x] Merge PR P1 #12 (agent, theo ủy quyền; `99bd39a`). Cây nguồn `main` trùng commit đã kiểm chứng `b8f9639`; chạy lại pytest 332 passed và checker P1/P2/P3 trên `main`.
 - [ ] P1 xác nhận bìa, tên/MSSV thành viên, GVHD, tháng/năm.
 - [ ] P1 xác nhận giờ đóng cổng, kênh nộp, định dạng file/video ngày 08/10/2026; có chiếu video trong 20 phút hay chỉ nộp kèm.
 - [ ] P1 quay video Hình 4.5 (2–3 phút), xem lại tiếng/hình, lưu theo định dạng yêu cầu.
 - [ ] Cả nhóm diễn tập 20 phút (không gồm hỏi đáp), thử demo CLI trên máy trình chiếu, chuẩn bị bản dự phòng (ảnh/kết quả `results/`).
-- [ ] Khi đã đạt các mục trên và có ủy quyền: tạo release/tag `v1.0`, nộp bài, lưu bằng chứng (ảnh xác nhận nộp, link release).
+- [x] Tạo tag `v1.0` (`99bd39a`) và [release](https://github.com/TuanNguyn-11/dft-atpg/releases/tag/v1.0) kèm hai PDF (agent, theo ủy quyền, 06/10/2026). Nếu bìa/nội dung phải sửa: phát hành `v1.0.1`.
+- [ ] Nộp bài theo kênh giảng viên và lưu bằng chứng (ảnh xác nhận nộp, link release).
 
 ## C. Nội dung PR đề xuất (`p1-nguyen-ly` → `main`)
 
@@ -52,6 +53,6 @@ Lưu ý: PDF phải được build lại trên đúng commit phát hành (sau kh
 
 **Giới hạn**
 - Base `main` `4abf964` (sau PR P6 #11).
-- Chưa build trên TeXPage; video, xác nhận kênh nộp, diễn tập và tag `v1.0` chưa thực hiện.
+- Chưa build trên TeXPage; tại thời điểm mở PR, video, xác nhận kênh nộp, diễn tập và tag `v1.0` chưa thực hiện (tag đã tạo sau khi merge).
 
 🤖 Generated with [Claude Code](https://claude.com/claude-code)
