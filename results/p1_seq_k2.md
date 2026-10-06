@@ -6,8 +6,8 @@ Che do: trang thai dau Q@0 CHUA BIET (khong scan/reset). `DETECTED` nghia la pha
 
 - Lenh tai tao (tu goc repo, PYTHONPATH=src): `python -m atpg.run circuits/seq_example.bench --unroll 2 --all --md results/p1_seq_k2.md`
 - Python 3.12.15 (CPython), Windows 11
-- Commit ma nguon: b107d79
-- Thoi diem chay: 2026-10-06T22:06:29
+- Commit ma nguon: 8564678 + thay doi chua commit trong src/ hoac circuits/
+- Thoi diem chay: 2026-10-06T22:29:18
 - Thu tu PI trong cot pattern: A, B
 - Pham vi loi: 18 loi stem vat ly, moi loi cay vao ca 2 khung
 - Nguon pattern theo hang (cot Thuat toan): PODEM, vet can chuoi (tham chieu)

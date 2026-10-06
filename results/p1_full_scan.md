@@ -1,5 +1,5 @@
 # Full scan qua API thật — 06/10/2026
-Python 3.12.15; base `b107d7953ad46ba715e51430f740f0e2226def57` + P1.
+Python 3.12.15; base `8564678cd360594cbd540389d49c99021525ac08` + P1.
 Tái lập: `python scripts/p1_verify_release.py`.
 PI: ['A', 'B', 'Q']; PO: ['Y', 'D']. Q là pseudo-PI, D là pseudo-PO.
 | Lỗi stem | Pattern (thứ tự PI trên) | Trạng thái | Mọi cách điền X |

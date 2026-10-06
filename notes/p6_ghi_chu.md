@@ -42,11 +42,11 @@
 
 ## 8. Lệnh/CLI và công cụ
 - `argparse`: `--fault NET SV [--branch GATE]`, `--all`, `--trace`, `--unroll K`, `--init`, `--no-collapse`, `--pattern`, `--max-x`, `--max-backtracks`, `--md FILE`.
-- Đầu vào sai (SV khác 0/1, net hoặc nhánh không tồn tại, K < 1, giới hạn âm, mạch có DFF mà thiếu `--unroll`) bị từ chối với mã thoát 2; API ném `ValueError`. `generate_test` chỉ dùng vét cạn khi PODEM báo chưa hỗ trợ, và ghi nguồn theo từng hàng.
+- Đầu vào sai (SV khác 0/1, net hoặc nhánh không tồn tại, K < 1, giới hạn âm, mạch có DFF mà thiếu `--unroll`) bị từ chối với mã thoát 2; API ném `ValueError`. `generate_test` chỉ dùng vét cạn khi PODEM báo chưa hỗ trợ, và ghi nguồn theo từng hàng. Từ 06/10/2026, lõi `podem.podem` gọi trực tiếp cũng ném `ValueError` khi net/nhánh không thuộc mạch hoặc `max_backtracks` âm (trước đó nhánh 11→999 trả `UNTESTABLE`); test ở `tests/test_input_validation.py`.
 - Beamer: `slides/main.tex` dùng `\input{parts/pX}`.
 
 ## 9. Việc còn mở
-- [x] Đối chiếu `Circuit`/`Fault` với P4, P5 (mục 8 prompt.md): ghép P4, P5 chạy đúng, 302 test pass.
+- [x] Đối chiếu `Circuit`/`Fault` với P4, P5 (mục 8 prompt.md): ghép P4, P5 chạy đúng, 302 test pass (mốc trước tích hợp; ngày 06/10/2026 sau khi merge P2/P4/P5 và vá kiểm tra đầu vào lõi PODEM: 350 passed).
 - [x] Đối chiếu vector của P2, P3 cho 11/SA0 bằng `--pattern`: `X10XX` phát hiện với mọi cách điền X.
 - [x] Chạy lại `--all` bằng PODEM của P5: `results/c17_all_faults.md`.
 

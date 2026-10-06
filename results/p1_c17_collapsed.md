@@ -4,13 +4,13 @@
 
 - Lenh tai tao (tu goc repo, PYTHONPATH=src): `python -m atpg.run circuits/c17.bench --all --md results/p1_c17_collapsed.md`
 - Python 3.12.15 (CPython), Windows 11
-- Commit ma nguon: b107d79
-- Thoi diem chay: 2026-10-06T22:06:28
+- Commit ma nguon: 8564678 + thay doi chua commit trong src/ hoac circuits/
+- Thoi diem chay: 2026-10-06T22:29:17
 - Thu tu PI trong cot pattern: 1, 2, 3, 6, 7
 - Pham vi loi goc: 34 loi = 22 stem + 12 nhanh
 - Dang chay 22 loi dai dien sau gop tuong duong (tu 34 loi goc). Tap 22 loi dai dien nay KHAC tap 22 loi stem, du hai so co the trung nhau.
 - Pattern co X duoc dien 0 khi mo phong loi; cot "Moi cach dien X" la vet can moi cach dien (toi da 16 bit X).
-- Thoi gian sinh pattern: 0.0016 s (time.perf_counter, chi tinh bo sinh pattern); ca kiem chung va nen: 0.0064 s. So do phu thuoc may chay.
+- Thoi gian sinh pattern: 0.0017 s (time.perf_counter, chi tinh bo sinh pattern); ca kiem chung va nen: 0.0065 s. So do phu thuoc may chay.
 
 | PI | PO | cong | DFF |
 |---|---|---|---|

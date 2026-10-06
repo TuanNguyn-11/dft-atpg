@@ -9,7 +9,7 @@ Hạn chính thức **08/10/2026**. Giờ đóng cổng, kênh và định dạn
 | PDF báo cáo | `report/bao_cao_DFT_ATPG.pdf` | Build PASS; 14 trang (2 bìa + mục lục i + danh mục viết tắt ii + 10 trang đánh số từ Chương 1, ~9 trang nội dung); không bị Git ignore |
 | PDF slide | `slides/slides_DFT_ATPG.pdf` | Build PASS; 19 trang (bìa + 3 frame × 6 người); không bị Git ignore |
 | Source báo cáo/slide | `report/`, `slides/` | 8 chương; bản chi tiết Ch.5–7 trước rút gọn ở `notes/p1_chi_tiet/` |
-| Code + test | `src/atpg/`, `tests/` | pytest 342 passed (Python 3.12.15), sau PR #14, #15 và nhánh P5 |
+| Code + test | `src/atpg/`, `tests/` | pytest 350 passed (Python 3.12.15), sau PR #14, #15, nhánh P5 và vá đầu vào lõi PODEM |
 | README/demo | `README.md`, `demo.md` | Lệnh tái lập: `python scripts/p1_verify_release.py` |
 | Bằng chứng kết quả | `results/p1_*.md` | c17, full scan, trải khung k=1..3, log kiểm chứng |
 | Lời giải/kịch bản video Hình 4.5 | `notes/p1_video_loi_giai.md` | Có lời giải và lời dẫn; **video chưa có bằng chứng đã quay** |
@@ -31,7 +31,9 @@ Lưu ý: PDF phải được build lại trên đúng commit phát hành (sau kh
 - [x] Sửa bìa thành “Bộ môn Kỹ thuật Máy tính” theo yêu cầu P1; thụt lề dòng đầu mọi đoạn; phát hành `v1.0.2`.
 - [x] Dàn lại Hình 3.1 (lưu đồ D-algorithm) cho các khối không chồng nhau; phát hành `v1.0.3`.
 - [x] Tách danh mục viết tắt ra trang riêng (trang ii), nội dung đánh số từ Chương 1; phát hành `v1.0.4`.
-- [x] Merge nhánh P5 `5b461af` (exporter trace, test); P1 biên tập Chương 6 cho vừa 10 trang, gộp cite trùng, sửa frame slide P5 tràn; bản gốc ở `notes/p1_chi_tiet/06_cai_dat_podem_p5_5b461af.tex`; phát hành `v1.0.5` — **bản dùng để nộp**.
+- [x] Merge nhánh P5 `5b461af` (exporter trace, test); P1 biên tập Chương 6 cho vừa 10 trang, gộp cite trùng, sửa frame slide P5 tràn; bản gốc ở `notes/p1_chi_tiet/06_cai_dat_podem_p5_5b461af.tex`; phát hành `v1.0.5`.
+- [x] Vá lõi `podem.podem`: từ chối net/nhánh không thuộc mạch và `max_backtracks` âm bằng `ValueError` (feedback P6-01), thêm 8 test hồi quy; sửa chữ cũ ở `demo.md`, `notes/p6_ghi_chu.md`; phát hành `v1.0.6` — **bản dùng để nộp**.
+- [ ] Báo P5 về thay đổi kiểm tra đầu vào trong `src/atpg/podem.py`.
 - [ ] P5 đọc lại bản biên tập Chương 6.
 - [ ] Nộp bài theo kênh giảng viên và lưu bằng chứng (ảnh xác nhận nộp, link release).
 

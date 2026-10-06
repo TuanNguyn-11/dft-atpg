@@ -1,18 +1,18 @@
 # Kiểm chứng P1 — 06/10/2026
 
-Python 3.12.15; base `b107d7953ad46ba715e51430f740f0e2226def57` + thay đổi P1 trong working tree.
+Python 3.12.15; base `8564678cd360594cbd540389d49c99021525ac08` + thay đổi P1 trong working tree.
 
 ## `python -m pytest -q`
 
 Exit 0
 
 ```text
-........................................................................ [ 21%]
-........................................................................ [ 42%]
-........................................................................ [ 63%]
-........................................................................ [ 84%]
-......................................................                   [100%]
-342 passed in 3.20s
+........................................................................ [ 20%]
+........................................................................ [ 41%]
+........................................................................ [ 61%]
+........................................................................ [ 82%]
+..............................................................           [100%]
+350 passed in 4.32s
 ```
 
 ## `python scripts/check_p1_examples.py`
@@ -167,13 +167,13 @@ Mach c17: 5 PI, 2 PO, 6 cong, 0 DFF
 
 - Lenh tai tao (tu goc repo, PYTHONPATH=src): `python -m atpg.run circuits/c17.bench --all --md results/p1_c17_collapsed.md`
 - Python 3.12.15 (CPython), Windows 11
-- Commit ma nguon: b107d79
-- Thoi diem chay: 2026-10-06T22:06:28
+- Commit ma nguon: 8564678 + thay doi chua commit trong src/ hoac circuits/
+- Thoi diem chay: 2026-10-06T22:29:17
 - Thu tu PI trong cot pattern: 1, 2, 3, 6, 7
 - Pham vi loi goc: 34 loi = 22 stem + 12 nhanh
 - Dang chay 22 loi dai dien sau gop tuong duong (tu 34 loi goc). Tap 22 loi dai dien nay KHAC tap 22 loi stem, du hai so co the trung nhau.
 - Pattern co X duoc dien 0 khi mo phong loi; cot "Moi cach dien X" la vet can moi cach dien (toi da 16 bit X).
-- Thoi gian sinh pattern: 0.0016 s (time.perf_counter, chi tinh bo sinh pattern); ca kiem chung va nen: 0.0064 s. So do phu thuoc may chay.
+- Thoi gian sinh pattern: 0.0017 s (time.perf_counter, chi tinh bo sinh pattern); ca kiem chung va nen: 0.0065 s. So do phu thuoc may chay.
 
 | PI | PO | cong | DFF |
 |---|---|---|---|
@@ -250,13 +250,13 @@ Mach c17: 5 PI, 2 PO, 6 cong, 0 DFF
 
 - Lenh tai tao (tu goc repo, PYTHONPATH=src): `python -m atpg.run circuits/c17.bench --all --no-collapse --md results/p1_c17_all.md`
 - Python 3.12.15 (CPython), Windows 11
-- Commit ma nguon: b107d79
-- Thoi diem chay: 2026-10-06T22:06:28
+- Commit ma nguon: 8564678 + thay doi chua commit trong src/ hoac circuits/
+- Thoi diem chay: 2026-10-06T22:29:17
 - Thu tu PI trong cot pattern: 1, 2, 3, 6, 7
 - Pham vi loi goc: 34 loi = 22 stem + 12 nhanh
 - Dang chay 34 loi goc, khong gop.
 - Pattern co X duoc dien 0 khi mo phong loi; cot "Moi cach dien X" la vet can moi cach dien (toi da 16 bit X).
-- Thoi gian sinh pattern: 0.0026 s (time.perf_counter, chi tinh bo sinh pattern); ca kiem chung va nen: 0.0105 s. So do phu thuoc may chay.
+- Thoi gian sinh pattern: 0.0030 s (time.perf_counter, chi tinh bo sinh pattern); ca kiem chung va nen: 0.0107 s. So do phu thuoc may chay.
 
 | PI | PO | cong | DFF |
 |---|---|---|---|
@@ -348,12 +348,12 @@ Che do: trang thai dau Q@0 CHUA BIET (khong scan/reset). `DETECTED` nghia la pha
 
 - Lenh tai tao (tu goc repo, PYTHONPATH=src): `python -m atpg.run circuits/seq_example.bench --unroll 1 --all --md results/p1_seq_k1.md`
 - Python 3.12.15 (CPython), Windows 11
-- Commit ma nguon: b107d79
-- Thoi diem chay: 2026-10-06T22:06:29
+- Commit ma nguon: 8564678 + thay doi chua commit trong src/ hoac circuits/
+- Thoi diem chay: 2026-10-06T22:29:17
 - Thu tu PI trong cot pattern: A, B
 - Pham vi loi: 18 loi stem vat ly, moi loi cay vao ca 1 khung
 - Nguon pattern theo hang (cot Thuat toan): PODEM, vet can chuoi (tham chieu)
-- Tong thoi gian (sinh + kiem chung bao dam): 0.0031 s (time.perf_counter). So do phu thuoc may chay.
+- Tong thoi gian (sinh + kiem chung bao dam): 0.0030 s (time.perf_counter). So do phu thuoc may chay.
 
 Pham vi: 18 loi stem vat ly cua seq_example (moi net 2 loi), moi loi duoc sao sang ca 1 khung; khong gop loi (equivalence cua mach to hop khong mac nhien dung cho mach tuan tu), khong co loi nhanh, mau so = 18.
 
@@ -412,8 +412,8 @@ Che do: trang thai dau Q@0 CHUA BIET (khong scan/reset). `DETECTED` nghia la pha
 
 - Lenh tai tao (tu goc repo, PYTHONPATH=src): `python -m atpg.run circuits/seq_example.bench --unroll 2 --all --md results/p1_seq_k2.md`
 - Python 3.12.15 (CPython), Windows 11
-- Commit ma nguon: b107d79
-- Thoi diem chay: 2026-10-06T22:06:29
+- Commit ma nguon: 8564678 + thay doi chua commit trong src/ hoac circuits/
+- Thoi diem chay: 2026-10-06T22:29:18
 - Thu tu PI trong cot pattern: A, B
 - Pham vi loi: 18 loi stem vat ly, moi loi cay vao ca 2 khung
 - Nguon pattern theo hang (cot Thuat toan): PODEM, vet can chuoi (tham chieu)
@@ -476,12 +476,12 @@ Che do: trang thai dau Q@0 CHUA BIET (khong scan/reset). `DETECTED` nghia la pha
 
 - Lenh tai tao (tu goc repo, PYTHONPATH=src): `python -m atpg.run circuits/seq_example.bench --unroll 3 --all --md results/p1_seq_k3.md`
 - Python 3.12.15 (CPython), Windows 11
-- Commit ma nguon: b107d79
-- Thoi diem chay: 2026-10-06T22:06:29
+- Commit ma nguon: 8564678 + thay doi chua commit trong src/ hoac circuits/
+- Thoi diem chay: 2026-10-06T22:29:18
 - Thu tu PI trong cot pattern: A, B
 - Pham vi loi: 18 loi stem vat ly, moi loi cay vao ca 3 khung
 - Nguon pattern theo hang (cot Thuat toan): PODEM, vet can chuoi (tham chieu)
-- Tong thoi gian (sinh + kiem chung bao dam): 0.0398 s (time.perf_counter). So do phu thuoc may chay.
+- Tong thoi gian (sinh + kiem chung bao dam): 0.0390 s (time.perf_counter). So do phu thuoc may chay.
 
 Pham vi: 18 loi stem vat ly cua seq_example (moi net 2 loi), moi loi duoc sao sang ca 3 khung; khong gop loi (equivalence cua mach to hop khong mac nhien dung cho mach tuan tu), khong co loi nhanh, mau so = 18.
 

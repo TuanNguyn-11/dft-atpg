@@ -611,6 +611,41 @@ def _pattern_from_decisions(
 
     return pattern
 
+def _validate_fault_in_circuit(c: "Circuit", fault: "Fault") -> None:
+    """
+    Kiểm tra fault thuộc đúng mạch c; sai thì raise ValueError.
+
+    Chỉ dùng thuộc tính chung (net, stuck_at, branch_to; gates, inputs)
+    để chạy được với Circuit/Fault thật lẫn bản giả trong test.
+    Input sai không được trả về UNTESTABLE/ABORTED như kết luận thuật toán.
+    """
+    stuck_at = getattr(fault, "stuck_at", None)
+    if isinstance(stuck_at, bool) or stuck_at not in (0, 1):
+        raise ValueError(
+            f"stuck_at phải là 0 hoặc 1, nhận {stuck_at!r}."
+        )
+
+    net = getattr(fault, "net", None)
+    if net not in c.gates and net not in c.inputs:
+        raise ValueError(
+            f"Fault {net}/SA{stuck_at}: net {net!r} không tồn tại trong mạch."
+        )
+
+    branch_to = getattr(fault, "branch_to", None)
+    if branch_to is not None:
+        gate = c.gates.get(branch_to)
+        if gate is None:
+            raise ValueError(
+                f"Fault {net}->{branch_to}/SA{stuck_at}: "
+                f"cổng {branch_to!r} không tồn tại trong mạch."
+            )
+        if net not in gate.inputs:
+            raise ValueError(
+                f"Fault {net}->{branch_to}/SA{stuck_at}: "
+                f"cổng {branch_to!r} không nhận net {net!r} làm ngõ vào."
+            )
+
+
 def podem(
     c: "Circuit",
     fault: "Fault | list[Fault]",
@@ -644,6 +679,20 @@ def podem(
         raise ValueError(
             "Danh sách fault không được rỗng."
         )
+
+    # Giới hạn quay lui phải là số nguyên không âm.
+    if (
+        isinstance(max_backtracks, bool)
+        or not isinstance(max_backtracks, int)
+        or max_backtracks < 0
+    ):
+        raise ValueError(
+            f"max_backtracks phải là số nguyên >= 0, nhận {max_backtracks!r}."
+        )
+
+    # Mọi fault (kể cả từng fault-frame) phải thuộc mạch đang chạy.
+    for target in faults:
+        _validate_fault_in_circuit(c, target)
 
     # ---------------------------------------------------------
     # 2. Hàm chạy PODEM cho một target fault
