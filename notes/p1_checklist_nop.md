@@ -28,7 +28,8 @@ Lưu ý: PDF phải được build lại trên đúng commit phát hành (sau kh
 - [ ] Cả nhóm diễn tập 20 phút (không gồm hỏi đáp), thử demo CLI trên máy trình chiếu, chuẩn bị bản dự phòng (ảnh/kết quả `results/`).
 - [x] Tạo tag `v1.0` (`99bd39a`) và [release](https://github.com/TuanNguyn-11/dft-atpg/releases/tag/v1.0) kèm hai PDF (agent, theo ủy quyền, 06/10/2026). Nếu bìa/nội dung phải sửa: phát hành `v1.0.1`.
 - [x] Merge PR P2 #14 và P4 #15 (agent, theo ủy quyền); sửa dàn trang Chương 5, build lại PDF, phát hành `v1.0.1`.
-- [x] Sửa bìa thành “Bộ môn Kỹ thuật Máy tính” theo yêu cầu P1; thụt lề dòng đầu mọi đoạn; phát hành `v1.0.2` — **bản dùng để nộp**.
+- [x] Sửa bìa thành “Bộ môn Kỹ thuật Máy tính” theo yêu cầu P1; thụt lề dòng đầu mọi đoạn; phát hành `v1.0.2`.
+- [x] Dàn lại Hình 3.1 (lưu đồ D-algorithm) cho các khối không chồng nhau; phát hành `v1.0.3` — **bản dùng để nộp**.
 - [ ] Nộp bài theo kênh giảng viên và lưu bằng chứng (ảnh xác nhận nộp, link release).
 
 ## C. Nội dung PR đề xuất (`p1-nguyen-ly` → `main`)
