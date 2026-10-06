@@ -22,6 +22,12 @@ Giới hạn: chưa chạy trên TeXPage; PR P6 #11 đã merge sau khi P1 chạy
 - Thử merge cả hai trên `586218e`: pytest 334 passed; `notes/p2_kiem_chung.py --integrated` PASS (160/160 ô, X100X 4/4, X10XX 8/8); `scripts/p4_integrated_experiment.py` PODEM 18/18, bộ mẫu phủ 18/18; nguồn chuỗi k=1,2,3 là 0/1, 3/10, 3/15, khớp Chương 7.
 - Build FAIL do đoạn mới ở Chương 5 (2 overfull hbox 14,9pt và 2,2pt, đường dẫn dài). Đã merge (`cb2be0e`) rồi sửa dàn trang, giữ nguyên nội dung; build PASS, report 13 trang, slide 19 trang. Cập nhật số test 334 ở Chương 6 và slide P5.
 
+### Bổ sung 06/10/2026 — nhánh P5 `5b461af`
+
+- Thử merge lên `main` `d94ec20`: pytest 342 passed (Python 3.12.15); logic/PODEM 255 passed; checker P1/P2 (`--integrated`)/P3, `scripts/p4_integrated_experiment.py` PASS. `scripts/export_podem_trace.py` tái sinh đúng `results/trace_c17_11sa0.md` và `results/trace_backtrack.md` (chỉ khác CRLF). Mặc định `max_backtracks=1000` khớp code.
+- Nguyên trạng: build slide FAIL (frame kiến trúc P5 tràn 29,7pt); báo cáo 15 trang, đánh số tới trang 11; Goel/Wang trùng mục do cite `p5_*`; tiêu đề “Kiến trúc” lặp; `\href` tương đối tới file `.md`; bảng trace trùng Bảng 4.1.
+- P1 biên tập: giữ nội dung mới (quy tắc XOR/XNOR, quy ước trace, điều kiện dừng, giới hạn 1000), bỏ sơ đồ/pseudo-code (có trên slide và notes), tham chiếu Bảng 4.1, cite khóa chung; giảm khoảng cách nút sơ đồ slide. Build PASS: report 14 trang (1–10), slide 19 trang.
+
 ---
 
 ## Lịch sử — kiểm tra P1 ngày 03/10/2026 (trước tích hợp)

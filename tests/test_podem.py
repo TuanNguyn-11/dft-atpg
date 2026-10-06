@@ -13,6 +13,7 @@ from atpg.podem import (
     _is_detected,
     podem,
 )
+from scripts.export_podem_trace import render_trace
 
 
 @dataclass
@@ -455,6 +456,45 @@ def test_imply_keeps_p23_as_x_on_c17():
     assert values["19"] == "X"
     assert values["22"] == "D"
     assert values["23"] == "X"
+
+
+def test_trace_export_is_deterministic_and_keeps_seven_columns():
+    c = make_c17()
+    result = podem(c, Fault_for_Test("11", 0), trace=True)
+
+    first = render_trace(c, result)
+    second = render_trace(c, result)
+
+    assert first == second
+    assert first.count("| Bước | Objective (net, giá trị) |") == 1
+    assert "PI=(X,1,0,X,X); 10=1, 11=D, 16=D', 19=X, 22=D, 23=X" in first
+    assert "| 2 | (2,1) | (2,1) | 2=1 |" in first
+
+
+def test_trace_export_moves_backtrack_action_to_failing_assignment():
+    c = make_backtrack_circuit()
+    result = podem(c, Fault_for_Test("t", 0), trace=True)
+
+    content = render_trace(c, result)
+    rows = [line for line in content.splitlines() if line.startswith("| ") and not line.startswith("| Bước") and not line.startswith("|---")]
+
+    assert len(rows) == 3
+    assert rows[0].endswith("| backtrack |")
+    assert "| 2 | — | — | a=0 | PI=(0,X); t=X, n=1, out=X | ∅ | tiếp tục |" in rows[1]
+    assert rows[2].endswith("| thành công |")
+
+
+def test_trace_export_preserves_aborted_status_and_limit_reason():
+    c = make_backtrack_circuit()
+    result = podem(c, Fault_for_Test("t", 0), max_backtracks=0, trace=True)
+
+    content = render_trace(c, result)
+
+    assert result.status == "ABORTED"
+    assert "- Status: `ABORTED`" in content
+    assert "- Lý do dừng: đạt giới hạn `max_backtracks`" in content
+    assert "## Kết luận\n\n- Status: `UNTESTABLE`" not in content
+    assert content.count("| backtrack |") == 1
 
 #Test UNTESTABLE
 def make_untestable_circuit():
