@@ -2,11 +2,11 @@
 
 ## Trạng thái hiện tại — 06/10/2026
 
-PR P6 #11, P1 #12, P2 #14, P4 #15 đã merge; release `v1.0` tại `99bd39a`, `v1.0.1` sau khi build lại PDF, `v1.0.2` sau khi sửa bìa và thụt lề, `v1.0.3` sau khi dàn lại Hình 3.1 (bản nộp).
+PR P6 #11, P1 #12, P2 #14, P4 #15 đã merge; release `v1.0` tại `99bd39a`, `v1.0.1` sau khi build lại PDF, `v1.0.2` sau khi sửa bìa và thụt lề, `v1.0.3` sau khi dàn lại Hình 3.1, `v1.0.4` sau khi tách danh mục viết tắt (bản nộp).
 
 - Code P2–P6 đã tích hợp, CLI `python -m atpg.run` chạy được; pytest 334 passed sau PR #14, #15 (mốc review trên main: 302). Bằng chứng: `results/p1_verification.md`.
 - P6 đã có bản nháp Chương 7 và 3 slide trên nhánh `p6-mo-phong-ket-qua`; P1 rút gọn để vừa ngân sách trang, bản chi tiết lưu ở `notes/p1_chi_tiet/`. Không giao lại việc “viết từ đầu”; PR P6 #11 đã merge, P6 nên đọc lại phần rút gọn.
-- Báo cáo 13 trang PDF (2 bìa + 1 mục lục + 10 trang đánh số; nội dung ~9 trang kể cả tài liệu tham khảo), trong mức 5–10 trang. Slide 19 trang (bìa + 6×3 frame). Build script PASS.
+- Báo cáo 14 trang PDF (2 bìa + mục lục trang i + danh mục viết tắt trang ii + 10 trang đánh số từ Chương 1; nội dung ~9 trang, tài liệu tham khảo trang 9–10), trong mức 5–10 trang. Slide 19 trang (bìa + 6×3 frame). Build script PASS.
 - **Video Hình 4.5: mới có kịch bản/lời giải** (`p1_video_loi_giai.md`), **chưa có bằng chứng đã quay**. Giờ đóng cổng, kênh và định dạng nộp ngày 08/10/2026 **chưa xác minh**.
 - Còn lại: P1 duyệt PDF cuối và bìa, quay video, diễn tập 20 phút và nộp. Checklist: `p1_checklist_nop.md`.
 
