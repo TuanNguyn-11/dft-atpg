@@ -1,101 +1,61 @@
-\begin{frame}{P5 -- Cài đặt PODEM}
-
-\begin{itemize}
-
-    \item Triển khai PODEM trên logic 5 giá trị.
-
-    \item Các bước chính:
-
-    \begin{itemize}
-
-        \item Imply
-
-        \item Objective
-
-        \item Backtrace
-
-        \item Gán PI
-
-        \item Backtrack
-
-    \end{itemize}
-
-    \item Sử dụng D-frontier để lan truyền fault.
-
-    \item Bổ sung xử lý Objective và Backtrace cho XOR/XNOR.
-
-\end{itemize}
-
-\end{frame}
-
-
-\begin{frame}{Cơ chế tìm kiếm và Backtrack}
-
-\[
-\text{Objective}
-\rightarrow
-\text{Backtrace}
-\rightarrow
-\text{PI Assignment}
-\rightarrow
-\text{Imply}
-\]
-
-\begin{itemize}
-
-    \item Thử nhánh đầu tiên.
-
-    \item Khi nhánh thất bại, đảo quyết định PI.
-
-    \item Sau khi backtrack, implication lại trạng thái mới.
-
-    \item Tiếp tục tìm kiếm với decision stack.
-
-    \item Phân biệt \texttt{UNTESTABLE} và \texttt{ABORTED}.
-
-\end{itemize}
-
-\end{frame}
-
-
-\begin{frame}{Kết quả P5}
-
-\begin{table}
+\begin{frame}{P5 -- Kiến trúc cài đặt PODEM}
 
 \centering
+\small
+\begin{tikzpicture}[>=Latex, node distance=16mm,
+  box/.style={draw,rounded corners,align=center,inner sep=5pt}]
+  \node[box] (bench) {Circuit\\\texttt{.bench}};
+  \node[box,right=of bench] (podem) {PODEM\\Objective, Backtrace, Imply};
+  \node[box,right=of podem] (sim) {Fault simulator\\kiểm chứng độc lập};
+  \node[box,above=of podem] (run) {\texttt{run}\\điều phối};
+  \node[box,below=of podem] (unroll) {\texttt{unroll}\\mở rộng khung P4};
+  \draw[->] (bench) -- (podem);
+  \draw[->] (podem) -- (sim);
+  \draw[->] (run) -- (podem);
+  \draw[->] (bench) |- (run);
+  \draw[->] (unroll) -- (podem);
+\end{tikzpicture}
 
-\begin{tabular}{lccc}
-
-\hline
-
-Fault & Pattern & Backtracks & Status \\
-
-\hline
-
-c17: 11/SA0 & X10XX & 0 & DETECTED \\
-
-Backtrack: t/SA0 & 01 & 1 & DETECTED \\
-
-\hline
-
-\end{tabular}
-
-\end{table}
-
-\vspace{3mm}
-
+\vspace{2mm}
 \begin{itemize}
-
-    \item Hỗ trợ fault-frame và branch fault.
-
-    \item Kiểm thử XOR/XNOR trên logic 5 giá trị.
-
+    \item Imply mô phỏng logic $0,1,X,D,D'$ theo thứ tự topo.
+    \item Chọn D-frontier có X-path; backtrace đến PI theo thứ tự netlist.
+    \item Sau backtrack, dựng lại pattern và imply lại toàn mạch.
 \end{itemize}
 
-\vspace{1mm}
+\end{frame}
 
-\[
-\boxed{262\ \text{tests passed}}
-\]
+
+\begin{frame}{Trace minh họa -- c17, 11/SA0}
+
+\centering
+\begin{tabular}{cclll}
+\hline
+Bước & Objective & Gán PI & Net tiêu biểu & Hành động\\
+\hline
+1 & $(11,1)$ & $3=0$ & $11=D$, frontier $\{16,19\}$ & tiếp tục\\
+2 & $(2,1)$ & $2=1$ & $16=D'$, $22=D$ & thành công\\
+\hline
+\end{tabular}
+
+\vspace{3mm}
+\begin{itemize}
+    \item Kết quả: $X10XX$, 0 backtrack, phát hiện tại PO22.
+    \item Trace đầy đủ 7 cột: \texttt{results/trace\_c17\_11sa0.md}.
+    \item Mạch phụ $t/SA0$: $a=1$ bế tắc, đảo $a=0$, rồi $b=1$.
+\end{itemize}
+
+\end{frame}
+
+
+\begin{frame}{Kết quả kiểm chứng và giới hạn}
+
+\begin{itemize}
+    \item Mạch phụ: pattern $01$, 1 backtrack; giới hạn 0 trả \texttt{ABORTED}.
+    \item \texttt{DETECTED}: PO có $D/D'$; \texttt{UNTESTABLE}: hết cây; \texttt{ABORTED}: chạm giới hạn.
+    \item XOR/XNOR: Objective truyền chọn X đầu tiên/thử 0; backtrace dùng parity khi còn một X.
+    \item Kiểm tra tích hợp: 340 test toàn repo qua trên Python 3.14.8/pytest 9.1.1.
+    \item Phạm vi minh họa: c17, mạch phụ P3 và mạch tuần tự sau unroll; chưa dùng SCOAP/FAN.
+\end{itemize}
 
 \end{frame}

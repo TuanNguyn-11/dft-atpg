@@ -1,157 +1,101 @@
 \chapter{Cài đặt PODEM}
-
 \label{sec:p5-cai-dat-podem}
 
-\section{Kiến trúc cài đặt}
+\textbf{Kiến trúc.}
+PODEM nhận \texttt{Circuit}, \texttt{Fault} và giới hạn quay lui; sau mỗi
+lần gán PI, hàm \texttt{imply} mô phỏng logic năm giá trị theo thứ tự topo.
+\texttt{unroll} của P4 biến mạch tuần tự thành mạch tổ hợp nhiều khung;
+\texttt{run} của P6 đọc netlist, gọi PODEM và kiểm tra kết quả bằng
+\texttt{fault\_sim}. Luồng tìm kiếm của PODEM theo thuật toán
+Goel~\cite{p5_goel1981}.
 
-Phần P5 triển khai lõi thuật toán PODEM trên mạch logic tổ hợp với mô hình
-logic năm giá trị. Giao diện chính nhận một mạch \texttt{Circuit} và một
-\texttt{Fault}, đồng thời hỗ trợ danh sách fault tương ứng với các khung
-thời gian sau khi mạch tuần tự được unroll.
+\begin{center}
+\begin{tikzpicture}[>=Latex, node distance=13mm,
+  box/.style={draw,rounded corners,align=center,inner sep=4pt}]
+  \node[box] (bench) {mạch \,\texttt{.bench}};
+  \node[box,right=of bench] (podem) {\texttt{podem}\\Objective, backtrace, imply};
+  \node[box,right=of podem] (sim) {\texttt{fault\_sim}\\kiểm tra độc lập};
+  \node[box,above=of podem] (run) {\texttt{run}\\đọc vào, điều phối};
+  \node[box,below=of podem] (unroll) {\texttt{unroll} (P4)\\mở rộng khung tuần tự};
+  \draw[->] (bench) -- (podem);
+  \draw[->] (podem) -- (sim);
+  \draw[->] (run) -- (podem);
+  \draw[->] (bench) |- (run);
+  \draw[->] (unroll) -- (podem);
+\end{tikzpicture}
+\end{center}
 
-Luồng xử lý chính gồm các bước Imply, kiểm tra phát hiện fault, Objective,
-Backtrace, gán Primary Input và Backtrack khi nhánh hiện tại thất bại.
+\textbf{Imply, objective và backtrace.}
+Imply khởi tạo PI chưa gán bằng $X$, cấy lỗi và tính lại các net theo topo.
+Trước kích hoạt, objective yêu cầu net lỗi bằng giá trị đối lập với
+stuck-at. Sau kích hoạt, PODEM chọn cổng D-frontier đầu tiên còn X-path tới
+PO và chọn input $X$ đầu tiên theo thứ tự trong netlist; AND/NAND cần 1,
+OR/NOR cần 0 để truyền sai biệt. Backtrace đưa mục tiêu qua gate về PI:
+NAND/NOR/NOT đảo giá trị, AND/OR/BUFF giữ nguyên.
 
-\section{Logic năm giá trị}
+Với XOR/XNOR, objective lan truyền chọn input $X$ đầu tiên và thử 0.
+Ở bước backtrace, khi còn đúng một $X$, giá trị được tính từ parity của
+rail tốt đã biết ($D\mapsto1$, $D'\mapsto0$; $q=0$ với XOR, $q=1$ với
+XNOR). Nếu còn nhiều $X$, chọn $X$ đầu tiên và thử 0; imply sau đó tính
+lại trạng thái, không giả định các $X$ còn lại bằng 0.
 
-Hệ thống sử dụng năm giá trị $0$, $1$, $X$, $D$ và $D'$.
+\begin{verbatim}
+values = imply(circuit, pattern, fault)
+objective = choose_objective(values, fault)
+pi, bit = backtrace(circuit, values, objective)
+decision_stack.push(pi, bit)
+pattern[pi] = bit
+if branch_failed:
+    if backtracks == max_backtracks: return ABORTED
+    decision_stack.backtrack()  # bỏ con, đảo PI gần nhất
+    imply(circuit, pattern, fault)
+\end{verbatim}
 
-Trong đó $D$ biểu diễn cặp giá trị good/faulty là $(1,0)$ và $D'$ biểu diễn
-$(0,1)$. Giá trị $X$ biểu diễn trạng thái chưa xác định.
+Khi nhánh thất bại, decision stack bỏ các quyết định con rồi đảo PI gần
+nhất còn giá trị chưa thử; PODEM imply lại toàn mạch từ pattern mới.
+Trace xuất một hàng cho mỗi lần gán hoặc đảo PI. Hành động \texttt{backtrack}
+được ghi ở hàng dẫn đến ngõ cụt; hàng đảo quyết định dùng \texttt{—} cho
+objective/backtrace. Quy ước này khớp hợp đồng trace P3.
 
-Pattern của Primary Input chỉ sử dụng các giá trị $0$, $1$ và $X$.
-Giá trị $D$ và $D'$ được sử dụng trong quá trình implication để biểu diễn
-sự khác nhau giữa mạch tốt và mạch lỗi.
+\textbf{Trace và điều kiện dừng.}
+Bảng~\ref{tab:p5-trace} rút gọn trace chạy trên c17; file Markdown có đủ
+bảy cột, metadata và các net ở từng bước
+(\href{../results/trace_c17_11sa0.md}{trace đầy đủ}).
 
-Sau mỗi lần thay đổi pattern, mạch được implication lại theo thứ tự topo.
+\begin{table}[H]
+\centering\small
+\caption{Trace PODEM thật cho c17, 11/SA0}
+\label{tab:p5-trace}
+\begin{tabular}{cclll}
+\hline
+Bước & Objective & Gán PI & Net tiêu biểu & Hành động\\
+\hline
+1 & $(11,1)$ & $3=0$ & $11=D$, frontier $\{16,19\}$ & tiếp tục\\
+2 & $(2,1)$ & $2=1$ & $16=D'$, $22=D$ & thành công\\
+\hline
+\end{tabular}
+\end{table}
 
-\section{Objective và Backtrace}
+PODEM dừng thành công khi PO có $D$ hoặc $D'$. Sau kích hoạt lỗi, nhánh
+không còn D-frontier có X-path bị loại. Hết toàn bộ cây quyết định cho kết
+quả \texttt{UNTESTABLE}; chạm \texttt{max\_backtracks} cho kết quả
+\texttt{ABORTED}, không phải \texttt{UNTESTABLE}. Mặc định giới hạn là
+1000 lần đảo nhánh. Giới hạn này kiểm soát thời gian tìm kiếm, không khẳng
+định mọi vector đều đã được thử.
 
-Khi fault chưa được kích hoạt, Objective đặt net lỗi về giá trị đối lập với
-stuck-at value.
+\textbf{Kết quả và giới hạn.}
+Trên c17 (5 PI, 6 cổng NAND), lỗi 11/SA0 cho $X10XX$, 0 backtrack;
+mạch phụ P3 (2 PI, 3 cổng) cho $01$, 1 backtrack. Mạch tuần tự P4 (2 PI,
+6 cổng tổ hợp, 1 DFF) được kiểm trên các bản unroll $k=1,2,3$; lỗi được
+trải theo danh sách fault-frame. $Q@0$ là PI giả định, nên trạng thái đầu
+chưa biết được báo riêng theo kết quả bảo đảm hoặc có điều kiện. Các số đo
+này giới hạn ở mạch và fault đã nêu; chưa hỗ trợ nhánh fault qua DFF, FAN
+hay heuristic SCOAP.
+Logic năm giá trị được trình bày theo mô hình trong giáo trình
+\cite[Ch.~3--4]{p5_wang2006}.
 
-Sau khi fault được kích hoạt, Objective được chọn trên D-frontier nhằm lan
-truyền giá trị $D$ hoặc $D'$ đến Primary Output.
-
-Đối với các cổng NAND, NOR và NOT, giá trị Objective được đảo.
-Đối với AND, OR và BUFF, giá trị Objective được giữ nguyên.
-
-Đối với cổng XOR và XNOR, Objective được xử lý theo tính chẵn lẻ của các
-đầu vào. Với XOR tương ứng $q=0$ và XNOR tương ứng $q=1$. Khi có một đầu vào
-$X$, giá trị cần gán cho đầu vào đó được xác định từ giá trị mục tiêu và
-giá trị trên rail tốt của các đầu vào đã biết. Khi có nhiều đầu vào $X$,
-đầu vào $X$ đầu tiên theo thứ tự \texttt{Gate.inputs} được chọn để tiếp tục
-Backtrace.
-
-Backtrace đưa Objective từ một net trung gian về Primary Input chưa được
-quyết định. Thứ tự lựa chọn được giữ ổn định theo thứ tự ngõ vào của gate.
-
-\section{Backtrack}
-
-Các quyết định Primary Input được lưu trong decision stack.
-
-Khi nhánh hiện tại thất bại, quyết định được đảo sang giá trị còn lại và
-thuật toán tiếp tục tìm kiếm. Biến đếm backtrack chỉ tăng khi thuật toán
-thực sự chuyển sang một nhánh mới.
-
-Sau khi backtrack, pattern được tạo lại từ decision stack và mạch được
-implication lại trước khi tiếp tục. Trạng thái net và D-frontier được sử
-dụng trong trace là trạng thái sau lần implication mới.
-
-\section{D-frontier và điều kiện dừng}
-
-D-frontier gồm các gate có đầu ra đang là $X$ và có đầu vào mang giá trị $D$
-hoặc $D'$.
-
-Thuật toán kết thúc thành công khi một Primary Output có giá trị $D$ hoặc
-$D'$.
-
-\section{Fault injection}
-
-Stem fault tác động đến các fanout của net, trong khi branch fault chỉ tác
-động đến branch được chỉ định.
-
-Khi cấy stuck-at vào một giá trị logic năm giá trị, rail của mạch tốt được
-giữ nguyên và rail của mạch lỗi được ép về stuck-at value.
-
-Do đó, với các trạng thái đã chứa fault effect:
-
-\[
-D + SA0 \rightarrow D
-\]
-
-\[
-D + SA1 \rightarrow 1
-\]
-
-\[
-D' + SA0 \rightarrow 0
-\]
-
-\[
-D' + SA1 \rightarrow D'
-\]
-
-Cách xử lý này tránh tạo ra fault effect $D/D'$ giả khi fault được cấy lặp
-lại trên các vị trí hoặc các frame khác nhau.
-
-\section{Hỗ trợ fault-frame}
-
-Để tương thích với phần P4, PODEM có thể nhận danh sách fault tương ứng với
-các frame của mạch sau khi unroll.
-
-Khi sử dụng danh sách fault, \texttt{imply()} vẫn mô phỏng toàn bộ
-fault-instance, trong khi từng fault-frame được lần lượt chọn làm target
-cho Objective và Backtrace.
-
-\section{Kết quả kiểm thử}
-
-Với mạch c17 và fault 11/SA0, thuật toán tạo pattern
-
-\[
-X10XX
-\]
-
-với $0$ backtrack và trạng thái \texttt{DETECTED}.
-
-Với ví dụ backtrack, thuật toán tạo pattern
-
-\[
-01
-\]
-
-với $1$ backtrack.
-
-Các kiểm thử bổ sung cho XOR/XNOR bao gồm các tổ hợp logic năm giá trị,
-nhiều đầu vào, lan truyền và triệt tiêu $D/D'$, cùng các trường hợp
-Backtrace và PODEM theo đặc tả P3-v1.1.
-
-Bộ kiểm thử hiện tại đạt:
-
-\[
-\boxed{262\ \text{passed}}
-\]
-
-Trong đó:
-
-\[
-\boxed{220\ \text{passed}}
-\]
-
-cho \texttt{tests/test\_logic.py}, và
-
-\[
-\boxed{32\ \text{passed}}
-\]
-
-cho \texttt{tests/test\_podem.py}.
-
-\section{Tóm tắt}
-
-Phần P5 đã triển khai các thành phần chính của PODEM gồm logic năm giá trị,
-Objective, Backtrace, implication, D-frontier, Backtrack, fault injection
-và trace.
-
-Phần cài đặt cũng đã được bổ sung xử lý cho các cổng XOR/XNOR, fault effect
-$D/D'$, fault-frame và trạng thái trace sau backtrack. Toàn bộ bộ kiểm thử
-hiện tại của project đạt 262 test thành công.
+Trong snapshot tích hợp kiểm tra ngày 06/10/2026, toàn bộ bộ test đạt
+\textbf{339 passed} trên Python 3.14.8/pytest 9.1.1; con số này gồm test
+của các phần trong repo, không phải riêng P5. Mốc 302 là tổng toàn repo ở
+snapshot review trước đó; 220 test logic và 32 test PODEM là số lịch sử,
+không dùng làm số đo hiện tại.
