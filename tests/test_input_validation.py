@@ -108,3 +108,34 @@ def test_valid_demo_commands_still_work(capsys):
     assert run.main([C17, "--all"]) == 0
     assert run.main([SEQ, "--unroll", "2", "--all"]) == 0
     capsys.readouterr()
+
+# ---------------- loi PODEM (P5) goi truc tiep ----------------
+@pytest.mark.parametrize("bad, msg", [
+    (Fault("11", 0, "999"), "999"),       # nhanh toi cong khong ton tai
+    (Fault("11", 0, "22"), "22"),         # cong 22 khong nhan net 11
+    (Fault("99", 0), "99"),               # net khong ton tai (truoc day KeyError)
+])
+def test_podem_core_rejects_fault_not_in_circuit(bad, msg):
+    from atpg.podem import podem
+    with pytest.raises(ValueError, match=msg):
+        podem(c17(), bad)
+
+
+def test_podem_core_rejects_bad_fault_frame_in_list():
+    from atpg.podem import podem
+    with pytest.raises(ValueError):
+        podem(c17(), [Fault("11", 0), Fault("11", 0, "999")])
+
+
+@pytest.mark.parametrize("limit", [-1, 1.5, True])
+def test_podem_core_rejects_bad_backtrack_limit(limit):
+    from atpg.podem import podem
+    with pytest.raises(ValueError, match="max_backtracks"):
+        podem(c17(), Fault("11", 0), max_backtracks=limit)
+
+
+def test_podem_core_valid_input_unchanged():
+    from atpg.podem import podem
+    r = podem(c17(), Fault("11", 0))
+    assert (r.status, "".join(r.pattern[i] for i in c17().inputs), r.backtracks) == ("DETECTED", "X10XX", 0)
+    assert podem(c17(), Fault("11", 0, "16")).status == "DETECTED"

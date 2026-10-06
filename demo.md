@@ -23,7 +23,7 @@ Muốn lưu kết quả thì dùng `--md FILE` (ghi UTF-8), **không** chuyển 
 ```
 .\.venv\Scripts\python.exe -m pytest -q
 ```
-Mong đợi: dòng cuối `... passed` (không có `failed`). Khi `podem.py` của P5 có trong repo, nhóm test tích hợp `tests/test_integration.py` chạy PODEM thật; nếu thiếu PODEM các test đó bị skip.
+Mong đợi: dòng cuối `... passed` (không có `failed`). Nhóm test tích hợp `tests/test_integration.py` chạy PODEM thật của P5 (đã có trong repo) và đếm số lần gọi PODEM; nếu thiếu `podem.py` các test đó bị skip thay vì pass giả. Mốc 06/10/2026: `350 passed`.
 
 ## 2. Trace lỗi mẫu 11/SA0 trên c17
 ```

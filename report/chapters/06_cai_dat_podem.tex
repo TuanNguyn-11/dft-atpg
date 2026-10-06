@@ -43,8 +43,10 @@ có điều kiện và chuỗi bảo đảm, không tự coi trạng thái đầ
 
 \textbf{Kiểm thử và giới hạn.}
 Logic năm giá trị và xử lý lỗi theo mô hình trong giáo trình
-\cite[Ch.~3--4]{p1_wang2006}. Ngày 06/10/2026, toàn repo đạt 342 test
-(Python 3.12.15 và 3.14.8, pytest 9.1.1), riêng logic và PODEM 255 test.
+\cite[Ch.~3--4]{p1_wang2006}. Input sai (net/nhánh không thuộc mạch,
+$SV\notin\{0,1\}$, giới hạn âm) bị từ chối bằng \texttt{ValueError}.
+Ngày 06/10/2026, toàn repo đạt 350 test (Python 3.12.15, pytest 9.1.1),
+riêng logic và PODEM 255 test.
 Với c17 $11/SA0$: $X10XX$, 0 backtrack, hai phép gán PI; mạch phụ P3
 $t/SA0$: $01$, một backtrack (giới hạn 0 trả \texttt{ABORTED}). Simulator
 P6 độc lập xác nhận các mẫu. Chưa hỗ trợ lỗi nhánh qua DFF, FAN hay
