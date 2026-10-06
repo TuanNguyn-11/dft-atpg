@@ -6,7 +6,7 @@ Hạn chính thức **08/10/2026**. Giờ đóng cổng, kênh và định dạn
 
 | Thành phần | Đường dẫn | Trạng thái 06/10/2026 |
 |---|---|---|
-| PDF báo cáo | `report/bao_cao_DFT_ATPG.pdf` | Build PASS; 13 trang (2 bìa + 1 mục lục + 10 trang đánh số, ~9 trang nội dung); không bị Git ignore |
+| PDF báo cáo | `report/bao_cao_DFT_ATPG.pdf` | Build PASS; 14 trang (2 bìa + mục lục i + danh mục viết tắt ii + 10 trang đánh số từ Chương 1, ~9 trang nội dung); không bị Git ignore |
 | PDF slide | `slides/slides_DFT_ATPG.pdf` | Build PASS; 19 trang (bìa + 3 frame × 6 người); không bị Git ignore |
 | Source báo cáo/slide | `report/`, `slides/` | 8 chương; bản chi tiết Ch.5–7 trước rút gọn ở `notes/p1_chi_tiet/` |
 | Code + test | `src/atpg/`, `tests/` | pytest 334 passed (Python 3.12.15), sau PR #14, #15 |
@@ -29,7 +29,8 @@ Lưu ý: PDF phải được build lại trên đúng commit phát hành (sau kh
 - [x] Tạo tag `v1.0` (`99bd39a`) và [release](https://github.com/TuanNguyn-11/dft-atpg/releases/tag/v1.0) kèm hai PDF (agent, theo ủy quyền, 06/10/2026). Nếu bìa/nội dung phải sửa: phát hành `v1.0.1`.
 - [x] Merge PR P2 #14 và P4 #15 (agent, theo ủy quyền); sửa dàn trang Chương 5, build lại PDF, phát hành `v1.0.1`.
 - [x] Sửa bìa thành “Bộ môn Kỹ thuật Máy tính” theo yêu cầu P1; thụt lề dòng đầu mọi đoạn; phát hành `v1.0.2`.
-- [x] Dàn lại Hình 3.1 (lưu đồ D-algorithm) cho các khối không chồng nhau; phát hành `v1.0.3` — **bản dùng để nộp**.
+- [x] Dàn lại Hình 3.1 (lưu đồ D-algorithm) cho các khối không chồng nhau; phát hành `v1.0.3`.
+- [x] Tách danh mục viết tắt ra trang riêng (trang ii), nội dung đánh số từ Chương 1; phát hành `v1.0.4` — **bản dùng để nộp**.
 - [ ] Nộp bài theo kênh giảng viên và lưu bằng chứng (ảnh xác nhận nộp, link release).
 
 ## C. Nội dung PR đề xuất (`p1-nguyen-ly` → `main`)

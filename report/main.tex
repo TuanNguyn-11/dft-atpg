@@ -60,7 +60,8 @@
 \tableofcontents
 % Không in danh mục hình/bảng riêng trong bản ngắn 5--10 trang.
 \clearpage
-\pagenumbering{arabic}
+% Danh mục viết tắt là phần đầu (số La Mã), nằm trên trang riêng.
+\phantomsection
 \chapter*{Danh mục viết tắt}
 \addcontentsline{toc}{chapter}{Danh mục viết tắt}
 \begin{longtable}{@{}p{2.4cm}p{6.4cm}p{5.2cm}@{}}
@@ -79,6 +80,9 @@ SCOAP & Sandia Controllability/Observability Analysis Program & Độ đo khả 
 DFF & D Flip-Flop & Phần tử nhớ D \\
 \bottomrule
 \end{longtable}
+\clearpage
+% Nội dung đánh số Ả Rập từ trang 1, bắt đầu ở Chương 1.
+\pagenumbering{arabic}
 
 % Dùng input thay include để các phần có thể nối tiếp trên cùng trang.
 \input{chapters/01_gioi_thieu}
