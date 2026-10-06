@@ -71,18 +71,31 @@ def detects(c, pattern, fault):
     return any(good[o] != bad[o] for o in c.outputs)
 
 
-def detects_cube(c, cube, fault, max_x=12):
-    """True neu MOI cach dien X deu phat hien duoc loi (neu qua nhieu X thi thu dien het 0 va het 1)."""
-    xs = [k for k, v in cube.items() if isinstance(v, str) and v in ("X", "x")]
+def _is_x(v):
+    return isinstance(v, str) and v in ("X", "x")
+
+
+def detects_cube(c, cube, fault, max_x=16):
+    """Kiem tra pattern co X phat hien loi voi MOI cach dien X.
+    Tra ve True  : da chung minh (vet can toan bo cach dien X);
+           False : co phan vi du (mot cach dien X khong phat hien);
+           None  : qua nhieu bit X (> max_x) nen CHUA chung minh duoc, khong co phan vi du da biet.
+    Khong bao gio tra True chi vi thu thu vai mau."""
+    xs = [k for k, v in cube.items() if _is_x(v)]
     base = {k: (0 if k in xs else _bit(v)) for k, v in cube.items()}
-    fills = (product((0, 1), repeat=len(xs)) if len(xs) <= max_x
-             else [(0,) * len(xs), (1,) * len(xs)])
-    for bits in fills:
+    if len(xs) <= max_x:
+        for bits in product((0, 1), repeat=len(xs)):
+            p = dict(base)
+            p.update(zip(xs, bits))
+            if not detects(c, p, fault):
+                return False
+        return True
+    for fill in (0, 1):                      # qua gioi han: chi tim phan vi du, khong chung minh
         p = dict(base)
-        p.update(zip(xs, bits))
+        p.update({k: fill for k in xs})
         if not detects(c, p, fault):
             return False
-    return True
+    return None
 
 
 def d_value(g, b):
@@ -195,6 +208,8 @@ def coverage_parallel(c, patterns, faults):
 # ---------- doi chieu voi PODEM (chi hop cho mach it dau vao) ----------
 def exhaustive_test(c, fault, max_pi=16):
     """Tim mot pattern bang vet can roi noi long thanh cube co X.
+    Chi noi long mot bit thanh X khi DA CHUNG MINH moi cach dien X deu phat hien
+    (vet can toan bo, nen khong dung ket qua thu vai mau).
     Tra ve (cube | None, da_vet_can). Neu qua nhieu PI thi tra (None, False)."""
     if len(c.inputs) > max_pi:
         return None, False
@@ -205,7 +220,60 @@ def exhaustive_test(c, fault, max_pi=16):
             for i in c.inputs:
                 trial = dict(cube)
                 trial[i] = "X"
-                if detects_cube(c, trial, fault):
+                if detects_cube(c, trial, fault, max_x=len(c.inputs)) is True:
+                    cube = trial
+            return {k: str(v) for k, v in cube.items()}, True
+    return None, True
+
+
+# ---------- mach da trai khung: trang thai dau CHUA BIET ----------
+def _po_trace(c, pattern, fault=None):
+    val = simulate(c, pattern, fault)
+    return tuple(val[o] for o in c.outputs)
+
+
+def detects_unknown_state(c, pattern, fault, state_nets, max_bits=20):
+    """Phat hien BAO DAM khi trang thai dau (cac net trong state_nets, vd 'Q@0') chua biet.
+    Mach tot va mach loi la hai chip rieng nen moi chip co the bat dau o BAT KY trang thai nao:
+    pattern chi duoc coi la phat hien neu moi vet PO cua mach tot khac moi vet PO cua mach loi,
+    voi moi cach dien X o cac dau vao dieu khien duoc (cung dinh nghia voi scripts/p4_seq_experiment.py).
+    Gia tri cua state_nets trong pattern bi bo qua.
+    Tra ve True (da chung minh), False (co phan vi du), None (qua nhieu to hop > 2**max_bits)."""
+    states = list(state_nets)
+    ctrl = [i for i in c.inputs if i not in states]
+    xs = [i for i in ctrl if _is_x(pattern.get(i, "X"))]
+    if len(xs) + 2 * len(states) > max_bits:
+        return None
+    base = {i: _bit(pattern[i]) for i in ctrl if i not in xs}
+    state_vals = list(product((0, 1), repeat=len(states)))
+    for bits in product((0, 1), repeat=len(xs)):
+        p = dict(base)
+        p.update(zip(xs, bits))
+        good, bad = set(), set()
+        for q in state_vals:
+            pq = dict(p)
+            pq.update(zip(states, q))
+            good.add(_po_trace(c, pq))
+            bad.add(_po_trace(c, pq, fault))
+        if not good.isdisjoint(bad):
+            return False
+    return True
+
+
+def guaranteed_sequence_test(c, fault, state_nets, max_bits=16):
+    """Vet can tren cac dau vao dieu khien duoc (khong gom state_nets) de tim chuoi phat hien
+    BAO DAM voi moi trang thai dau. Tra ve (cube | None, da_vet_can)."""
+    ctrl = [i for i in c.inputs if i not in state_nets]
+    if len(ctrl) > max_bits or len(ctrl) + 2 * len(state_nets) > 24:
+        return None, False
+    limit = len(ctrl) + 2 * len(state_nets)
+    for bits in product((0, 1), repeat=len(ctrl)):
+        cube = dict(zip(ctrl, bits))
+        if detects_unknown_state(c, cube, fault, state_nets, max_bits=limit) is True:
+            for i in ctrl:
+                trial = dict(cube)
+                trial[i] = "X"
+                if detects_unknown_state(c, trial, fault, state_nets, max_bits=limit) is True:
                     cube = trial
             return {k: str(v) for k, v in cube.items()}, True
     return None, True

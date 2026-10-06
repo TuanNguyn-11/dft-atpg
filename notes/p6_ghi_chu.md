@@ -27,7 +27,7 @@
 - Nối tiếp (serial): mô phỏng mạch tốt và mạch lỗi, so các PO; phát hiện nếu có PO khác nhau.
 - Lỗi stem ép giá trị cả net; lỗi nhánh chỉ ép giá trị tại ngõ vào của cổng `branch_to`.
 - Song song theo pattern: mỗi net là một số nguyên, bit k là giá trị ở pattern k; cổng NAND = `~(a & b) & mask`.
-- Pattern có X: điền 0 rồi mô phỏng (quy ước nhóm); thêm kiểm "mọi cách điền X" để chắc chắn.
+- Pattern có X: điền 0 rồi mô phỏng (quy ước nhóm). Kiểm "mọi cách điền X" có ba kết quả: có (đã vét cạn), không (có phản ví dụ), chưa kiểm chứng hết (quá giới hạn bit X). Không được coi "thử X=0 và X=1 đều đạt" là bằng chứng cho mọi cách điền.
 
 ## 6. Chỉ số
 - Fault coverage = DETECTED / tổng.
@@ -48,3 +48,11 @@
 - [ ] Đối chiếu `Circuit`/`Fault` với P4, P5 (mục 8 prompt.md).
 - [ ] Đối chiếu vector của P2, P3 cho 11/SA0 bằng `--pattern`.
 - [ ] Chạy lại `--all` khi `podem.py` của P5 có mặt.
+
+## 10. Mạch tuần tự: trạng thái đầu chưa biết
+- Sau `unroll`, `Q@0` chỉ là đầu vào hình thức. Trên chip không scan/reset không tự đặt được `Q@0`.
+- Mạch tốt và mạch lỗi là hai chip riêng nên mỗi chip có thể bắt đầu ở trạng thái bất kỳ. Pattern chỉ **phát hiện bảo đảm** khi mọi vết PO của mạch tốt khác mọi vết PO của mạch lỗi, với mọi cặp trạng thái đầu và mọi cách điền X (cùng định nghĩa với `scripts/p4_seq_experiment.py`).
+- Pattern phụ thuộc `Q@0` chỉ là kết quả **có điều kiện** (nhãn `CO DIEU KIEN Q@0`), tách khỏi coverage bảo đảm. Ví dụ `Q = DFF(A)`, `Y = AND(Q, A)`, lỗi `Y/SA0`: 1 khung chỉ phát hiện nếu `Q@0 = 1`; 2 khung với `A = 1, 1` thì bảo đảm.
+- seq_example, 18 lỗi stem, bảo đảm: k = 1: 1/18; k = 2: 13/18; k = 3: 18/18 (khớp kết quả của P4).
+- Chế độ trải khung chỉ dùng lỗi stem vật lý, sao sang mọi khung, không gộp lỗi, không có lỗi nhánh (`fault_in_frames` của P4 chỉ nhận stem; lỗi nhánh vào DFF phải ánh xạ `D@t` sang `Q@(t+1)`).
+

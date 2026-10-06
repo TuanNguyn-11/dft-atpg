@@ -5,7 +5,7 @@ from itertools import product
 from atpg import run
 from atpg.circuit import Circuit
 from atpg.fault_sim import (compact, coverage, coverage_parallel, detects, detects_cube,
-                            exhaustive_test, simulate, simulate_parallel)
+                            detects_unknown_state, exhaustive_test, simulate, simulate_parallel)
 from atpg.faults import Fault, all_faults, collapse
 
 ROOT = os.path.dirname(os.path.dirname(__file__))
@@ -118,3 +118,87 @@ def test_cli_all(tmp_path, capsys):
     assert run.main([C17, "--all", "--md", str(md)]) == 0
     text = md.read_text(encoding="utf-8")
     assert "34" in text and "22" in text and "100.0%" in text
+
+
+# ---------- phan vi du cua nhom P1: khong xac nhan "moi cach dien X" chi bang hai lan thu ----------
+def xor_circuit(tmp_path):
+    """a, x0..x12 -> eq = XNOR(x0,x1); y = AND(a, eq). Loi a/SA0 can x0 == x1."""
+    xs = [f"x{i}" for i in range(13)]
+    lines = ["INPUT(a)"] + [f"INPUT({x})" for x in xs] + ["OUTPUT(y)", "eq = XNOR(x0, x1)", "y = AND(a, eq)"]
+    f = tmp_path / "xor.bench"
+    f.write_text("\n".join(lines) + "\n")
+    return f, Circuit.from_bench(str(f)), Fault("a", 0)
+
+
+def test_detects_cube_not_true_from_two_fills(tmp_path):
+    _, c, f = xor_circuit(tmp_path)
+    cube = {k: "X" for k in c.inputs}
+    cube["a"] = "1"
+    # tat ca X=0 va tat ca X=1 deu phat hien, nhung x0=0,x1=1 thi khong
+    assert detects(c, {k: (1 if k == "a" else 0) for k in c.inputs}, f)
+    assert detects(c, {k: 1 for k in c.inputs}, f)
+    assert not detects(c, {**{k: 0 for k in c.inputs}, "a": 1, "x1": 1}, f)
+    assert detects_cube(c, cube, f, max_x=12) is None      # qua gioi han: KHONG duoc tra True
+    assert detects_cube(c, cube, f, max_x=16) is False     # vet can: tim ra phan vi du
+
+
+def test_exhaustive_test_relaxes_only_proven_bits(tmp_path):
+    _, c, f = xor_circuit(tmp_path)
+    cube, exhausted = exhaustive_test(c, f)
+    assert exhausted and cube["a"] == "1"
+    assert cube["x0"] != "X" and cube["x1"] != "X"          # x0 == x1 la dieu kien bat buoc
+    assert all(cube[f"x{i}"] == "X" for i in range(2, 13))
+    assert detects_cube(c, cube, f, max_x=len(c.inputs)) is True
+
+
+def test_cli_pattern_wording_for_x_counterexample(tmp_path, capsys):
+    path, c, f = xor_circuit(tmp_path)
+    pat = "1" + "X" * 13
+    run.main([str(path), "--fault", "a", "0", "--pattern", pat])
+    out = capsys.readouterr().out
+    assert "KHONG phat hien voi moi cach dien X" in out and "PHAT HIEN voi moi cach" not in out
+    run.main([str(path), "--fault", "a", "0", "--pattern", pat, "--max-x", "12"])
+    out = capsys.readouterr().out
+    assert "CHUA KIEM CHUNG HET" in out and "PHAT HIEN voi moi cach" not in out
+
+
+def test_cli_verify_column_for_unproven_cube(tmp_path):
+    _, c, f = xor_circuit(tmp_path)
+    cube = {k: "X" for k in c.inputs}
+    cube["a"] = "1"
+    res = run.GenResult(f, "DETECTED", cube, "-", "test")
+    assert run.verify(c, res, 16) == ("OK", "khong")
+    assert run.verify(c, res, 12)[1].startswith("chua kiem chung het")
+
+
+def test_unknown_state_vs_controllable_state(tmp_path):
+    from atpg.circuit import Gate
+    c = Circuit.from_gates("st", ["A", "S"], ["Y"], [Gate("Y", "AND", ["S", "A"])])
+    f = Fault("Y", 0)
+    p = {"A": "1", "S": "1"}
+    assert detects(c, p, f)                                   # neu S dieu khien duoc va = 1
+    assert detects_unknown_state(c, p, f, ["S"]) is False     # S chua biet: khong bao dam
+
+
+def test_generate_test_falls_back_when_podem_raises():
+    c = c17()
+
+    def broken_podem(circ, fault, max_backtracks=1000, trace=False):
+        raise ValueError("Backtrace chua ho tro loai cong: XOR")
+
+    run.PODEM_ERRORS.clear()
+    r = run.generate_test(c, F11, broken_podem)
+    assert r.status == "DETECTED" and "PODEM khong chay duoc" in r.algo
+    assert "XOR" in run.podem_error_note()
+    run.PODEM_ERRORS.clear()
+
+
+def test_podem_agrees_with_independent_fault_sim_on_c17():
+    """Chi chay khi podem.py cua P5 co mat: moi pattern PODEM phai duoc fault simulation xac nhan."""
+    pytest = __import__("pytest")
+    podem = pytest.importorskip("atpg.podem").podem
+    c = c17()
+    for fault in collapse(c, all_faults(c)):
+        r = run.generate_test(c, fault, podem)
+        assert r.algo == "PODEM" and r.status == "DETECTED", str(fault)
+        assert run.verify(c, r, 16) == ("OK", "co"), str(fault)

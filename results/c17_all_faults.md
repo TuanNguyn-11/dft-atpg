@@ -1,6 +1,6 @@
 # Ket qua toan bo loi - c17
 
-Thuat toan sinh pattern: vet can (tham chieu). Tong thoi gian: 0.010 s. Pattern co X duoc dien 0 khi mo phong loi.
+Thuat toan sinh pattern: vet can (tham chieu). Tong thoi gian: 0.006 s. Pattern co X duoc dien 0 khi mo phong loi.
 
 | PI | PO | cong | DFF |
 |---|---|---|---|
@@ -43,3 +43,5 @@ So loi truoc gop: 34; sau gop (equivalence): 22.
 | Pattern truoc nen | 22 |
 | Pattern sau nen | 7 (phu 22/22 loi) |
 | Pattern bi kiem chung SAI | 0 |
+| Pattern co X ma co cach dien X khong phat hien | 0 |
+| Pattern chua kiem chung het moi cach dien X (>16 bit X) | 0 |
