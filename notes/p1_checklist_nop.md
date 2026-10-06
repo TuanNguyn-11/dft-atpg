@@ -9,7 +9,7 @@ Hạn chính thức **08/10/2026**. Giờ đóng cổng, kênh và định dạn
 | PDF báo cáo | `report/bao_cao_DFT_ATPG.pdf` | Build PASS; 13 trang (2 bìa + 1 mục lục + 10 trang đánh số, ~9 trang nội dung); không bị Git ignore |
 | PDF slide | `slides/slides_DFT_ATPG.pdf` | Build PASS; 19 trang (bìa + 3 frame × 6 người); không bị Git ignore |
 | Source báo cáo/slide | `report/`, `slides/` | 8 chương; bản chi tiết Ch.5–7 trước rút gọn ở `notes/p1_chi_tiet/` |
-| Code + test | `src/atpg/`, `tests/` | pytest 332 passed (Python 3.12.15) |
+| Code + test | `src/atpg/`, `tests/` | pytest 334 passed (Python 3.12.15), sau PR #14, #15 |
 | README/demo | `README.md`, `demo.md` | Lệnh tái lập: `python scripts/p1_verify_release.py` |
 | Bằng chứng kết quả | `results/p1_*.md` | c17, full scan, trải khung k=1..3, log kiểm chứng |
 | Lời giải/kịch bản video Hình 4.5 | `notes/p1_video_loi_giai.md` | Có lời giải và lời dẫn; **video chưa có bằng chứng đã quay** |
@@ -27,6 +27,7 @@ Lưu ý: PDF phải được build lại trên đúng commit phát hành (sau kh
 - [ ] P1 quay video Hình 4.5 (2–3 phút), xem lại tiếng/hình, lưu theo định dạng yêu cầu.
 - [ ] Cả nhóm diễn tập 20 phút (không gồm hỏi đáp), thử demo CLI trên máy trình chiếu, chuẩn bị bản dự phòng (ảnh/kết quả `results/`).
 - [x] Tạo tag `v1.0` (`99bd39a`) và [release](https://github.com/TuanNguyn-11/dft-atpg/releases/tag/v1.0) kèm hai PDF (agent, theo ủy quyền, 06/10/2026). Nếu bìa/nội dung phải sửa: phát hành `v1.0.1`.
+- [x] Merge PR P2 #14 và P4 #15 (agent, theo ủy quyền); sửa dàn trang Chương 5, build lại PDF, phát hành `v1.0.1` — **bản dùng để nộp**.
 - [ ] Nộp bài theo kênh giảng viên và lưu bằng chứng (ảnh xác nhận nộp, link release).
 
 ## C. Nội dung PR đề xuất (`p1-nguyen-ly` → `main`)

@@ -17,6 +17,11 @@ Sửa trong đợt này: font mono có đủ bold/italic (TeX Gyre Cursor); ng�
 
 Giới hạn: chưa chạy trên TeXPage; PR P6 #11 đã merge sau khi P1 chạy pytest trên head `1b37300` (332 passed); chưa review độc lập phần rút gọn Chương 5–7 bởi P4/P5/P6.
 
+### Bổ sung 06/10/2026 — PR P2 #14, P4 #15
+
+- Thử merge cả hai trên `586218e`: pytest 334 passed; `notes/p2_kiem_chung.py --integrated` PASS (160/160 ô, X100X 4/4, X10XX 8/8); `scripts/p4_integrated_experiment.py` PODEM 18/18, bộ mẫu phủ 18/18; nguồn chuỗi k=1,2,3 là 0/1, 3/10, 3/15, khớp Chương 7.
+- Build FAIL do đoạn mới ở Chương 5 (2 overfull hbox 14,9pt và 2,2pt, đường dẫn dài). Đã merge (`cb2be0e`) rồi sửa dàn trang, giữ nguyên nội dung; build PASS, report 13 trang, slide 19 trang. Cập nhật số test 334 ở Chương 6 và slide P5.
+
 ---
 
 ## Lịch sử — kiểm tra P1 ngày 03/10/2026 (trước tích hợp)
