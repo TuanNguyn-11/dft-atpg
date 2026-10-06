@@ -2,13 +2,13 @@
 
 ## Trạng thái hiện tại — 06/10/2026
 
-Base `main` `4abf964` (đã merge PR P6 #11) cộng thay đổi P1 trong nhánh `p1-nguyen-ly`.
+PR P6 #11 và P1 #12 đã merge; release `v1.0` tại `99bd39a`.
 
 - Code P2–P6 đã tích hợp, CLI `python -m atpg.run` chạy được; pytest 332 passed (mốc review trên main: 302). Bằng chứng: `results/p1_verification.md`.
 - P6 đã có bản nháp Chương 7 và 3 slide trên nhánh `p6-mo-phong-ket-qua`; P1 rút gọn để vừa ngân sách trang, bản chi tiết lưu ở `notes/p1_chi_tiet/`. Không giao lại việc “viết từ đầu”; PR P6 #11 đã merge, P6 nên đọc lại phần rút gọn.
 - Báo cáo 13 trang PDF (2 bìa + 1 mục lục + 10 trang đánh số; nội dung ~9 trang kể cả tài liệu tham khảo), trong mức 5–10 trang. Slide 19 trang (bìa + 6×3 frame). Build script PASS.
 - **Video Hình 4.5: mới có kịch bản/lời giải** (`p1_video_loi_giai.md`), **chưa có bằng chứng đã quay**. Giờ đóng cổng, kênh và định dạng nộp ngày 08/10/2026 **chưa xác minh**.
-- Còn lại: P1 duyệt PDF cuối và bìa, quay video, diễn tập 20 phút, release/tag `v1.0` và nộp. Checklist: `p1_checklist_nop.md`.
+- Còn lại: P1 duyệt PDF cuối và bìa, quay video, diễn tập 20 phút và nộp. Checklist: `p1_checklist_nop.md`.
 
 ## Lịch sử — cập nhật thực hiện 03/10/2026 (trước tích hợp, không còn là trạng thái hiện tại)
 
@@ -102,4 +102,4 @@ Tổng 20 phút, nội dung trình bày 18 phút, hỏi đáp nằm ngoài khung
 - [ ] Video Hình 4.5 quay và kiểm tra (đã có lời giải).
 - [ ] Diễn tập 20 phút, kiểm tra bản dự phòng demo.
 - [ ] P1 duyệt PDF/code/slide/video nhất quán ở commit phát hành.
-- [ ] Chỉ tạo tag v1.0 khi sản phẩm đã hoàn chỉnh và có ủy quyền.
+- [x] Tag v1.0 đã tạo theo ủy quyền của P1 sau khi kiểm chứng đạt (06/10/2026).
