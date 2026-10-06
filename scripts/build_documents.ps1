@@ -23,7 +23,9 @@ foreach ($document in @('report', 'slides')) {
         Invoke-Checked $xelatex $texArgs
         $issues = Select-String -Path 'main.log' -Pattern 'undefined|Please \(re\)run Biber|Missing character:|Overfull \\[hv]box'
         if ($issues) { throw ($issues -join [Environment]::NewLine) }
-        Write-Output "PASS: $document/main.pdf"
+        $artifact = if ($document -eq 'report') { 'bao_cao_DFT_ATPG.pdf' } else { 'slides_DFT_ATPG.pdf' }
+        Copy-Item -LiteralPath 'main.pdf' -Destination $artifact -Force
+        Write-Output "PASS: $document/$artifact"
     }
     finally { Pop-Location }
 }

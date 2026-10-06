@@ -6,15 +6,23 @@ Repo chung của nhóm gồm báo cáo LaTeX, slide và chương trình minh h�
 
 ## Trạng thái
 
-**Cập nhật P1 ngày 03/10/2026:** đã viết Chương 1, 2, kết luận theo trạng thái hiện tại, ba slide P1, bảng SCOAP và ví dụ collapsing c17. Có lời giải/lời dẫn Hình 4.5; **P1 tự quay video 2–3 phút**. P2–P6 trong repo vẫn là khung, chưa có lõi ATPG, netlist hoặc kết quả thực nghiệm được tích hợp. Các lệnh CLI ATPG bên dưới là giao diện dự kiến, chưa chạy được. Chưa phát hành PDF cuối hoặc tag `v1.0`.
+**Trạng thái hiện tại (P1, 06/10/2026; base `main` `4abf964`, sau khi merge PR P6 #11):**
 
-Kiểm chứng độc lập phần P1 (chỉ dùng thư viện chuẩn, chạy từ gốc repo):
+- Code P2–P6 đã tích hợp; CLI `python -m atpg.run` chạy được. `pytest` đạt **332 passed** trên Python 3.12.15/pytest 9.1.1 (mốc review trên main: 302; tăng do test tích hợp P6).
+- Số liệu thực đo: c17 PODEM 34/34 lỗi gốc, 22/22 đại diện sau gộp; nén 34→7 hoặc 22→6 pattern. Full scan 18/18 lỗi stem qua API thật. Trải khung từ trạng thái đầu chưa biết: 1/18, 13/18, 18/18 tại k=1,2,3 (PODEM kết hợp vét cạn chuỗi bổ sung, không phải PODEM thuần).
+- Báo cáo 8 chương đã biên tập về 13 trang PDF (2 bìa + 1 mục lục + 10 trang đánh số, ~9 trang nội dung kể cả tài liệu tham khảo). Slide 19 trang: bìa + 18 frame của 6 người. `scripts/build_documents.ps1` PASS cục bộ.
+- Chương 7/slide P6 đã merge vào `main` (PR #11). P1 rút gọn Chương 5–7 để vừa số trang; bản chi tiết gốc ở `notes/p1_chi_tiet/`, P4/P5/P6 nên đọc lại.
+- **Còn thiếu:** P1 duyệt PDF cuối và thông tin bìa, video Hình 4.5 (mới có kịch bản/lời giải, **chưa có bằng chứng đã quay**), xác nhận giờ/kênh/định dạng nộp, diễn tập 20 phút, release/tag `v1.0`.
+
+Tái lập toàn bộ kiểm chứng P1 (test, kiểm chứng P2/P3/P4, demo CLI, full scan qua API thật):
 
 ```text
-python scripts/check_p1_examples.py
+python scripts/p1_verify_release.py
 ```
 
-Lệnh này kiểm tra collapsing trên 32 vector c17, tám cách điền mẫu X, bảng SCOAP 11 net và toàn bộ tám vector bài Hình 4.5. Đây không phải phép chạy PODEM hoặc kết quả coverage của nhóm. Xem [kiến thức và thuật ngữ P1](notes/p1_kien_thuc.md), [lời giải video](notes/p1_video_loi_giai.md) và [biên bản kiểm tra tích hợp](notes/p1_review.md).
+Kết quả ghi vào `results/p1_verification.md`, `results/p1_full_scan.md`, `results/p1_c17_*.md`, `results/p1_seq_k*.md`. Kiểm chứng riêng ví dụ P1 (collapsing, SCOAP, Hình 4.5): `python scripts/check_p1_examples.py`. Xem [kiến thức và thuật ngữ P1](notes/p1_kien_thuc.md), [lời giải video](notes/p1_video_loi_giai.md), [biên bản review](notes/p1_review.md) và [checklist nộp](notes/p1_checklist_nop.md).
+
+> Lịch sử (03/10/2026, trước tích hợp): README từng ghi P2–P6 là khung, CLI chưa chạy được. Nội dung đó không còn đúng.
 
 ## Mục tiêu và phạm vi
 
@@ -59,7 +67,7 @@ slides/
   parts/p1.tex ... p6.tex  Mỗi người viết 2–3 frame
 ```
 
-Các thư mục trống có `.gitkeep` để Git lưu được cấu trúc. Những file code, netlist và kết quả sẽ được chủ sở hữu thêm khi triển khai.
+Các thư mục trống có `.gitkeep` để Git lưu được cấu trúc. Bản nháp chi tiết Chương 5–7 trước biên tập rút gọn được lưu trong `notes/p1_chi_tiet/`.
 
 Trang bìa nằm trong `report/cover.tex`; logo `report/figures/p1/logo_truong.png` được trích từ PDF mẫu `Final_Project_Blockchain-1.pdf` do P1 cung cấp. Khi cập nhật lên TeXPage, cần đưa cả file bìa và logo cùng với `main.tex`.
 
@@ -109,11 +117,11 @@ xelatex -interaction=nonstopmode -halt-on-error main.tex
 xelatex -interaction=nonstopmode -halt-on-error main.tex
 ```
 
-Kết quả là `slides/main.pdf`. Hiện có trang tiêu đề và ba frame P1; P6 tiếp tục ghép khi P2–P6 gửi slide.
+Kết quả là `slides/main.pdf` (bìa + 18 frame P1–P6).
 
-PDF trung gian được bỏ qua bởi Git. Khi đã rà soát bản cuối, sao chép thành `report/bao_cao_DFT_ATPG.pdf` và `slides/slide_DFT_ATPG.pdf`; hai tên này được phép commit.
+PDF trung gian (`main.pdf`) được bỏ qua bởi Git. Script build tự sao chép thành `report/bao_cao_DFT_ATPG.pdf` và `slides/slides_DFT_ATPG.pdf` (tên số nhiều, thống nhất với P6); chỉ hai tên này được phép commit. Kiểm tra: `git check-ignore report/bao_cao_DFT_ATPG.pdf slides/slides_DFT_ATPG.pdf` phải không in gì (exit 1).
 
-## Chạy code và kiểm thử — sau khi P4/P5/P6 triển khai
+## Chạy code và kiểm thử
 
 Yêu cầu **Python ≥ 3.10**. Kiểm tra bằng `python --version` và chọn đúng interpreter trước khi thực hiện. Các lệnh dưới đây chạy từ thư mục gốc repo.
 
@@ -185,13 +193,13 @@ Theo thông tin P1 xác nhận và `Thang_diem_DFT_public.pdf` do giảng viên 
 - Báo cáo **5–10 trang nội dung**, không tính bìa và mục lục theo xác nhận của P1. Mục tiêu 8–9 trang kể cả tài liệu tham khảo và danh mục viết tắt để chừa dư địa.
 - Khung vẫn giữ tám file chương và lệnh `\chapter`, nhưng dùng `\input` và tiêu đề liên tục, không ép mỗi chương sang trang mới. Bỏ danh mục hình/bảng riêng để giảm phần đầu.
 - Thuyết trình và demo tổng cộng **20 phút, không bao gồm hỏi đáp**. Video giải thích dài khoảng **2–3 phút**.
-- **Bắt buộc chọn 01 ví dụ/bài tập từ sách hoặc tài liệu môn học, trình bày đề bài, cách giải và kết luận; quay video giải thích để nộp kèm.** Đã chốt Hình 4.5, mục 4.3, trang in 166–167, tìm vector phát hiện y/SA0; **P1 thực hiện video 2–3 phút**. Xem [lời giải và lời dẫn](notes/p1_video_loi_giai.md). Video còn chờ P1 quay.
+- **Bắt buộc chọn 01 ví dụ/bài tập từ sách hoặc tài liệu môn học, trình bày đề bài, cách giải và kết luận; quay video giải thích để nộp kèm.** Đã chốt Hình 4.5, mục 4.3, trang in 166–167, tìm vector phát hiện y/SA0; P1 phụ trách video 2–3 phút. Đã có [lời giải và lời dẫn](notes/p1_video_loi_giai.md); **chưa có bằng chứng video đã quay** trong repo.
 - Giáo trình chính: *VLSI Test Principles and Architectures: Design for Testability*, Laung-Terng Wang, Cheng-Wen Wu, Xiaoqing Wen (biên tập), Morgan Kaufmann, 2006. Thông tin được kiểm tra trực tiếp từ PDF do P1 cung cấp; mục BibLaTeX ở `report/bib/p1.bib`.
 - Chưa xác nhận tiến độ làm riêng của P2–P6 ngoài repo. Bản ZIP TeXPage do P1 cung cấp trùng nội dung nguồn báo cáo trước đợt cập nhật này; chưa có bằng chứng build trên TeXPage. Kiểm tra build cục bộ được ghi trong biên bản review.
-- Hạn nộp chính thức: **08/10/2026**. Mục tiêu nội bộ: hoàn thiện hết ngày **05/10/2026**, tức trước 06/10.
+- Hạn nộp chính thức: **08/10/2026**; giờ đóng cổng, kênh và định dạng nộp **chưa xác minh**. Mục tiêu nội bộ cũ 05/10/2026 đã trễ; phần còn lại dồn vào 06–07/10.
 - Kế hoạch này thay thế mốc 10/10 và dự kiến số trang dài trong bộ hướng dẫn ban đầu. Chi tiết phân bổ trang, rubric và thời gian: [kế hoạch P1](notes/p1_ke_hoach.md).
 
-## Các mốc chung mới — kế hoạch đề xuất
+## Các mốc chung (kế hoạch 01/10/2026, giữ làm lịch sử)
 
 | Ngày | Đầu ra cần đạt |
 |---|---|
@@ -203,11 +211,11 @@ Theo thông tin P1 xác nhận và `Thang_diem_DFT_public.pdf` do giảng viên 
 | 06–07/10/2026 | Dự phòng sửa lỗi hoặc phản hồi, không bố trí nội dung bắt buộc mới |
 | 08/10/2026 | Hạn nộp chính thức; thời điểm đóng cổng và cách nộp cần xác nhận |
 
-## Việc P1 cần hoàn tất
+## Việc P1 cần hoàn tất (cập nhật 06/10/2026)
 
-- Mời năm thành viên vào repo; xác nhận mỗi người đã tạo branch từ `main` mới nhất.
-- Kiểm tra biên dịch trên TeXPage bằng XeLaTeX + Biber; khi có nội dung, rà soát tràn trang, tham chiếu và trích dẫn.
-- Thống nhất kế hoạch rút ngắn với cả nhóm, xác nhận tiến độ thực tế của P2–P6.
-- Quay video Hình 4.5 theo lời giải đã kiểm tra (P1 phụ trách).
-- Xác nhận hình thức nộp, định dạng video và có cần chiếu video trong 20 phút hay chỉ nộp kèm.
-- Tự kiểm tra hiểu phần học trong `notes/p1_kien_thuc.md`; cập nhật kết luận khi có kết quả thực nghiệm thật từ P2–P6.
+- (Đã xong 06/10) Merge PR P6 #11 và PR P1; kiểm chứng và build lại trên `main` trước khi gắn tag.
+- Duyệt bìa, thông tin nhóm, nội dung rút gọn Chương 5–7 cùng P4/P5/P6.
+- Quay và kiểm tra video Hình 4.5 theo lời giải đã kiểm tra.
+- Xác nhận giờ/kênh/định dạng nộp ngày 08/10/2026 và việc có chiếu video trong 20 phút hay không.
+- Diễn tập 20 phút cùng nhóm; sau đó release/tag `v1.0` và nộp, lưu bằng chứng. Checklist: [notes/p1_checklist_nop.md](notes/p1_checklist_nop.md).
+- (Đã xong) Mời thành viên, tạo branch, build cục bộ XeLaTeX + Biber. Build trên TeXPage vẫn chưa xác nhận.

@@ -3,19 +3,19 @@
 % P2: bản ngắn; bảng đầy đủ và trace chi tiết nằm trong tests/data và notes.
 \textbf{D-calculus và các cube.}
 D-algorithm của Roth (1966) biểu diễn sai khác giữa mạch tốt và mạch lỗi
-bằng $D=(1,0)$, $\overline D=(0,1)$; $0=(0,0)$, $1=(1,1)$ và $X$ chưa biết
+bằng $D=(1,0)$, $D'=(0,1)$; $0=(0,0)$, $1=(1,1)$ và $X$ chưa biết
 \cite{p2_roth1966}. Đánh giá cổng riêng trên hai thành phần rồi ghép kết quả:
-$D\land1=D$, $D\land\overline D=0$, $D\land X=X$,
-$\operatorname{NAND}(D,1)=\overline D$. Bảng tám loại cổng đầy đủ nằm ở
+$D\land1=D$, $D\land D'=0$, $D\land X=X$,
+$\operatorname{NAND}(D,1)=D'$. Bảng tám loại cổng đầy đủ nằm ở
 \nolinkurl{tests/data/five_valued_tables.md}.
 Với NAND $z=\overline{ab}$, singular cover gồm $(0,X,1)$, $(X,0,1)$,
 $(1,1,0)$. PDCF cho $z/\mathrm{SA0}$ là $(0,X,D)$ hoặc $(X,0,D)$;
-PDC như $(D,1,\overline D)$ đưa sai khác qua cổng. D-intersection kết hợp
+PDC như $(D,1,D')$ đưa sai khác qua cổng. D-intersection kết hợp
 các yêu cầu cùng net: $X\cap v=v$, $v\cap v=v$; hai giá trị xác định khác
-nhau gây xung đột khi cực $D/\overline D$ đã cố định.
+nhau gây xung đột khi cực $D/D'$ đã cố định.
 
 \textbf{Tìm kiếm và justification.}
-D-frontier chứa cổng có đầu vào $D/\overline D$ nhưng đầu ra $X$;
+D-frontier chứa cổng có đầu vào $D/D'$ nhưng đầu ra $X$;
 J-frontier chứa cổng có đầu ra đã gán nhưng đầu vào chưa justify được.
 Thuật toán chọn PDCF, thực hiện implication tiến/lùi, chọn PDC để đưa lỗi
 ra PO, rồi dùng singular cover justify các yêu cầu nội bộ. Khi xung đột,
@@ -41,8 +41,8 @@ Bảng~\ref{tab:p2-trace} ghi bốn lần chọn cube; không đếm các lần 
 Bước & Cube trên các net & Implication chính & $J$\\
 \midrule
 1 & PDCF $(3,6,11)=(X,0,D)$ & $11=D$ & $\varnothing$\\
-2 & PDC $(2,11,16)=(1,D,\overline D)$ & $16=\overline D$ & $\varnothing$\\
-3 & PDC $(10,16,22)=(1,\overline D,D)$ & $22=D$ & $\{10\}$\\
+2 & PDC $(2,11,16)=(1,D,D')$ & $16=D'$ & $\varnothing$\\
+3 & PDC $(10,16,22)=(1,D',D)$ & $22=D$ & $\{10\}$\\
 4 & Cover $(1,3,10)=(X,0,1)$ & Gán PI $3=0$ & $\varnothing$\\
 \bottomrule
 \end{tabular}
@@ -57,7 +57,7 @@ D-algorithm luôn ít bước hơn PODEM.\par
 \centering
 \input{figures/common/c17}
 \caption{Hình c17 do P2 cung cấp: cube sau tổng quát hóa, $6=X$;
-đường quan sát $11=D\to16=\overline D\to22=D$.}
+đường quan sát $11=D\to16=D'\to22=D$.}
 \label{fig:p2-c17}
 \end{figure}
 

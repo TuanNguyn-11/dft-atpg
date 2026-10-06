@@ -27,7 +27,7 @@ venv/
 build-output.txt
 *.pdf
 !report/bao_cao_DFT_ATPG.pdf
-!slides/slide_DFT_ATPG.pdf
+!slides/slides_DFT_ATPG.pdf
 
 # File tạm của hệ điều hành và trình soạn thảo
 .DS_Store
