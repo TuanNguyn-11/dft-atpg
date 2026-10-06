@@ -1,0 +1,7 @@
+# Ví dụ P3 tự thiết kế: thứ tự cổng và inputs thuộc hợp đồng trace
+INPUT(a)
+INPUT(b)
+OUTPUT(out)
+t = OR(a, b)
+n = NOT(a)
+out = AND(t, n)

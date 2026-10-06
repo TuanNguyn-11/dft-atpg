@@ -40,6 +40,22 @@ Boolean difference `df/dy = f(y=1) XOR f(y=0) = x XOR z` là điều kiện nh�
 
 **2:15–2:30 — Kết luận.** “Có đúng hai vector phát hiện y/SA0: 110 và 011. Ví dụ cho thấy ATPG phải đồng thời kích hoạt lỗi và đưa ảnh hưởng lỗi ra đầu ra quan sát được.”
 
+## Kế hoạch quay theo cảnh — bản chốt 06/10/2026
+
+Cách quay đơn giản nhất: quay màn hình (OBS hoặc Xbox Game Bar `Win+Alt+R`) kèm micro, viết tay trên giấy/bảng trắng hoặc tablet. Đọc theo lời dẫn ở trên; mỗi cảnh có thể quay riêng rồi ghép.
+
+| Cảnh | Thời gian | Hình trên màn hình | Thao tác |
+|---|---|---|---|
+| 1 | 0:00–0:20 | Trang bìa giáo trình + dòng “Hình 4.5, mục 4.3, tr. 166–167” | Giới thiệu tên, vai trò, nguồn và đề |
+| 2 | 0:20–0:45 | Sơ đồ tự vẽ: AND trên (x, y), NOT trên nhánh y dưới, AND dưới (¬y, z), OR ra f | Khoanh điểm y **trước** chỗ rẽ nhánh, ghi “y/SA0 (stem)” |
+| 3 | 0:45–1:15 | Cùng sơ đồ, ghi giá trị tốt/lỗi | Ghi `y = 1/0`; viết `f_tốt = x`, `f_lỗi = z` |
+| 4 | 1:15–1:50 | Biểu thức | Viết `x ⊕ z = 1` và `y = 1` → khoanh `110`, `011` |
+| 5 | 1:50–2:15 | Bảng chân trị 8 dòng (bảng ở trên) | Tô hai dòng “Có”; chỉ dòng `111` để giải thích vì sao không phát hiện |
+| 6 | 2:15–2:30 | Một dòng kết luận | “Hai vector: 110 và 011 — vừa kích hoạt vừa lan truyền” |
+| 7 (tùy chọn, ≤15 s) | — | Terminal chạy `python scripts/check_p1_examples.py` | Chỉ dòng `PASS: Figure 4.5 (8 vectors), detects y/SA0: 011, 110` |
+
+Thứ tự đầu vào luôn đọc là **x, y, z**. Tổng thời lượng mục tiêu 2:30, tối đa 3:00. Xuất MP4 (H.264), 1080p hoặc 720p; đặt tên gợi ý `Nhom4_P1_Hinh4-5_ySA0.mp4`. Không đưa video hay ảnh chụp trang sách lên repo công khai.
+
 ## Kiểm tra trước khi quay
 
 - Hiển thị nguồn, số hình và thứ tự PI rõ ràng; sơ đồ tự vẽ cần giữ đúng dấu NOT ở nhánh y phía dưới.

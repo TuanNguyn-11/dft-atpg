@@ -1,2 +1,51 @@
-% P2: bổ sung 2--3 frame cho phần của mình.
-% Không khai báo documentclass, gói, begin{document} hoặc end{document} ở đây.
+\begin{frame}{D-calculus: quan sát mạch tốt và mạch lỗi}
+\centering
+\begin{tabular}{c|cc}
+Giá trị & Tốt & Lỗi\\\hline
+$0$ & 0 & 0\\
+$1$ & 1 & 1\\
+$X$ & ? & ?\\
+$D$ & 1 & 0\\
+$\overline D$ & 0 & 1
+\end{tabular}
+\begin{block}{Tính cổng trên từng thành phần}
+$D\land1=D$, $D\land\overline D=0$, $D\land X=X$.\\
+Qua NAND với ngõ vào phụ bằng 1: $D\leftrightarrow\overline D$.
+\end{block}
+\footnotesize Bảng chuẩn tám cổng: \texttt{tests/data/five\_valued\_tables.md}.
+\end{frame}
+
+\begin{frame}{D-algorithm: chọn cube, lan truyền và justify}
+\begin{itemize}
+\item NAND $(a,b,z)$: cover $(0,X,1)$, $(X,0,1)$, $(1,1,0)$.
+\item PDCF cho $z/SA0$: $(0,X,D)$ hoặc $(X,0,D)$.
+\item PDC: $(D,1,\overline D)$; ngõ vào phụ bằng 1 cho sai khác đi qua.
+\item Giao cube: $X\cap v=v$; yêu cầu xác định trái nhau gây xung đột.
+\item D-frontier: đầu vào có sai khác, đầu ra còn $X$.
+\item J-frontier: đầu ra đã gán, đầu vào chưa justify được.
+\end{itemize}
+\begin{block}{Điều kiện thành công}
+Sai khác tới PO, mọi yêu cầu được justify và nhất quán.\\
+Xung đột: quay lui, khôi phục trạng thái và thử cube khác.
+\end{block}
+\footnotesize Nguồn: J. Paul Roth, IBM J. Res. Dev., 1966, DOI: 10.1147/rd.104.0278.
+\end{frame}
+
+\begin{frame}{c17, 11/SA0: lan truyền và justification}
+\centering
+\begingroup
+\def\pTwoCSeventeenWidth{0.86\linewidth}
+\input{../report/figures/common/c17}
+\endgroup
+\par\smallskip
+\small
+\begin{tabular}{clcl}
+1 & PDCF: $6=0$, $11=D$ & 2 & PDC: $2=1$, $16=\overline D$\\
+3 & PDC: $10=1$, $22=D$ & 4 & Justify: $3=0$, $J=\varnothing$
+\end{tabular}
+\par\smallskip
+Cube gốc $(X,1,0,0,X)$; hình sau tổng quát hóa $(X,1,0,X,X)$.
+\par
+\footnotesize $X=0$: $01000$; PO tốt $(1,1)$, lỗi $(0,0)$.
+4 lần chọn cube, 0 backtrack.
+\end{frame}

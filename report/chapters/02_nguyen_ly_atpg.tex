@@ -9,10 +9,10 @@ lỗi cầu nối (bridging) liên quan các dây nối ngoài ý muốn, còn l
 (delay) liên quan đáp ứng không kịp thời gian~\cite[Ch.~1]{p1_wang2006}.
 Để phát hiện lỗi phải \emph{kích hoạt} giá trị đối nghịch tại vị trí lỗi,
 \emph{lan truyền} khác biệt đến PO và \emph{justify} các yêu cầu bằng gán PI
-nhất quán. Logic năm giá trị dùng $0,1,X,D,\overline D$, với
-$D=(1,0)$, $\overline D=(0,1)$ theo thứ tự (mạch tốt, mạch lỗi); $X$ là chưa biết.
+nhất quán. Logic năm giá trị dùng $0,1,X,D,D'$, với
+$D=(1,0)$, $D'=(0,1)$ theo thứ tự (mạch tốt, mạch lỗi); $X$ là chưa biết.
 Trên c17, theo thứ tự PI $(1,2,3,6,7)$, mẫu $(X,1,0,X,X)$ cho lỗi
-\texttt{11/SA0} tạo $11=D$, $16=\overline D$, $10=1$, $22=D$.
+\texttt{11/SA0} tạo $11=D$, $16=D'$, $10=1$, $22=D$.
 Mọi cách điền ba giá trị $X$ đều phát hiện lỗi này.
 
 \textbf{Danh sách và rút gọn lỗi.}
@@ -53,6 +53,7 @@ CC0(z)&=CC1(a)+CC1(b)+1, & CC1(z)&=\min(CC0(a),CC0(b))+1,\\
 CO(a\!\to\!z)&=CO(z)+CC1(b)+1, & CO(s)&=\min_{\text{nhánh }j}CO(s_j).
 \end{aligned}
 \]
+
 Tính $CC$ từ PI đến PO rồi $CO$ theo chiều ngược lại thu được
 Bảng~\ref{tab:p1-scoap}. Chẳng hạn $CC0(11)=1+1+1=3$,
 $CC1(11)=2$; $CO(11)=\min(3+1+1,3+1+1)=5$.

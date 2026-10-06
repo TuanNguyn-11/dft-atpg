@@ -1,5 +1,11 @@
 \chapter{Cài đặt PODEM}
 \label{sec:p5-cai-dat-podem}
+\textbf{Kiến trúc.}
+Lõi P5 hiện thực PODEM~\cite{p3_goel1981}, nhận \texttt{Circuit},
+\texttt{Fault}, giới hạn backtrack và tùy chọn trace. Mô phỏng năm giá trị
+$0,1,X,D,D'$ theo topo sau mỗi lần đổi PI; pattern PI chỉ chứa $0,1,X$.
+Luồng tìm kiếm gồm imply, kiểm tra PO/khả thi, objective, backtrace,
+gán PI và quay lui. Chọn cổng và đầu vào theo thứ tự ổn định, chưa dùng SCOAP.
 
 \textbf{Kiến trúc.}
 PODEM nhận \texttt{Circuit}, \texttt{Fault} và giới hạn quay lui; sau mỗi
@@ -94,8 +100,17 @@ hay heuristic SCOAP.
 Logic năm giá trị được trình bày theo mô hình trong giáo trình
 \cite[Ch.~3--4]{p5_wang2006}.
 
-Trong snapshot tích hợp kiểm tra ngày 06/10/2026, toàn bộ bộ test đạt
-\textbf{339 passed} trên Python 3.14.8/pytest 9.1.1; con số này gồm test
-của các phần trong repo, không phải riêng P5. Mốc 302 là tổng toàn repo ở
-snapshot review trước đó; 220 test logic và 32 test PODEM là số lịch sử,
-không dùng làm số đo hiện tại.
+\textbf{Cấy lỗi và fault-frame.}
+Stem tác động mọi fanout; branch chỉ tác động ngõ vào cổng đích.
+Cấy lỗi giữ rail tốt, ép rail lỗi: $D+SA0=D$, $D+SA1=1$,
+$D'+SA0=0$, $D'+SA1=D'$. Trên mạch trải, imply cấy đồng thời danh sách
+fault-instance; objective/backtrace lần lượt chọn fault-frame làm mục tiêu.
+PODEM có thể gán $Q@0$, nên bộ kiểm chứng tuần tự phải phân biệt kết quả
+có điều kiện và chuỗi bảo đảm, không tự coi trạng thái đầu là điều khiển được.
+
+\textbf{Kết quả kiểm thử.}
+Logic năm giá trị và xử lý lỗi theo mô hình trong giáo trình
+\cite[Ch.~3--4]{p5_wang2006}. Trên checkout tích hợp ngày 06/10/2026,
+toàn bộ bộ test đạt \textbf{342 passed} trên Python 3.14.8/pytest 9.1.1;
+riêng logic và PODEM đạt 255 passed. Đây là số đo của toàn repo, không
+chỉ riêng P5.

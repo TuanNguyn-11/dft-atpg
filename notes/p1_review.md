@@ -1,4 +1,30 @@
-# Biên bản kiểm tra P1 — 03/10/2026
+# Biên bản kiểm tra P1
+
+## Kiểm tra tích hợp — 06/10/2026 (hiện tại)
+
+Base `1b3730008b3505af62dcca619a2dd2b528d87099` (head PR P6 #11; sau merge là `main` `4abf964`, cùng cây nguồn) + thay đổi P1. Python 3.12.15, pytest 9.1.1, TinyTeX (TeX Live 2026).
+
+| Hạng mục | Lệnh | Kết quả |
+|---|---|---|
+| Test + kiểm chứng P2/P3/P4 + demo CLI | `python scripts/p1_verify_release.py` | Tất cả PASS; pytest 332 passed (`results/p1_verification.md`) |
+| c17 | `--all`, `--all --no-collapse` | 22/22 đại diện, 34/34 gốc; nén 22→6, 34→7; tập nén phủ 34/34 |
+| Full scan qua API thật | trong script trên | 18/18 lỗi stem, khớp oracle P4 (`results/p1_full_scan.md`) |
+| Trải khung, trạng thái đầu chưa biết | `--unroll k --all` | Bảo đảm 1/18, 13/18, 18/18 tại k=1,2,3; nguồn PODEM/vét cạn chuỗi: 17/1, 8/10, 3/15 |
+| Build | `scripts/build_documents.ps1 -TexBin ...` | PASS; report 13 trang, slide 19 trang; không overfull/undefined/missing character |
+| Ignore | `git check-ignore report/bao_cao_DFT_ATPG.pdf slides/slides_DFT_ATPG.pdf` | Không in gì, exit 1 |
+
+Sửa trong đợt này: font mono có đủ bold/italic (TeX Gyre Cursor); ngắt dòng API ở Chương 5; `emergencystretch` cho bibliography; gộp các mục Wang 2006/Goel 1981 trùng về `p1_wang2006`/`p3_goel1981` (checker P3 được nới để chấp nhận khóa chung P1); tên slide cuối thống nhất `slides_DFT_ATPG.pdf`. Còn cảnh báo Babel không có mẫu ngắt từ tiếng Việt và 1 underfull hbox ở bảng viết tắt; không ảnh hưởng hiển thị.
+
+Giới hạn: chưa chạy trên TeXPage; PR P6 #11 đã merge sau khi P1 chạy pytest trên head `1b37300` (332 passed); chưa review độc lập phần rút gọn Chương 5–7 bởi P4/P5/P6.
+
+### Bổ sung 06/10/2026 — PR P2 #14, P4 #15
+
+- Thử merge cả hai trên `586218e`: pytest 334 passed; `notes/p2_kiem_chung.py --integrated` PASS (160/160 ô, X100X 4/4, X10XX 8/8); `scripts/p4_integrated_experiment.py` PODEM 18/18, bộ mẫu phủ 18/18; nguồn chuỗi k=1,2,3 là 0/1, 3/10, 3/15, khớp Chương 7.
+- Build FAIL do đoạn mới ở Chương 5 (2 overfull hbox 14,9pt và 2,2pt, đường dẫn dài). Đã merge (`cb2be0e`) rồi sửa dàn trang, giữ nguyên nội dung; build PASS, report 13 trang, slide 19 trang. Cập nhật số test 334 ở Chương 6 và slide P5.
+
+---
+
+## Lịch sử — kiểm tra P1 ngày 03/10/2026 (trước tích hợp)
 
 ## Phạm vi
 
@@ -45,4 +71,4 @@ Báo cáo hiện có **6 trang PDF: hai bìa + một mục lục + ba trang nộ
 - P1 tự quay/nộp video 2–3 phút; lời giải và lời dẫn ở `p1_video_loi_giai.md`.
 - Chờ PR chương, code, netlist, golden trace, bảng logic và slide P2–P6; review theo phân công và chạy kiểm thử tích hợp khi nhận được.
 - Khi có thực nghiệm, thay đoạn trạng thái trong Chương 8 bằng kết quả thật, đối chiếu coverage và trace, kiểm tra lại tổng 5–10 trang và diễn tập 20 phút.
-- Chỉ xuất/commit `bao_cao_DFT_ATPG.pdf`, `slide_DFT_ATPG.pdf` và gắn `v1.0` sau khi gói nhóm hoàn chỉnh. Chưa thực hiện nộp bài hoặc mời thành viên/gửi thông báo thay P1.
+- Chỉ xuất/commit `bao_cao_DFT_ATPG.pdf`, `slide_DFT_ATPG.pdf` (nay đổi thành `slides_DFT_ATPG.pdf`) và gắn `v1.0` sau khi gói nhóm hoàn chỉnh. Chưa thực hiện nộp bài hoặc mời thành viên/gửi thông báo thay P1.
