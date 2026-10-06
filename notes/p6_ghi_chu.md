@@ -41,7 +41,8 @@
 - c17 bằng PODEM: 22 lỗi sau gộp, 22 pattern → 6 pattern; 34 lỗi không gộp → 7 pattern; vẫn coverage 100%, backtrack trung bình 0.
 
 ## 8. Lệnh/CLI và công cụ
-- `argparse`: `--fault NET SV [--branch GATE]`, `--all`, `--trace`, `--unroll K`, `--md FILE`.
+- `argparse`: `--fault NET SV [--branch GATE]`, `--all`, `--trace`, `--unroll K`, `--init`, `--no-collapse`, `--pattern`, `--max-x`, `--max-backtracks`, `--md FILE`.
+- Đầu vào sai (SV khác 0/1, net hoặc nhánh không tồn tại, K < 1, giới hạn âm, mạch có DFF mà thiếu `--unroll`) bị từ chối với mã thoát 2; API ném `ValueError`. `generate_test` chỉ dùng vét cạn khi PODEM báo chưa hỗ trợ, và ghi nguồn theo từng hàng.
 - Beamer: `slides/main.tex` dùng `\input{parts/pX}`.
 
 ## 9. Việc còn mở
@@ -55,4 +56,9 @@
 - Pattern phụ thuộc `Q@0` chỉ là kết quả **có điều kiện** (nhãn `CO DIEU KIEN Q@0`), tách khỏi coverage bảo đảm. Ví dụ `Q = DFF(A)`, `Y = AND(Q, A)`, lỗi `Y/SA0`: 1 khung chỉ phát hiện nếu `Q@0 = 1`; 2 khung với `A = 1, 1` thì bảo đảm.
 - seq_example, 18 lỗi stem, bảo đảm: k = 1: 1/18; k = 2: 13/18; k = 3: 18/18 (khớp kết quả của P4).
 - Chế độ trải khung chỉ dùng lỗi stem vật lý, sao sang mọi khung, không gộp lỗi, không có lỗi nhánh (`fault_in_frames` của P4 chỉ nhận stem; lỗi nhánh vào DFF phải ánh xạ `D@t` sang `Q@(t+1)`).
+
+## 11. Kết quả chính thức (PODEM, 06/10/2026)
+- c17: 22/22 (22 đại diện, nén 22 → 6) và 34/34 (34 lỗi gốc, nén 34 → 7); backtrack trung bình 0; tập 6 pattern phủ cả 34 lỗi gốc; 0 pattern sai. File: `results/c17_all_faults.md`, `results/c17_all_faults_uncollapsed.md`.
+- seq_example (Q@0 chưa biết): k = 1, 2, 3 → bảo đảm 1/18, 13/18, 18/18; nguồn chuỗi bảo đảm PODEM/vét cạn 0/1, 3/10, 3/15. File: `results/seq_example_p6_k1.md` … `k3.md`.
+- Review chéo P5 và xác nhận P2/P3: xem `notes/p6_review_p5.md`.
 

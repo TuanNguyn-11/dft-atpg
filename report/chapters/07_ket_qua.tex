@@ -1,52 +1,54 @@
 \chapter{Kết quả và kiểm chứng}
 \label{sec:p6-ket-qua}
-% P6 phụ trách. Số liệu chạy bằng PODEM của P5 trên main (06/10/2026);
-% tái tạo: python -m atpg.run circuits/c17.bench --all --md results/c17_all_faults.md
+% P6 phụ trách. Số liệu tái tạo bằng các lệnh ghi đầu mỗi file results/c17_all_faults*.md và
+% results/seq_example_p6_k*.md (PODEM của P5, unroll của P4, fault simulator của P6).
 
-\section{Mạch thử và danh sách lỗi}
+\section{Môi trường, mạch thử và danh sách lỗi}
 \label{sec:p6-mach-loi}
-Hai mạch được đọc từ định dạng ISCAS \texttt{.bench} bằng trình đọc riêng của
-nhóm (\texttt{circuit.py}): c17 (mạch tổ hợp) và \texttt{seq\_example} (mạch
-tuần tự của Chương~\ref{sec:p4-atpg-tuan-tu}). Trình đọc tính bảng fanout,
-mức (level) và thứ tự topo của các cổng; mã chỉ dùng thư viện chuẩn Python 3.10
-trở lên và \texttt{pytest}.
+Công cụ viết bằng Python ($\ge 3.10$), chỉ dùng thư viện chuẩn, kiểm thử bằng
+\texttt{pytest}. Luồng xử lý: trình đọc \texttt{.bench} tính fanout, mức và thứ
+tự topo; danh sách lỗi; PODEM (Chương~\ref{sec:p5-cai-dat-podem}) sinh pattern;
+bộ mô phỏng lỗi kiểm chứng; \texttt{unroll} (Chương~\ref{sec:p4-atpg-tuan-tu})
+trải mạch tuần tự. Lỗi đầu vào như giá trị kẹt khác 0/1, net hoặc nhánh không
+tồn tại, số khung không dương đều bị từ chối, không được quy thành kết quả.
 \begin{table}[H]
 \centering
 \caption{Mạch dùng trong thực nghiệm.}
 \label{tab:p6-mach}
-\begin{tabular}{@{}lcccc@{}}
+\begin{tabular}{@{}lccccl@{}}
 \toprule
-Mạch & PI & PO & Cổng tổ hợp & DFF\\
+Mạch & PI & PO & Cổng tổ hợp & DFF & Nguồn\\
 \midrule
-c17 & 5 & 2 & 6 (NAND) & 0\\
-\texttt{seq\_example} & 2 & 1 & 6 & 1\\
+c17 & 5 & 2 & 6 (NAND) & 0 & ISCAS'85~\cite{p6_brglez1985}\\
+\texttt{seq\_example} & 2 & 1 & 6 & 1 & P4 tự thiết kế\\
 \bottomrule
 \end{tabular}
 \end{table}
-Với c17, mỗi net có hai lỗi stem (SA0, SA1): 11 net cho 22 lỗi. Ba net rẽ
-nhánh (3, 11, 16), mỗi net hai nhánh, thêm 12 lỗi nhánh; tổng ban đầu là
-\textbf{34 lỗi}. Gộp tương đương theo từng loại cổng (với NAND, SA0 ở ngõ vào
-tương đương SA1 ở ngõ ra) tạo sáu lớp, mỗi lớp ba lỗi, nên còn \textbf{22 lỗi};
-lỗi mẫu \texttt{11/SA0} không thuộc lớp nào và được giữ. Số 22 sau gộp chỉ
-ngẫu nhiên trùng với 22 lỗi stem. Mạch tuần tự đã trải khung chỉ dùng 18 lỗi
-stem vật lý (9 net), sao sang mọi khung, không gộp và không có lỗi nhánh, vì
-ánh xạ lỗi nhánh vào DFF cần xác định đúng cạnh theo từng khung.
+Với c17, 11 net cho 22 lỗi stem; ba net rẽ nhánh (3, 11, 16), mỗi net hai
+nhánh, thêm 12 lỗi nhánh: tổng \textbf{34 lỗi gốc}. Gộp tương đương theo từng
+loại cổng~\cite[pp.~12--14]{p1_wang2006} (với NAND, SA0 ở ngõ vào tương đương
+SA1 ở ngõ ra) tạo sáu lớp ba lỗi, còn \textbf{22 lỗi đại diện}. Tập 22 đại
+diện này \emph{khác} tập 22 lỗi stem, dù trùng số; lỗi mẫu \texttt{11/SA0}
+không thuộc lớp nào nên được giữ. Mạch tuần tự dùng 18 lỗi stem vật lý (9 net),
+cấy vào mọi khung, không gộp và không có lỗi nhánh.
 
 \section{Phương pháp kiểm chứng}
 \label{sec:p6-kiem-chung}
-Mọi pattern do PODEM (Chương~\ref{sec:p5-cai-dat-podem}) sinh ra đều được mô
-phỏng lại bằng một bộ mô phỏng lỗi độc lập (\texttt{fault\_sim.py}): tính giá
-trị mọi net theo thứ tự topo cho mạch tốt và mạch lỗi; lỗi stem ép giá trị cả
-net, lỗi nhánh chỉ ép giá trị tại ngõ vào của cổng nhận nhánh. Pattern phát
-hiện lỗi nếu ít nhất một PO khác nhau. Theo quy ước nhóm, $X$ được điền $0$
-trước khi mô phỏng; ngoài ra pattern có $X$ chỉ được xác nhận đúng với
-\emph{mọi} cách điền khi đã vét cạn các cách điền (kết quả: có, không, hoặc
-chưa kiểm chứng hết khi quá 16 bit $X$). Thử riêng hai mẫu toàn $0$ và toàn
-$1$ không đủ: với $y=a\land\mathrm{XNOR}(x_0,x_1)$, hai mẫu đó cùng phát hiện
-$a/\mathrm{SA0}$ nhưng $x_0=0,x_1=1$ thì không. Kết luận \texttt{UNTESTABLE}
-của PODEM được đối chiếu bằng vét cạn khi mạch có tối đa 16 PI. Các chỉ số:
-fault coverage $=DT/|F|$, test coverage $=DT/(|F|-UT)$, fault efficiency
-$=(DT+UT)/|F|$, với $DT$ là số lỗi phát hiện và $UT$ là số lỗi chứng minh
+Mọi pattern của PODEM đều được mô phỏng lại bằng bộ mô phỏng lỗi nối tiếp độc
+lập~\cite[Ch.~3]{p1_wang2006}: tính mọi net theo thứ tự topo cho mạch tốt và
+mạch lỗi; lỗi stem ép cả net, lỗi nhánh chỉ ép ngõ vào của cổng nhận nhánh;
+phát hiện nếu một PO khác nhau. Bản mô phỏng song song theo pattern (phép toán
+bit) cho cùng kết quả trên toàn bộ 32 vector c17. Theo quy ước nhóm, $X$ được
+điền $0$; ngoài ra một pattern có $X$ chỉ được xác nhận khi đã vét cạn
+\emph{mọi} cách điền (kết quả: có, không, hoặc chưa kiểm chứng hết khi quá 16
+bit $X$). Thử riêng hai mẫu toàn $0$ và toàn $1$ không đủ: với
+$y=a\land\mathrm{XNOR}(x_0,x_1)$, hai mẫu đó cùng phát hiện $a/\mathrm{SA0}$
+nhưng $x_0=0,x_1=1$ thì không. Kết luận \texttt{UNTESTABLE} được đối chiếu
+bằng vét cạn khi mạch có tối đa 16 PI. Bộ sinh chỉ chuyển sang vét cạn khi
+PODEM báo chưa hỗ trợ, và ghi nguồn theo từng hàng. Nén tập test giữ pattern
+phát hiện thêm lỗi mới rồi duyệt ngược để bỏ pattern thừa~\cite[Ch.~4]{p1_wang2006}.
+Các chỉ số: fault coverage $=DT/|F|$, test coverage $=DT/(|F|-UT)$, fault
+efficiency $=(DT+UT)/|F|$, với $DT$ là số lỗi phát hiện, $UT$ số lỗi chứng minh
 không thể phát hiện.
 
 \section{Kết quả trên c17}
@@ -57,42 +59,46 @@ không thể phát hiện.
 \label{tab:p6-c17}
 \begin{tabular}{@{}lcc@{}}
 \toprule
-Chỉ số & Sau gộp & Không gộp\\
+Chỉ số & 22 lỗi đại diện & 34 lỗi gốc\\
 \midrule
-Số lỗi & 22 & 34\\
 Fault coverage & 22/22 = 100\% & 34/34 = 100\%\\
 Test coverage, fault efficiency & 100\%, 100\% & 100\%, 100\%\\
 \texttt{ABORTED}; backtrack trung bình & 0; 0 & 0; 0\\
 Pattern trước / sau nén & 22 / 6 & 34 / 7\\
+Tập sau nén phủ 34 lỗi gốc & 34/34 & 34/34\\
 Pattern bị kiểm chứng sai & 0 & 0\\
 \bottomrule
 \end{tabular}
 \end{table}
-PODEM tìm được pattern cho mọi lỗi mà không cần backtrack, và mọi pattern đều
-phát hiện lỗi với mọi cách điền $X$. Nén tập test giữ lại pattern phát hiện
-thêm lỗi mới, rồi duyệt ngược để bỏ pattern thừa. Với lỗi mẫu \texttt{11/SA0}
-(có 18 trong 32 vector phát hiện được), PODEM cho $X10XX$ (thứ tự PI
-$1,2,3,6,7$) sau hai bước: $11=D$, $16=\overline D$, và $22$, $23$ đều mang
-$D$ khi điền $X=0$, khớp trace chạy tay của Chương~\ref{sec:p3-podem}.
+PODEM tìm được pattern cho mọi lỗi không cần backtrack, mọi pattern đúng với
+mọi cách điền $X$, và tập 6 pattern sau nén phủ cả 34 lỗi gốc. Thời gian sinh
+pattern cho toàn bộ lỗi c17 dưới 0{,}01~s trên máy thử (Python 3.12); con số
+chính xác và môi trường được ghi trong file kết quả, phụ thuộc máy chạy. Với
+\texttt{11/SA0}, PODEM cho $X10XX$ (thứ tự PI $1,2,3,6,7$) sau hai bước, đúng
+golden trace Chương~\ref{sec:p3-podem}; $01000$ cho đầu ra tốt $(1,1)$ và lỗi
+$(0,0)$. Bộ mô phỏng cũng xác nhận các cube chạy tay của P2 ($4/4$ và $8/8$
+cách điền phát hiện lỗi tại 22) và mạch phụ của P3 (chỉ vector $01$ phát hiện
+\texttt{t/SA0}; PODEM cần một backtrack, giới hạn 0 cho \texttt{ABORTED}).
 
-\section{Kết quả mạch tuần tự}
+\section{Mạch tuần tự: full scan và trải khung}
 \label{sec:p6-tuan-tu}
-Mạch được trải $k$ khung; $Q@0$ là trạng thái đầu \emph{chưa biết}. Mạch tốt và
-mạch lỗi là hai chip riêng, mỗi chip có thể bắt đầu ở trạng thái bất kỳ. Một
-chuỗi chỉ được tính là phát hiện \emph{bảo đảm} khi mọi vết PO của mạch tốt
-khác mọi vết PO của mạch lỗi, với mọi cặp trạng thái đầu và mọi cách điền $X$.
-PODEM coi $Q@0$ là PI hình thức nên có thể gán nó; chuỗi chỉ đúng khi $Q@0$ có
-giá trị cụ thể là kết quả \emph{có điều kiện}, được tách riêng. Khi pattern
+Với full scan, kết quả vét cạn của P4 phát hiện $18/18$ lỗi
+(Mục~\ref{sec:p4-thuc-nghiem}). Khi không scan, mạch được trải $k$ khung và
+$Q@0$ là trạng thái đầu \emph{chưa biết}: mạch tốt và mạch lỗi có thể bắt đầu ở
+trạng thái bất kỳ. Chuỗi chỉ được tính là phát hiện \emph{bảo đảm} khi mọi vết
+PO của mạch tốt khác mọi vết PO của mạch lỗi, với mọi cặp trạng thái đầu và mọi
+cách điền $X$. PODEM coi $Q@0$ là PI hình thức nên có thể gán nó; chuỗi chỉ
+đúng khi $Q@0$ có giá trị cụ thể là kết quả \emph{có điều kiện}. Khi pattern
 PODEM phụ thuộc $Q@0$, công cụ tìm chuỗi bảo đảm bằng vét cạn trên các PI điều
-khiển được.
+khiển được và ghi nguồn theo từng hàng.
 \begin{table}[H]
 \centering
-\caption{\texttt{seq\_example}, 18 lỗi stem.}
+\caption{\texttt{seq\_example}, 18 lỗi stem, trạng thái đầu chưa biết.}
 \label{tab:p6-seq}
 \begin{tabular}{@{}ccccc@{}}
 \toprule
-$k$ & Bảo đảm & Nguồn chuỗi bảo đảm & Chỉ có điều kiện & Nếu $Q@0$\\
- & & (PODEM / vét cạn) & $Q@0$ & điều khiển được\\
+$k$ & Bảo đảm & Nguồn chuỗi bảo đảm & Chỉ có điều kiện & Nếu đặt được\\
+ & & (PODEM / vét cạn) & $Q@0$ & $Q@0$\\
 \midrule
 1 & 1/18 & 0 / 1 & 9 & 10/18\\
 2 & 13/18 & 3 / 10 & 5 & 18/18\\
@@ -100,17 +106,21 @@ $k$ & Bảo đảm & Nguồn chuỗi bảo đảm & Chỉ có điều kiện & N
 \bottomrule
 \end{tabular}
 \end{table}
-Số phát hiện bảo đảm (1, 13, 18) trùng kết quả vét cạn độc lập của P4 trên
-cùng 18 lỗi. Với $k=1$, 8 lỗi còn lại được PODEM kết luận không thể phát hiện
-trong một khung, và vét cạn xác nhận đúng. Lỗi chưa phát hiện ở $k$ nhỏ chỉ là
-chưa phát hiện được trong giới hạn $k$ khung, chưa phải \texttt{untestable}.
+Số phát hiện bảo đảm (1, 13, 18) trùng kết quả vét cạn độc lập của P4. Với hai
+khung, 5 lỗi chỉ phát hiện khi biết $Q@0$, nên không gọi hai khung là $100\%$ từ
+trạng thái chưa biết. Với $k=1$, 8 lỗi được PODEM kết luận không thể phát hiện
+trong một khung và vét cạn xác nhận; đây là giới hạn của $k$, chưa phải
+\texttt{untestable}. Cột cuối ứng với chế độ \texttt{--init controllable}: chỉ
+đặt được trạng thái đầu, còn quan sát vẫn qua PO ở các khung, nên \emph{không}
+tương đương full scan (full scan đặt $Q$ và đọc $D$ ở mọi pattern).
 
 \section{Nhận xét và giới hạn}
 \label{sec:p6-nhan-xet}
 Bộ mô phỏng độc lập giúp phát hiện sai lệch khi tích hợp: trên bản PODEM trước
 khi merge, nó chỉ ra backtrace chưa hỗ trợ cổng XOR và bốn kết luận
-\texttt{UNTESTABLE} sai trên mạch đã trải khung; bản cuối không còn sai lệch
-nào. Giới hạn: c17 nhỏ nên coverage 100\% chưa nói lên hiệu năng; gộp lỗi mới ở
-mức tương đương, chưa gộp trội (dominance); chế độ tuần tự chưa có lỗi nhánh,
-kết quả phụ thuộc $k$, và phần lớn chuỗi bảo đảm vẫn lấy từ vét cạn vì PODEM
-gán $Q@0$. Hướng cải tiến là cho PODEM giữ $Q@0=X$ để tự sinh chuỗi bảo đảm.
+\texttt{UNTESTABLE} sai trên mạch đã trải; bản cuối không còn sai lệch nào.
+Giới hạn: c17 nhỏ nên coverage $100\%$ chưa nói lên hiệu năng; gộp lỗi mới ở
+mức tương đương, chưa gộp trội; vét cạn tham chiếu chỉ dùng được với mạch ít
+PI; chế độ tuần tự chưa có lỗi nhánh, kết quả phụ thuộc $k$, và phần lớn chuỗi
+bảo đảm vẫn lấy từ vét cạn vì PODEM gán $Q@0$. Hướng cải tiến là cho PODEM giữ
+$Q@0=X$ để tự sinh chuỗi bảo đảm.
