@@ -1,5 +1,87 @@
 # Biên bản kiểm tra P2 — 03/10/2026
 
+## Trạng thái hiện tại — nghiệm thu feedback_P2, 06/10/2026
+
+Base đã fetch và cập nhật fast-forward: `586218e1eb244fa5374b7bc856e0ffd979447f4a`
+(origin/main). Mốc `eb6694d` trong feedback là snapshot cũ; base hiện tại đã
+có P5/P6, Chương 7, PDF phát hành và biên tập P1. Branch làm việc vẫn là
+`p2-d-algorithm`. Hai file feedback người dùng cung cấp giữ nguyên, không stage.
+Không thay release/tag, PDF đã phát hành hoặc nội dung của thành viên khác.
+
+Môi trường thực chạy: **Python 3.12.1, pytest 9.1.1**, venv `.venv`.
+Chỉ script kiểm chứng/ghi chú P2 thay đổi, không sửa logic P5 hay simulator P6.
+
+### Checklist thực hiện
+
+- [x] P2-01: giữ oracle độc lập; thêm `--integrated` đọc các ô từ Markdown
+  rồi gọi `atpg.logic.eval_gate` trực tiếp, không dùng bảng Python chép lại.
+- [x] 160/160 ô khớp; không có bất đồng hoặc phản ví dụ.
+- [x] `Circuit.from_bench('circuits/c17.bench')`, `Fault('11',0)` lỗi stem;
+  PI đúng thứ tự `(1,2,3,6,7)`, PO `(22,23)`.
+- [x] Duyệt mọi cách điền X rồi gọi simulator/detects thật: X100X **4/4**,
+  X10XX **8/8**, đều khác tại PO22; `detects_cube` cùng trả True.
+- [x] Vector 01000: PO tốt **(1,1)**, lỗi **(0,0)**; CLI trace phát hiện
+  tại cả PO22 và PO23 sau khi điền đủ bit. Không thay X bảo thủ của trace tay
+  bằng D ở PO23 chỉ vì một vector nhị phân cụ thể.
+- [x] P2-02: **4 lần chọn cube, 3 PI gán, 0 backtrack**; X100X → X10XX.
+  Tổng quát hóa không tính là quyết định thứ năm; khác đơn vị đếm gán PI P3.
+- [x] Bảng bàn giao cho P3 ở `p2_ghi_chu.md`, có cùng lỗi/đơn vị/phạm vi.
+- [x] Rà chương/slide: phân biệt cube gốc/hình tổng quát, D/J-frontier và
+  thành công sau justification vẫn đúng; giữ nguyên bản P1 đã biên tập.
+- [x] Các đoạn chờ P5/P6, netlist và wrapper JPG ở dưới đã được xác định là
+  lịch sử 03–05/10; không còn là trạng thái hay phụ thuộc hiện tại.
+
+### Lệnh chạy lại và kết quả thật
+
+Từ gốc checkout, dùng Python >=3.10 và pytest trong venv:
+
+```powershell
+$env:PYTHONPATH = (Join-Path (Get-Location) 'src')
+$env:PYTHONIOENCODING = 'utf-8'
+.\.venv\Scripts\python.exe --version
+.\.venv\Scripts\python.exe -m pytest --version
+.\.venv\Scripts\python.exe notes/p2_kiem_chung.py --integrated
+.\.venv\Scripts\python.exe -m pytest tests/test_logic.py tests/test_fault_sim.py -q
+.\.venv\Scripts\python.exe -m atpg.run circuits/c17.bench --fault 11 0 --pattern X100X --trace
+.\.venv\Scripts\python.exe -m atpg.run circuits/c17.bench --fault 11 0 --pattern X10XX --trace
+.\.venv\Scripts\python.exe -m pytest -q
+git diff --check
+```
+
+- Script: oracle 160 ô, bốn trạng thái/frontier, đáp ứng nhị phân độc lập
+  vẫn PASS; chế độ tích hợp PASS 160/160, 4/4, 8/8 và PO 01000.
+- Test logic/fault_sim: **240 passed in 1.52s**.
+- Hai lệnh CLI: `PHAT HIEN voi moi cach dien X`; X=0 cho 01000, PO22/23 khác.
+- Suite đầy đủ: **332 passed in 6.50s**. Mốc 302 của feedback là lịch sử;
+  không đổi số test để khớp mốc cũ. Thời gian là lần chạy máy này.
+- Không sửa nguồn LaTeX/hình/slide, không rebuild hoặc thay PDF phát hành.
+
+### File thay đổi và nội dung PR đề xuất
+
+| File | Thay đổi và lý do |
+|---|---|
+| `notes/p2_kiem_chung.py` | Thêm `--integrated`, đối chiếu Markdown→logic thật; simulator thật kiểm mọi cách điền; lỗi in gate/input/expected/actual hoặc vector/PO |
+| `notes/p2_ghi_chu.md` | Cập nhật trạng thái 06/10, số liệu/đơn vị bàn giao P3, checklist con người |
+| `notes/p2_review.md` | Lưu base, môi trường, checklist, lệnh và kết quả thật; giữ lịch sử có ngày |
+
+Đề xuất PR: **[P2] Bổ sung bằng chứng kiểm chứng trên code đã tích hợp**.
+Vấn đề: oracle độc lập/test Python chép bảng chưa bảo đảm Markdown còn đồng bộ
+với P5 và ghi chú vẫn chờ simulator đã có. Thay đổi: chế độ kiểm tích hợp tái
+lập cùng cập nhật bàn giao. Kiểm chứng: 160/160 ô, 4/4 và 8/8 cách điền,
+240 test liên quan và 332 test toàn bộ. Giới hạn: hai cube c17, lỗi stem
+11/SA0; không phải implementation hoặc đo hiệu năng D-algorithm. Không thay
+API/code chung, bảng chuẩn, nguồn LaTeX hoặc số liệu mô phỏng của thành viên khác.
+
+### Checklist cần con người thực hiện
+
+- [ ] P2 đọc hiểu và giải thích được phần mình; chưa xác nhận đã học.
+- [ ] P2 luyện trình bày ba slide, phối hợp diễn tập/demo của nhóm.
+- [ ] P1/P3 review artifact bàn giao và cập nhật phần so sánh khi cần.
+- [ ] Xác nhận/nộp bài theo checklist P1; agent không thực hiện thay.
+
+Các phần có ngày 03–05/10 dưới đây là lịch sử; các câu thiếu code/hình cũ
+không còn mô tả trạng thái hiện tại.
+
 ## Sửa theo feedback P1 — 05/10/2026
 
 - Mã giả trả Result với status/pattern, truyền DETECTED và ABORTED qua mọi

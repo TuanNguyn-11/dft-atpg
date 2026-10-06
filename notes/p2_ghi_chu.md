@@ -2,6 +2,16 @@
 
 ## Phạm vi và trạng thái
 
+**Cập nhật 06/10/2026, base `586218e`:** code P5/P6 và netlist c17 đã tích hợp.
+`python -B notes/p2_kiem_chung.py --integrated` đã đối chiếu trực tiếp
+160/160 ô Markdown với `atpg.logic.eval_gate`, kiểm chứng X100X 4/4 và
+X10XX 8/8 cách điền bằng simulator P6 thật; 01000 có PO tốt (1,1), lỗi (0,0).
+Oracle độc lập vẫn được giữ và chạy trước bước tích hợp.
+Hình chung hiện là TikZ tùy chỉnh, JPG chỉ là ảnh đối chiếu.
+Các ghi nhận thiếu P5/P6 ở biên bản 03–05/10 là lịch sử, không còn là phụ thuộc.
+Đây là xác nhận dữ liệu/trace D-algorithm bằng code chung, không phải
+implementation hoặc số đo thời gian D-algorithm.
+
 Thực hiện sản phẩm trước theo yêu cầu P2; chưa xác nhận sinh viên đã học hoặc
 trả lời câu hỏi tự kiểm tra. Branch: `p2-d-algorithm`.
 P2 sở hữu lý thuyết D-algorithm, bảng chuẩn, Chương 3 và slide riêng.
@@ -183,6 +193,21 @@ tất cả được script P1 kiểm tra. Không xóa 6=0 khỏi trace để là
 
 ### Số liệu giao cho P3
 
+Chốt bàn giao 06/10/2026, cùng lỗi **stem 11/SA0**, PI (1,2,3,6,7):
+
+| Đại lượng | D-algorithm P2 |
+|---|---|
+| Chọn cube | 4: 1 PDCF, 2 PDC, 1 singular cover |
+| PI được gán | 3: 6=0, 2=1, 3=0 |
+| Backtrack | 0 |
+| Pattern ban đầu | X100X |
+| Pattern sau tổng quát hóa | X10XX |
+| Simulator thật | 4/4 và 8/8 cách điền; 01000: tốt (1,1), lỗi (0,0) |
+
+Tổng quát hóa không phải quyết định thứ năm. Số lần chọn cube khác đơn vị
+số phép gán PI của PODEM; không lấy tỷ lệ 4/2 làm tỷ lệ tốc độ.
+Artifact này và `p2_review.md` là bàn giao cho P3, không xác nhận đã gửi tin.
+
 - 4 lần chọn cube: 1 PDCF, 2 PDC, 1 singular cover.
 - 0 backtrack trong đường tìm kiếm đã trình bày.
 - 3 PI đã gán trong trace: 6=0, 2=1, 3=0; một yêu cầu nội bộ: 10=1.
@@ -219,7 +244,8 @@ backtrack không chứng minh D-algorithm nhanh hơn PODEM.
 - Specification nhóm: bảy file tại `C:\DFT\DFT_ATPG`; cập nhật lịch/độ dài:
   README và `notes/p1_ke_hoach.md` trong repository.
 - Bảng logic và trace c17 là tính toán P2 theo netlist chung, không phải ví dụ
-  trích nguyên văn từ sách. Không nhận đã chạy simulator P6 khi code chưa có.
+  trích nguyên văn từ sách. Trước 06/10 chỉ có kiểm chứng độc lập; từ lần
+  cập nhật này đã chạy simulator P6 thật, với kết quả ghi ở đầu tài liệu.
 
 ## 7. Kiểm tra và việc còn chờ
 
@@ -234,11 +260,17 @@ Tái lập kiểm chứng P2 từ gốc repository (chỉ thư viện chuẩn, k
 
 ```text
 python -B notes/p2_kiem_chung.py
+python -B notes/p2_kiem_chung.py --integrated
 python -B scripts/check_p1_examples.py
 powershell -ExecutionPolicy Bypass -File scripts/build_documents.ps1
 git diff --check
 ```
 
-Việc còn chờ: P6 xác nhận lại pattern bằng simulator
-chung; P3 nhận số liệu theo quy tắc đếm; P1 review nội dung/ngân sách trang.
+Đã hoàn tất đối chiếu code chung; không còn chờ simulator P6 cho hai cube.
+P3/P1 dùng artifact để review số liệu/biên tập. Phần con người còn phải làm:
+
+- [ ] P2 đọc hiểu D-calculus, frontier, justification và trình bày trace.
+- [ ] P2 tập nói ba slide và phối hợp diễn tập demo 20 phút của nhóm.
+- [ ] P1 xác nhận review/nộp bài theo checklist chung; agent không tự xác nhận.
+
 Không tự sửa code, chương hay cấu hình của các thành viên khác.
