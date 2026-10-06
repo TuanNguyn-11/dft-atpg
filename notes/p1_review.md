@@ -28,6 +28,12 @@ Giới hạn: chưa chạy trên TeXPage; PR P6 #11 đã merge sau khi P1 chạy
 - Nguyên trạng: build slide FAIL (frame kiến trúc P5 tràn 29,7pt); báo cáo 15 trang, đánh số tới trang 11; Goel/Wang trùng mục do cite `p5_*`; tiêu đề “Kiến trúc” lặp; `\href` tương đối tới file `.md`; bảng trace trùng Bảng 4.1.
 - P1 biên tập: giữ nội dung mới (quy tắc XOR/XNOR, quy ước trace, điều kiện dừng, giới hạn 1000), bỏ sơ đồ/pseudo-code (có trên slide và notes), tham chiếu Bảng 4.1, cite khóa chung; giảm khoảng cách nút sơ đồ slide. Build PASS: report 14 trang (1–10), slide 19 trang.
 
+### Bổ sung 06/10/2026 — PR P3 #23 (P3 tự merge)
+
+- Chỉ đổi notes/results P3, 8 dòng Chương 4 và slide P3 (thay “chờ code P5” bằng kết quả đối chiếu thật); không đổi code.
+- Trên `main` `d958a69`: pytest 350 passed; checker P1/P2 (`--integrated`)/P3/P4 PASS; `notes/p3_doi_chieu_code.py` PASS (35 ô golden/API/export) và tái sinh `results/p3_doi_chieu_code.md` giống bản P3 (chỉ khác commit/phiên bản Python). Chạy riêng: mạch phụ `t/SA0` giới hạn 0 → ABORTED, 1 → DETECTED.
+- Build PASS: report 14 trang (đánh số 1–10), slide 19 trang. PDF cũ trong repo không còn khớp nguồn nên build lại và phát hành `v1.0.7`.
+
 ---
 
 ## Lịch sử — kiểm tra P1 ngày 03/10/2026 (trước tích hợp)
