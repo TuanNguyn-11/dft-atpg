@@ -2,15 +2,15 @@
 
 ## Moi truong va tai lap
 
-- Lenh tai tao (tu goc repo, PYTHONPATH=src): `python -m atpg.run circuits/c17.bench --all --md results/c17_all_faults.md`
+- Lenh tai tao (tu goc repo, PYTHONPATH=src): `python -m atpg.run circuits/c17.bench --all --no-collapse --md results/c17_all_faults_uncollapsed.md`
 - Python 3.14.8 (CPython), Windows 10
 - Commit ma nguon: a6504cd
-- Thoi diem chay: 2026-10-06T17:37:11
+- Thoi diem chay: 2026-10-06T17:37:20
 - Thu tu PI trong cot pattern: 1, 2, 3, 6, 7
 - Pham vi loi goc: 34 loi = 22 stem + 12 nhanh
-- Dang chay 22 loi dai dien sau gop tuong duong (tu 34 loi goc). Tap 22 loi dai dien nay KHAC tap 22 loi stem, du hai so co the trung nhau.
+- Dang chay 34 loi goc, khong gop.
 - Pattern co X duoc dien 0 khi mo phong loi; cot "Moi cach dien X" la vet can moi cach dien (toi da 16 bit X).
-- Thoi gian sinh pattern: 0.0043 s (time.perf_counter, chi tinh bo sinh pattern); ca kiem chung va nen: 0.0137 s. So do phu thuoc may chay.
+- Thoi gian sinh pattern: 0.0048 s (time.perf_counter, chi tinh bo sinh pattern); ca kiem chung va nen: 0.0242 s. So do phu thuoc may chay.
 
 | PI | PO | cong | DFF |
 |---|---|---|---|
@@ -22,23 +22,35 @@ So loi truoc gop: 34; sau gop (equivalence): 22.
 
 | Loi | Trang thai | Pattern | Thuat toan | Backtrack | Kiem chung | Moi cach dien X |
 |---|---|---|---|---|---|---|
+| 1/SA0 | DETECTED | 101XX | PODEM | 0 | OK | co |
 | 1/SA1 | DETECTED | 001XX | PODEM | 0 | OK | co |
+| 2/SA0 | DETECTED | X10XX | PODEM | 0 | OK | co |
 | 2/SA1 | DETECTED | X00XX | PODEM | 0 | OK | co |
 | 3/SA0 | DETECTED | 11111 | PODEM | 0 | OK | co |
 | 3/SA1 | DETECTED | 11011 | PODEM | 0 | OK | co |
+| 3->10/SA0 | DETECTED | 101XX | PODEM | 0 | OK | co |
 | 3->10/SA1 | DETECTED | 100XX | PODEM | 0 | OK | co |
+| 3->11/SA0 | DETECTED | X1111 | PODEM | 0 | OK | co |
 | 3->11/SA1 | DETECTED | X101X | PODEM | 0 | OK | co |
+| 6/SA0 | DETECTED | X1111 | PODEM | 0 | OK | co |
 | 6/SA1 | DETECTED | X1101 | PODEM | 0 | OK | co |
+| 7/SA0 | DETECTED | X00X1 | PODEM | 0 | OK | co |
 | 7/SA1 | DETECTED | X00X0 | PODEM | 0 | OK | co |
+| 10/SA0 | DETECTED | 00XXX | PODEM | 0 | OK | co |
 | 10/SA1 | DETECTED | 101XX | PODEM | 0 | OK | co |
 | 11/SA0 | DETECTED | X10XX | PODEM | 0 | OK | co |
 | 11/SA1 | DETECTED | X1111 | PODEM | 0 | OK | co |
+| 11->16/SA0 | DETECTED | X10XX | PODEM | 0 | OK | co |
 | 11->16/SA1 | DETECTED | X111X | PODEM | 0 | OK | co |
+| 11->19/SA0 | DETECTED | X00X1 | PODEM | 0 | OK | co |
 | 11->19/SA1 | DETECTED | XX111 | PODEM | 0 | OK | co |
 | 16/SA0 | DETECTED | 00XXX | PODEM | 0 | OK | co |
 | 16/SA1 | DETECTED | X10XX | PODEM | 0 | OK | co |
+| 16->22/SA0 | DETECTED | 00XXX | PODEM | 0 | OK | co |
 | 16->22/SA1 | DETECTED | X10XX | PODEM | 0 | OK | co |
+| 16->23/SA0 | DETECTED | X011X | PODEM | 0 | OK | co |
 | 16->23/SA1 | DETECTED | X10X0 | PODEM | 0 | OK | co |
+| 19/SA0 | DETECTED | XX11X | PODEM | 0 | OK | co |
 | 19/SA1 | DETECTED | X00X1 | PODEM | 0 | OK | co |
 | 22/SA0 | DETECTED | 1X1XX | PODEM | 0 | OK | co |
 | 22/SA1 | DETECTED | 00XXX | PODEM | 0 | OK | co |
@@ -49,13 +61,13 @@ So loi truoc gop: 34; sau gop (equivalence): 22.
 
 | Chi so | Gia tri |
 |---|---|
-| Fault coverage (DETECTED / tong) | 22/22 = 100.0% |
-| Test coverage (DETECTED / (tong - UNTESTABLE)) | 22/22 = 100.0% |
-| Fault efficiency ((DETECTED + UNTESTABLE) / tong) | 22/22 = 100.0% |
+| Fault coverage (DETECTED / tong) | 34/34 = 100.0% |
+| Test coverage (DETECTED / (tong - UNTESTABLE)) | 34/34 = 100.0% |
+| Fault efficiency ((DETECTED + UNTESTABLE) / tong) | 34/34 = 100.0% |
 | ABORTED | 0 |
 | Backtrack trung binh | 0.00 |
-| Pattern truoc nen | 22 |
-| Pattern sau nen | 6 (phu 22/22 loi dang chay) |
+| Pattern truoc nen | 34 |
+| Pattern sau nen | 7 (phu 34/34 loi dang chay) |
 | Tap sau nen phu toan bo loi goc (34 loi) | 34/34 = 100.0% |
 | Pattern bi kiem chung SAI | 0 |
 | Pattern co X ma co cach dien X khong phat hien | 0 |
@@ -66,8 +78,9 @@ So loi truoc gop: 34; sau gop (equivalence): 22.
 | # | Pattern |
 |---|---|
 | 1 | 00100 |
-| 2 | 11111 |
-| 3 | 10000 |
-| 4 | 01010 |
-| 5 | 01101 |
-| 6 | 00001 |
+| 2 | 01000 |
+| 3 | 11111 |
+| 4 | 11011 |
+| 5 | 10000 |
+| 6 | 01101 |
+| 7 | 00001 |
