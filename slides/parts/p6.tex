@@ -1,2 +1,51 @@
-% P6: bổ sung 2--3 frame cho phần của mình.
-% Không khai báo documentclass, gói, begin{document} hoặc end{document} ở đây.
+\begin{frame}{P6 -- Kiểm chứng độc lập}
+\small
+\begin{itemize}
+  \item Đọc \texttt{.bench} $\rightarrow$ fault list $\rightarrow$ PODEM (P5) $\rightarrow$
+        mô phỏng lỗi độc lập $\rightarrow$ coverage, nén tập test.
+  \item c17: 34 lỗi gốc (22 stem + 12 nhánh), gộp tương đương còn 22 đại diện.
+  \item Mỗi pattern được mô phỏng lại ở mạch tốt và mạch lỗi; pattern có $X$ chỉ
+        được xác nhận khi đã vét cạn mọi cách điền.
+  \item Đầu vào sai (SA khác 0/1, nhánh không tồn tại, $k\le 0$) bị từ chối.
+  \item Mạch tuần tự: $Q@0$ chưa biết; chỉ chuỗi bảo đảm với mọi trạng thái đầu
+        mới tính là phát hiện.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{P6 -- Kết quả c17 và mạch tuần tự}
+\small
+\begin{center}
+\begin{tabular}{@{}lcc@{}}
+\toprule
+c17, PODEM & 22 đại diện & 34 lỗi gốc\\
+\midrule
+Fault coverage & 22/22 & 34/34\\
+Backtrack trung bình & 0 & 0\\
+Pattern trước / sau nén & 22 / 6 & 34 / 7\\
+Pattern kiểm chứng sai & 0 & 0\\
+\bottomrule
+\end{tabular}
+
+\vspace{2mm}
+\begin{tabular}{@{}cccc@{}}
+\toprule
+\texttt{seq\_example}, 18 lỗi & $k=1$ & $k=2$ & $k=3$\\
+\midrule
+Phát hiện bảo đảm ($Q@0$ chưa biết) & 1/18 & 13/18 & 18/18\\
+\bottomrule
+\end{tabular}
+\end{center}
+\footnotesize Full scan (P4): 18/18. Tập 6 pattern phủ cả 34 lỗi gốc; số tuần tự khớp vét cạn độc lập của P4.
+\end{frame}
+
+\begin{frame}{P6 -- Demo và hỏi đáp}
+\small
+\begin{itemize}
+  \item Trace một lỗi: \texttt{python -m atpg.run circuits/c17.bench --fault 11 0 --trace}
+  \item Backtrack: \texttt{python -m atpg.run circuits/backtrack\_example.bench --fault t 0 --trace}
+  \item Toàn bộ lỗi: \texttt{python -m atpg.run circuits/c17.bench --all}
+  \item Tuần tự: \texttt{python -m atpg.run circuits/seq\_example.bench --unroll 2 --all}
+\end{itemize}
+\vspace{4mm}
+\centering {\large Cảm ơn thầy và các bạn đã lắng nghe. Xin mời đặt câu hỏi.}
+\end{frame}

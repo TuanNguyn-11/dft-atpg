@@ -180,16 +180,22 @@ def test_unknown_state_vs_controllable_state(tmp_path):
     assert detects_unknown_state(c, p, f, ["S"]) is False     # S chua biet: khong bao dam
 
 
-def test_generate_test_falls_back_when_podem_raises():
+def test_generate_test_falls_back_only_when_podem_unsupported():
+    import pytest
     c = c17()
 
-    def broken_podem(circ, fault, max_backtracks=1000, trace=False):
-        raise ValueError("Backtrace chua ho tro loai cong: XOR")
+    def unsupported(circ, fault, max_backtracks=1000, trace=False):
+        raise ValueError("Backtrace chưa hỗ trợ loại cổng: XOR")
+
+    def internal_bug(circ, fault, max_backtracks=1000, trace=False):
+        raise ValueError("Không còn input X để backtrace từ net 16.")
 
     run.PODEM_ERRORS.clear()
-    r = run.generate_test(c, F11, broken_podem)
-    assert r.status == "DETECTED" and "PODEM khong chay duoc" in r.algo
+    r = run.generate_test(c, F11, unsupported)
+    assert r.status == "DETECTED" and r.algo == "vet can (PODEM chua ho tro)"
     assert "XOR" in run.podem_error_note()
+    with pytest.raises(ValueError, match="backtrace"):     # loi noi bo: khong duoc che bang vet can
+        run.generate_test(c, F11, internal_bug)
     run.PODEM_ERRORS.clear()
 
 

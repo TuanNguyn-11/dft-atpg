@@ -5,6 +5,8 @@ from __future__ import annotations
 
 from itertools import product
 
+from atpg.faults import validate_fault
+
 
 def _bit(v):
     if isinstance(v, str):
@@ -41,8 +43,10 @@ def _eval(typ, v):
     raise ValueError(f"Khong mo phong duoc cong {typ} (can full_scan/unroll truoc)")
 
 
-def _split(fault):
+def _split(fault, c=None):
     fl = _as_list(fault)
+    if c is not None and fl:
+        validate_fault(c, fl)            # khong am tham bo qua loi khong ton tai trong mach
     stem = {f.net: f.stuck_at for f in fl if f.branch_to is None}
     branch = {(f.net, f.branch_to): f.stuck_at for f in fl if f.branch_to is not None}
     return stem, branch
@@ -50,7 +54,7 @@ def _split(fault):
 
 def simulate(c, pattern, fault=None):
     """Tinh gia tri 0/1 cua moi net. fault co the la None, 1 Fault hoac danh sach Fault."""
-    stem, branch = _split(fault)
+    stem, branch = _split(fault, c)
     val = {}
     for pi in c.inputs:
         if pi not in pattern:
@@ -149,7 +153,7 @@ def simulate_parallel(c, patterns, fault=None):
     """Moi net la mot so nguyen: bit k = gia tri cua pattern thu k. Tinh het pattern mot luot."""
     n = len(patterns)
     mask = (1 << n) - 1
-    stem, branch = _split(fault)
+    stem, branch = _split(fault, c)
 
     def force(net, word):
         return (mask if stem[net] else 0) if net in stem else word

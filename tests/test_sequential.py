@@ -61,10 +61,10 @@ def test_matches_p4_script_fault_by_fault():
             assert (kind == "bao dam") == (p4.first_sequence((net, sv), max_frames=2) is not None), (net, sv)
 
 
-def test_branch_with_unroll_is_rejected():
+def test_branch_with_unroll_is_rejected(capsys):
     with pytest.raises(SystemExit) as e:
         run.main([SEQ, "--unroll", "2", "--fault", "D", "0", "--branch", "Q"])
-    assert "chua ho tro" in str(e.value)
+    assert e.value.code == 2 and "chua ho tro" in capsys.readouterr().err
 
 
 def test_init_requires_unroll():

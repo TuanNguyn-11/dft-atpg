@@ -11,14 +11,18 @@ chi pattern phat hien duoc voi moi trang thai dau moi duoc tinh la DETECTED. Dun
 from __future__ import annotations
 
 import argparse
+import os
+import platform
+import subprocess
 import sys
 import time
 from dataclasses import dataclass, field
+from datetime import datetime
 
 from atpg.circuit import Circuit
 from atpg.fault_sim import (compact, coverage, detects, detects_cube, detects_unknown_state,
                             exhaustive_test, guaranteed_sequence_test, trace_rows)
-from atpg.faults import Fault, all_faults, collapse
+from atpg.faults import Fault, all_faults, collapse, validate_fault
 
 MAX_BITS = 20          # gioi han so to hop khi chung minh phat hien voi trang thai dau chua biet
 
@@ -51,10 +55,27 @@ def podem_error_note():
             + "); cac loi do dung vet can tham chieu, cot thuat toan ghi ro.")
 
 
+# Chi fallback sang vet can khi PODEM bao THUAT TOAN CHUA HO TRO (vd loai cong); moi loi khac
+# (dau vao sai, loi noi bo cua PODEM) deu duoc nem ra, khong che giau bang ket qua vet can.
+UNSUPPORTED_MARKERS = ("chưa hỗ trợ", "không được hỗ trợ", "chua ho tro", "khong duoc ho tro", "not supported")
+
+
+def _is_unsupported(err):
+    if isinstance(err, NotImplementedError):
+        return True
+    msg = str(err).lower()
+    return any(m in msg for m in UNSUPPORTED_MARKERS)
+
+
 def generate_test(c, fault, podem_fn, max_backtracks=1000, trace=False):
-    """Sinh pattern cho `fault` (Fault hoac list/tuple Fault). Dung PODEM cua P5 neu co,
-    neu chua co (hoac PODEM bao loi, vd cong chua ho tro) thi dung vet can lam mau tham chieu
-    (chi hop cho mach it dau vao); truong hop sau duoc ghi ro trong cot thuat toan."""
+    """Sinh pattern cho `fault` (Fault hoac list/tuple Fault).
+    - Kiem tra dau vao truoc (ValueError neu loi khong thuoc mach, nhanh khong ton tai, ...).
+    - Dung PODEM cua P5 neu co; chi khi PODEM bao chua ho tro (vd loai cong) moi dung vet can
+      tham chieu cho loi do, va ghi ro trong cot thuat toan va ghi chu bao cao.
+    - Neu chua co podem.py thi dung vet can tham chieu (chi hop cho mach it dau vao)."""
+    validate_fault(c, fault)
+    if max_backtracks < 0:
+        raise ValueError("max_backtracks phai >= 0")
     algo = "vet can (tham chieu)"
     if podem_fn is not None:
         arg = list(fault) if isinstance(fault, tuple) else fault   # podem nhan Fault hoac list[Fault]
@@ -62,9 +83,11 @@ def generate_test(c, fault, podem_fn, max_backtracks=1000, trace=False):
             r = podem_fn(c, arg, max_backtracks=max_backtracks, trace=trace)
             return GenResult(fault, r.status, dict(r.pattern), r.backtracks, "PODEM",
                              list(getattr(r, "steps", [])))
-        except ValueError as e:              # vd "Backtrace chua ho tro loai cong: XOR"
+        except (ValueError, NotImplementedError) as e:
+            if not _is_unsupported(e):
+                raise
             PODEM_ERRORS.add(str(e))
-            algo = "vet can (PODEM khong chay duoc)"
+            algo = "vet can (PODEM chua ho tro)"
     cube, exhausted = exhaustive_test(c, fault)
     if cube is not None:
         return GenResult(fault, "DETECTED", cube, "-", algo)
@@ -149,6 +172,35 @@ def print_trace(c, res, fault, note=""):
         print(md_table(cols, [[s.get(k, "") for k in cols] for s in res.steps]))
 
 
+def _git_commit():
+    """Commit ma nguon luc chay; ghi ro neu src/ hoac circuits/ con thay doi chua commit."""
+    root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    try:
+        sha = subprocess.run(["git", "rev-parse", "--short", "HEAD"], cwd=root, capture_output=True,
+                             text=True, timeout=5).stdout.strip()
+        if not sha:
+            return "khong xac dinh (khong co git)"
+        dirty = subprocess.run(["git", "status", "--porcelain", "--", "src", "circuits"], cwd=root,
+                               capture_output=True, text=True, timeout=5).stdout.strip()
+        return sha + (" + thay doi chua commit trong src/ hoac circuits/" if dirty else "")
+    except Exception:
+        return "khong xac dinh"
+
+
+def meta_lines(args, base, extra=()):
+    """Phan moi truong va tai lap dat dau bao cao Markdown."""
+    cmd = "python -m atpg.run " + " ".join(getattr(args, "argv_used", []) or [])
+    lines = ["## Moi truong va tai lap\n",
+             f"- Lenh tai tao (tu goc repo, PYTHONPATH=src): `{cmd.strip()}`",
+             f"- Python {platform.python_version()} ({platform.python_implementation()}), "
+             f"{platform.system()} {platform.release()}",
+             f"- Commit ma nguon: {_git_commit()}",
+             f"- Thoi diem chay: {datetime.now().isoformat(timespec='seconds')}",
+             f"- Thu tu PI trong cot pattern: {', '.join(base.inputs)}",
+             *extra]
+    return "\n".join(lines) + "\n"
+
+
 # ------------------------------------------------------------------ mach to hop
 def run_single(c, fault, args, podem_fn):
     if args.pattern:
@@ -170,15 +222,21 @@ def run_single(c, fault, args, podem_fn):
     return 0
 
 
-def run_all(c, faults, n_before, n_after, args, podem_fn, notes=()):
-    t0 = time.time()
+def run_all(c, faults, n_before, n_after, args, podem_fn, notes=(), universe=None, base=None):
+    """Chay moi loi trong `faults`. `universe` la toan bo loi goc cua mach (de bao coverage toan mach
+    cua tap test sau nen); mac dinh bang `faults`."""
+    universe = list(universe) if universe is not None else list(faults)
+    base = base or c
+    t_gen = 0.0
+    t0 = time.perf_counter()
     results, rows = [], []
     for f in faults:
+        t1 = time.perf_counter()
         r = generate_test(c, f, podem_fn, args.max_backtracks, False)
+        t_gen += time.perf_counter() - t1
         v, x = verify(c, r, args.max_x)
         results.append(r)
-        rows.append([label(f), r.status, cube_str(c, r.pattern), r.backtracks, v, x])
-    elapsed = time.time() - t0
+        rows.append([label(f), r.status, cube_str(c, r.pattern), r.algo, r.backtracks, v, x])
 
     n = len(faults)
     dt = sum(1 for r in results if r.status == "DETECTED")
@@ -187,24 +245,43 @@ def run_all(c, faults, n_before, n_after, args, podem_fn, notes=()):
     pats = [fill0(c, r.pattern) for r in results if r.status == "DETECTED"]
     kept = compact(c, pats, faults)
     cov = coverage(c, kept, faults)
-    sai = sum(1 for r in rows if r[4].startswith("SAI"))
-    x_bad = sum(1 for r in rows if r[5] == "khong")
-    x_unp = sum(1 for r in rows if r[5].startswith("chua"))
+    cov_all = coverage(c, kept, universe)
+    t_all = time.perf_counter() - t0
+    sai = sum(1 for r in rows if r[5].startswith("SAI"))
+    x_bad = sum(1 for r in rows if r[6] == "khong")
+    x_unp = sum(1 for r in rows if r[6].startswith("chua"))
     bt = [r.backtracks for r in results if isinstance(r.backtracks, int)]
 
-    text = [f"# Ket qua toan bo loi - {c.name}\n"]
-    algos = sorted({r.algo for r in results})
-    text.append(f"Thuat toan sinh pattern: {', '.join(algos)}. "
-                f"Tong thoi gian: {elapsed:.3f} s. Pattern co X duoc dien 0 khi mo phong loi.\n")
+    n_stem = sum(1 for f in universe if not isinstance(f, (list, tuple)) and f.branch_to is None)
+    n_branch = len(universe) - n_stem
+    if isinstance(n_after, str):
+        scope = n_after.strip()
+    elif n == len(universe):
+        scope = f"Dang chay {n} loi goc, khong gop."
+    else:
+        scope = (f"Dang chay {n} loi dai dien sau gop tuong duong (tu {n_before} loi goc). "
+                 f"Tap {n} loi dai dien nay KHAC tap {n_stem} loi stem, du hai so co the trung nhau.")
+    text = [f"# Ket qua toan bo loi - {c.name}\n",
+            meta_lines(args, base, [
+                f"- Pham vi loi goc: {len(universe)} loi"
+                + (f" = {n_stem} stem + {n_branch} nhanh" if n_branch or n_stem else ""),
+                f"- {scope}",
+                "- Pattern co X duoc dien 0 khi mo phong loi; cot \"Moi cach dien X\" la vet can moi cach dien "
+                f"(toi da {args.max_x} bit X).",
+                f"- Thoi gian sinh pattern: {t_gen:.4f} s (time.perf_counter, chi tinh bo sinh pattern); "
+                f"ca kiem chung va nen: {t_all:.4f} s. So do phu thuoc may chay."])]
     for line in notes:
         text.append(line + "\n")
     if podem_error_note():
         text.append(podem_error_note() + "\n")
     s = c.stats()
     text.append(md_table(["PI", "PO", "cong", "DFF"], [[s["PI"], s["PO"], s["gates"], s["DFF"]]]) + "\n")
-    text.append(n_after if isinstance(n_after, str) else
-                f"So loi truoc gop: {n_before}; sau gop (equivalence): {n_after}.\n")
-    text.append(md_table(["Loi", "Trang thai", "Pattern", "Backtrack", "Kiem chung", "Moi cach dien X"], rows) + "\n")
+    if not isinstance(n_after, str):
+        text.append(f"So loi truoc gop: {n_before}; sau gop (equivalence): {n_after}.\n")
+    text.append("## Ket qua tung loi\n")
+    text.append(md_table(["Loi", "Trang thai", "Pattern", "Thuat toan", "Backtrack", "Kiem chung",
+                          "Moi cach dien X"], rows) + "\n")
+    text.append("## Tong hop\n")
     text.append(md_table(["Chi so", "Gia tri"], [
         ["Fault coverage (DETECTED / tong)", f"{dt}/{n} = {pct(dt, n)}"],
         ["Test coverage (DETECTED / (tong - UNTESTABLE))", f"{dt}/{n - ut} = {pct(dt, n - ut)}"],
@@ -212,11 +289,16 @@ def run_all(c, faults, n_before, n_after, args, podem_fn, notes=()):
         ["ABORTED", ab],
         ["Backtrack trung binh", f"{sum(bt) / len(bt):.2f}" if bt else "-"],
         ["Pattern truoc nen", len(pats)],
-        ["Pattern sau nen", f"{len(kept)} (phu {cov['detected']}/{n} loi)"],
+        ["Pattern sau nen", f"{len(kept)} (phu {cov['detected']}/{n} loi dang chay)"],
+        [f"Tap sau nen phu toan bo loi goc ({len(universe)} loi)",
+         f"{cov_all['detected']}/{len(universe)} = {pct(cov_all['detected'], len(universe))}"],
         ["Pattern bi kiem chung SAI", sai],
         ["Pattern co X ma co cach dien X khong phat hien", x_bad],
         [f"Pattern chua kiem chung het moi cach dien X (>{args.max_x} bit X)", x_unp],
-    ]))
+    ]) + "\n")
+    text.append(f"## Tap test sau nen (X da dien 0; thu tu PI: {', '.join(c.inputs)})\n")
+    text.append(md_table(["#", "Pattern"], [[i + 1, "".join(str(p[pi]) for pi in c.inputs)]
+                                             for i, p in enumerate(kept)]))
     write_report("\n".join(text), args)
     return 1 if (sai or x_bad) else 0
 
@@ -293,7 +375,7 @@ def run_seq_single(c, base, fault, args, podem_fn, state_nets):
 def run_seq_all(c, base, k, expand, args, podem_fn, state_nets):
     faults = [Fault(n, sv) for n in base.nets for sv in (0, 1)]
     n = len(faults)
-    t0 = time.time()
+    t0 = time.perf_counter()
     rows, kinds, results = [], [], []
     for f in faults:
         r, kind = seq_generate(c, expand(f), podem_fn, state_nets, args)
@@ -305,8 +387,8 @@ def run_seq_all(c, base, k, expand, args, podem_fn, state_nets):
                  "chua": "chua chung minh",
                  "-": "-"}[kind]
         rows.append([label(f), r.status, seq_str(c, r.pattern, state_nets, show_state) if r.pattern else "-",
-                     r.backtracks, scope])
-    elapsed = time.time() - t0
+                     r.algo, r.backtracks, scope])
+    elapsed = time.perf_counter() - t0
     dt = sum(1 for r in results if r.status == "DETECTED")
     cond = sum(1 for r in results if r.status == "CO DIEU KIEN Q@0")
     unp = sum(1 for r in results if r.status == "CHUA KIEM CHUNG HET")
@@ -318,14 +400,18 @@ def run_seq_all(c, base, k, expand, args, podem_fn, state_nets):
             "Che do: trang thai dau Q@0 CHUA BIET (khong scan/reset). `DETECTED` nghia la phat hien BAO DAM voi "
             "moi trang thai dau cua mach tot va mach loi (cung dinh nghia voi scripts/p4_seq_experiment.py); "
             "pattern chi con cac PI dieu khien duoc, Q@0 khong nam trong pattern.\n",
-            f"Thuat toan sinh pattern: {', '.join(sorted({r.algo for r in results}))}. "
-            f"Tong thoi gian: {elapsed:.3f} s.\n",
+            meta_lines(args, base, [
+                f"- Pham vi loi: {n} loi stem vat ly, moi loi cay vao ca {k} khung",
+                f"- Nguon pattern theo hang (cot Thuat toan): {', '.join(sorted({r.algo for r in results}))}",
+                f"- Tong thoi gian (sinh + kiem chung bao dam): {elapsed:.4f} s (time.perf_counter). "
+                "So do phu thuoc may chay."]),
             scope_line(base, k, n) + "\n",
             *([podem_error_note() + "\n"] if podem_error_note() else []),
             md_table(["PI moi khung", "PO moi khung", "cong moi khung", "DFF"],
                      [[len(base.inputs), len(base.outputs), len(base.topo_order), len(base.dffs)]]) + "\n",
             f"Pattern: moi nhom ky tu la cac PI ({', '.join(base.inputs)}) cua mot khung, theo thoi gian.\n",
-            md_table(["Loi", "Trang thai", "Chuoi (PI moi khung)", "Backtrack", "Pham vi dam bao"], rows) + "\n",
+            md_table(["Loi", "Trang thai", "Chuoi (PI moi khung)", "Thuat toan", "Backtrack", "Pham vi dam bao"],
+                     rows) + "\n",
             md_table(["Chi so", "Gia tri"], [
                 ["Phat hien BAO DAM (DETECTED / tong)", f"{dt}/{n} = {pct(dt, n)}"],
                 ["Chi phat hien CO DIEU KIEN Q@0", cond],
@@ -347,33 +433,81 @@ def run_seq_controllable(c, base, k, expand, args, podem_fn):
     n = len(faults)
     notes = ["CHE DO Q@0 DIEU KHIEN DUOC (scan/reset): pattern gom ca Q@0; ket qua CO DIEU KIEN, "
              "khong phai phat hien bao dam tu trang thai dau chua biet. " + scope_line(base, k, n)]
-    return run_all(c, faults, n, f"So loi: {n} (stem vat ly, khong gop).\n", args, podem_fn, notes)
+    return run_all(c, faults, n, f"Dang chay {n} loi stem vat ly, khong gop (moi loi cay vao ca {k} khung).",
+                   args, podem_fn, notes, universe=faults, base=base)
+
+
+def _int_at_least(lo, what):
+    def conv(text):
+        try:
+            v = int(text)
+        except ValueError:
+            raise argparse.ArgumentTypeError(f"{what} phai la so nguyen, nhan {text!r}")
+        if v < lo:
+            raise argparse.ArgumentTypeError(f"{what} phai >= {lo}, nhan {v}")
+        return v
+    return conv
+
+
+def _safe_console():
+    """Console Windows cu (cp1252) khong in duoc tieng Viet trong trace PODEM: thay ky tu loi
+    bang '?' thay vi dung chuong trinh. Muon luu ket qua day du hay dung --md (ghi UTF-8)."""
+    for stream in (sys.stdout, sys.stderr):
+        if hasattr(stream, "reconfigure"):
+            try:
+                stream.reconfigure(errors="replace")
+            except Exception:
+                pass
 
 
 def main(argv=None):
+    _safe_console()
+    argv = list(sys.argv[1:] if argv is None else argv)
     ap = argparse.ArgumentParser(prog="atpg.run", description="ATPG PODEM: sinh pattern, kiem chung, coverage")
     ap.add_argument("bench")
-    ap.add_argument("--fault", nargs=2, metavar=("NET", "SV"), help="mot loi, vd: --fault 11 0")
+    ap.add_argument("--fault", nargs=2, metavar=("NET", "SV"), help="mot loi, vd: --fault 11 0 (SV la 0 hoac 1)")
     ap.add_argument("--branch", metavar="GATE", help="loi tren nhanh cua NET di vao cong GATE (chi mach to hop)")
     ap.add_argument("--all", action="store_true", help="chay moi loi, tinh coverage")
     ap.add_argument("--trace", action="store_true")
-    ap.add_argument("--unroll", type=int, metavar="K", help="trai K khung thoi gian (unroll.py cua P4)")
+    ap.add_argument("--unroll", type=_int_at_least(1, "So khung K"), metavar="K",
+                    help="trai K khung thoi gian (unroll.py cua P4), K >= 1")
     ap.add_argument("--init", choices=["unknown", "controllable"], default="unknown",
                     help="chi dung voi --unroll: trang thai dau chua biet (mac dinh) hoac dieu khien duoc")
     ap.add_argument("--no-collapse", action="store_true", help="khong gop loi tuong duong (mach to hop)")
     ap.add_argument("--pattern", help="chuoi 0/1/X theo thu tu INPUT: kiem tra pattern co phat hien loi")
-    ap.add_argument("--max-backtracks", type=int, default=1000)
-    ap.add_argument("--max-x", type=int, default=16, metavar="N",
+    ap.add_argument("--max-backtracks", type=_int_at_least(0, "--max-backtracks"), default=1000)
+    ap.add_argument("--max-x", type=_int_at_least(0, "--max-x"), default=16, metavar="N",
                     help="vet can moi cach dien X neu pattern co toi da N bit X (mac dinh 16)")
-    ap.add_argument("--md", metavar="FILE", help="ghi bao cao Markdown (vd results/c17_all_faults.md)")
+    ap.add_argument("--md", metavar="FILE", help="ghi bao cao Markdown UTF-8 (vd results/c17_all_faults.md)")
     args = ap.parse_args(argv)
+    args.argv_used = argv
+
+    if args.fault and args.fault[1] not in ("0", "1"):
+        ap.error(f"SV phai la 0 hoac 1 (stuck-at-0/stuck-at-1), nhan {args.fault[1]!r}")
+    if args.branch and not args.fault:
+        ap.error("--branch can di kem --fault NET SV")
+    if args.init != "unknown" and args.unroll is None:
+        ap.error("--init chi dung cung --unroll")
 
     base = Circuit.from_bench(args.bench)
+    if args.fault:
+        net = args.fault[0]
+        if net not in base.gates and net not in base.inputs:
+            ap.error(f"Khong co net {net!r} trong mach {base.name}")
+        if args.branch:
+            g = base.gates.get(args.branch)
+            if g is None or net not in g.inputs:
+                ap.error(f"Nhanh {net}->{args.branch} khong ton tai: "
+                         + (f"khong co cong {args.branch!r}" if g is None
+                            else f"cong {args.branch} khong nhan net {net}"))
+    if base.dffs and args.unroll is None:
+        ap.error(f"Mach {base.name} co {len(base.dffs)} DFF: can --unroll K (hoac full_scan cua P4)")
+
     c = base
     expand = None
-    if args.unroll:
+    if args.unroll is not None:
         if args.branch:
-            sys.exit("--branch chua ho tro khi --unroll: fault_in_frames cua P4 chi nhan loi stem "
+            ap.error("--branch chua ho tro khi --unroll: fault_in_frames cua P4 chi nhan loi stem "
                      "(loi nhanh can anh xa dung canh, dac biet canh vao DFF).")
         try:
             from atpg.unroll import fault_in_frames, unroll   # P4
@@ -383,8 +517,6 @@ def main(argv=None):
         expand = lambda f: tuple(fault_in_frames(f, args.unroll))   # tuple de lam khoa dict
         if args.no_collapse:
             print("(--no-collapse: che do tran khung luon khong gop loi)")
-    elif args.init != "unknown":
-        ap.error("--init chi dung cung --unroll")
 
     s = c.stats()
     print(f"Mach {c.name}: {s['PI']} PI, {s['PO']} PO, {s['gates']} cong, {s['DFF']} DFF")
@@ -395,22 +527,21 @@ def main(argv=None):
 
     if args.fault:
         net, sv = args.fault[0], int(args.fault[1])
-        if net not in base.nets:
-            sys.exit(f"Khong co net {net} trong mach")
-        if args.unroll:
+        if args.unroll is not None:
             fault = expand(Fault(net, sv))
             if args.init == "controllable":
                 return run_single(c, fault, args, podem_fn)
             return run_seq_single(c, base, fault, args, podem_fn, state_nets)
         return run_single(c, Fault(net, sv, args.branch), args, podem_fn)
     if args.all:
-        if args.unroll:
+        if args.unroll is not None:
             if args.init == "controllable":
                 return run_seq_controllable(c, base, args.unroll, expand, args, podem_fn)
             return run_seq_all(c, base, args.unroll, expand, args, podem_fn, state_nets)
         base_faults = all_faults(base)
         used = base_faults if args.no_collapse else collapse(base, base_faults)
-        return run_all(c, used, len(base_faults), len(collapse(base, base_faults)), args, podem_fn)
+        return run_all(c, used, len(base_faults), len(collapse(base, base_faults)), args, podem_fn,
+                       universe=base_faults, base=base)
     ap.error("can --fault NET SV hoac --all")
 
 
