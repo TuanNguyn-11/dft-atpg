@@ -1,19 +1,33 @@
 \begin{frame}{P5 -- Cài đặt PODEM}
 
 \begin{itemize}
+
     \item Triển khai PODEM trên logic 5 giá trị.
+
     \item Các bước chính:
+
     \begin{itemize}
+
         \item Imply
+
         \item Objective
+
         \item Backtrace
+
         \item Gán PI
+
         \item Backtrack
+
     \end{itemize}
+
     \item Sử dụng D-frontier để lan truyền fault.
+
+    \item Bổ sung xử lý Objective và Backtrace cho XOR/XNOR.
+
 \end{itemize}
 
 \end{frame}
+
 
 \begin{frame}{Cơ chế tìm kiếm và Backtrack}
 
@@ -28,32 +42,60 @@
 \]
 
 \begin{itemize}
+
     \item Thử nhánh đầu tiên.
+
     \item Khi nhánh thất bại, đảo quyết định PI.
+
+    \item Sau khi backtrack, implication lại trạng thái mới.
+
     \item Tiếp tục tìm kiếm với decision stack.
+
     \item Phân biệt \texttt{UNTESTABLE} và \texttt{ABORTED}.
+
 \end{itemize}
 
 \end{frame}
 
+
 \begin{frame}{Kết quả P5}
 
 \begin{table}
+
 \centering
+
 \begin{tabular}{lccc}
+
 \hline
+
 Fault & Pattern & Backtracks & Status \\
+
 \hline
+
 c17: 11/SA0 & X10XX & 0 & DETECTED \\
+
 Backtrack: t/SA0 & 01 & 1 & DETECTED \\
+
 \hline
+
 \end{tabular}
+
 \end{table}
 
 \vspace{3mm}
 
+\begin{itemize}
+
+    \item Hỗ trợ fault-frame và branch fault.
+
+    \item Kiểm thử XOR/XNOR trên logic 5 giá trị.
+
+\end{itemize}
+
+\vspace{1mm}
+
 \[
-\boxed{194\ \text{tests passed}}
+\boxed{262\ \text{tests passed}}
 \]
 
 \end{frame}

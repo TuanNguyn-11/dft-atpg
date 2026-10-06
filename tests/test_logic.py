@@ -105,3 +105,288 @@ def test_invalid_gate_type():
     # Loại cổng không được hỗ trợ phải bị từ chối.
     with pytest.raises(ValueError):
         eval_gate("INVALID", ["0", "1"])
+
+
+# =========================================================
+# TEST XOR / XNOR THEO P3-v1.1
+# =========================================================
+
+import pytest
+
+
+# ---------------------------------------------------------
+# Toàn bộ 25 tổ hợp của 5 giá trị:
+# 0, 1, X, D, D'
+# ---------------------------------------------------------
+
+LOGIC_VALUES = [
+    "0",
+    "1",
+    "X",
+    "D",
+    "D'",
+]
+
+
+# Bảng XOR kỳ vọng độc lập với implementation.
+XOR_EXPECTED = {
+    ("0", "0"): "0",
+    ("0", "1"): "1",
+    ("0", "X"): "X",
+    ("0", "D"): "D",
+    ("0", "D'"): "D'",
+
+    ("1", "0"): "1",
+    ("1", "1"): "0",
+    ("1", "X"): "X",
+    ("1", "D"): "D'",
+    ("1", "D'"): "D",
+
+    ("X", "0"): "X",
+    ("X", "1"): "X",
+    ("X", "X"): "X",
+    ("X", "D"): "X",
+    ("X", "D'"): "X",
+
+    ("D", "0"): "D",
+    ("D", "1"): "D'",
+    ("D", "X"): "X",
+    ("D", "D"): "0",
+    ("D", "D'"): "1",
+
+    ("D'", "0"): "D'",
+    ("D'", "1"): "D",
+    ("D'", "X"): "X",
+    ("D'", "D"): "1",
+    ("D'", "D'"): "0",
+}
+
+
+# Bảng XNOR kỳ vọng độc lập với implementation.
+XNOR_EXPECTED = {
+    ("0", "0"): "1",
+    ("0", "1"): "0",
+    ("0", "X"): "X",
+    ("0", "D"): "D'",
+    ("0", "D'"): "D",
+
+    ("1", "0"): "0",
+    ("1", "1"): "1",
+    ("1", "X"): "X",
+    ("1", "D"): "D",
+    ("1", "D'"): "D'",
+
+    ("X", "0"): "X",
+    ("X", "1"): "X",
+    ("X", "X"): "X",
+    ("X", "D"): "X",
+    ("X", "D'"): "X",
+
+    ("D", "0"): "D'",
+    ("D", "1"): "D",
+    ("D", "X"): "X",
+    ("D", "D"): "1",
+    ("D", "D'"): "0",
+
+    ("D'", "0"): "D",
+    ("D'", "1"): "D'",
+    ("D'", "X"): "X",
+    ("D'", "D"): "0",
+    ("D'", "D'"): "1",
+}
+
+
+@pytest.mark.parametrize(
+    "left",
+    LOGIC_VALUES,
+)
+@pytest.mark.parametrize(
+    "right",
+    LOGIC_VALUES,
+)
+def test_xor_all_25_combinations(left, right):
+    expected = XOR_EXPECTED[(left, right)]
+
+    result = eval_gate(
+        "XOR",
+        [left, right],
+    )
+
+    assert result == expected
+
+
+@pytest.mark.parametrize(
+    "left",
+    LOGIC_VALUES,
+)
+@pytest.mark.parametrize(
+    "right",
+    LOGIC_VALUES,
+)
+def test_xnor_all_25_combinations(left, right):
+    expected = XNOR_EXPECTED[(left, right)]
+
+    result = eval_gate(
+        "XNOR",
+        [left, right],
+    )
+
+    assert result == expected
+
+
+# ---------------------------------------------------------
+# Multi-input XOR
+# ---------------------------------------------------------
+
+def test_xor_multi_input():
+    assert eval_gate(
+        "XOR",
+        ["1", "0", "1"],
+    ) == "0"
+
+    assert eval_gate(
+        "XOR",
+        ["D", "0", "1"],
+    ) == "D'"
+
+    assert eval_gate(
+        "XOR",
+        ["D", "D", "0"],
+    ) == "0"
+
+    assert eval_gate(
+        "XOR",
+        ["D", "D'", "0"],
+    ) == "1"
+
+    assert eval_gate(
+        "XOR",
+        ["D", "X", "0"],
+    ) == "X"
+
+
+# ---------------------------------------------------------
+# Multi-input XNOR
+# ---------------------------------------------------------
+
+def test_xnor_multi_input():
+    assert eval_gate(
+        "XNOR",
+        ["1", "0", "1"],
+    ) == "1"
+
+    assert eval_gate(
+        "XNOR",
+        ["D", "0", "1"],
+    ) == "D"
+
+    assert eval_gate(
+        "XNOR",
+        ["D", "D", "0"],
+    ) == "1"
+
+    assert eval_gate(
+        "XNOR",
+        ["D", "D'", "0"],
+    ) == "0"
+
+    assert eval_gate(
+        "XNOR",
+        ["D", "X", "0"],
+    ) == "X"
+
+
+# ---------------------------------------------------------
+# D / D' lan truyền và triệt tiêu
+# ---------------------------------------------------------
+
+def test_xor_d_propagation():
+    assert eval_gate(
+        "XOR",
+        ["D", "0"],
+    ) == "D"
+
+    assert eval_gate(
+        "XOR",
+        ["D", "1"],
+    ) == "D'"
+
+    assert eval_gate(
+        "XOR",
+        ["D'", "0"],
+    ) == "D'"
+
+    assert eval_gate(
+        "XOR",
+        ["D'", "1"],
+    ) == "D"
+
+
+def test_xnor_d_propagation():
+    assert eval_gate(
+        "XNOR",
+        ["D", "0"],
+    ) == "D'"
+
+    assert eval_gate(
+        "XNOR",
+        ["D", "1"],
+    ) == "D"
+
+    assert eval_gate(
+        "XNOR",
+        ["D'", "0"],
+    ) == "D"
+
+    assert eval_gate(
+        "XNOR",
+        ["D'", "1"],
+    ) == "D'"
+
+
+def test_xor_d_cancellation():
+    assert eval_gate(
+        "XOR",
+        ["D", "D"],
+    ) == "0"
+
+    assert eval_gate(
+        "XOR",
+        ["D'", "D'"],
+    ) == "0"
+
+
+def test_xor_d_and_d_prime():
+    assert eval_gate(
+        "XOR",
+        ["D", "D'"],
+    ) == "1"
+
+    assert eval_gate(
+        "XOR",
+        ["D'", "D"],
+    ) == "1"
+
+
+def test_xnor_d_cancellation():
+    assert eval_gate(
+        "XNOR",
+        ["D", "D"],
+    ) == "1"
+
+    assert eval_gate(
+        "XNOR",
+        ["D'", "D'"],
+    ) == "1"
+
+
+def test_xnor_d_and_d_prime():
+    assert eval_gate(
+        "XNOR",
+        ["D", "D'"],
+    ) == "0"
+
+    assert eval_gate(
+        "XNOR",
+        ["D'", "D"],
+    ) == "0"

@@ -653,3 +653,420 @@ def test_podem_sequential_fault_frames():
     assert set(result.pattern.keys()) == set(
         unrolled.inputs
     )
+
+
+# =========================================================
+# TEST BỔ SUNG THEO P3-v1.1: XOR / XNOR
+# =========================================================
+
+def make_xor_circuit() -> Circuit_for_Test:
+    gates = {
+        "y": Gate_for_Test(
+            output="y",
+            type="XOR",
+            inputs=["a", "b"],
+        ),
+    }
+
+    return Circuit_for_Test(
+        inputs=["a", "b"],
+        outputs=["y"],
+        gates=gates,
+        fanout={
+            "a": ["y"],
+            "b": ["y"],
+        },
+        topo_order=["y"],
+    )
+
+
+def make_xnor_circuit() -> Circuit_for_Test:
+    gates = {
+        "y": Gate_for_Test(
+            output="y",
+            type="XNOR",
+            inputs=["a", "b"],
+        ),
+    }
+
+    return Circuit_for_Test(
+        inputs=["a", "b"],
+        outputs=["y"],
+        gates=gates,
+        fanout={
+            "a": ["y"],
+            "b": ["y"],
+        },
+        topo_order=["y"],
+    )
+
+
+# ---------------------------------------------------------
+# Backtrace qua XOR
+# ---------------------------------------------------------
+
+def test_backtrace_xor_one_unknown():
+    c = make_xor_circuit()
+
+    values = {
+        "a": "1",
+        "b": "X",
+        "y": "X",
+    }
+
+    # XOR(a,b) = 1, a = 1 -> b = 0
+    result = backtrace(
+        c,
+        values,
+        "y",
+        1,
+    )
+
+    assert result == ("b", 0)
+
+
+# ---------------------------------------------------------
+# Backtrace qua XNOR
+# ---------------------------------------------------------
+
+def test_backtrace_xnor_one_unknown():
+    c = make_xnor_circuit()
+
+    values = {
+        "a": "1",
+        "b": "X",
+        "y": "X",
+    }
+
+    # XNOR(a,b) = 1, a = 1 -> b = 1
+    result = backtrace(
+        c,
+        values,
+        "y",
+        1,
+    )
+
+    assert result == ("b", 1)
+
+
+# ---------------------------------------------------------
+# Backtrace XOR nhiều đầu vào
+# ---------------------------------------------------------
+
+def test_backtrace_xor_three_inputs():
+    gates = {
+        "y": Gate_for_Test(
+            output="y",
+            type="XOR",
+            inputs=["a", "b", "c"],
+        ),
+    }
+
+    c = Circuit_for_Test(
+        inputs=["a", "b", "c"],
+        outputs=["y"],
+        gates=gates,
+        fanout={
+            "a": ["y"],
+            "b": ["y"],
+            "c": ["y"],
+        },
+        topo_order=["y"],
+    )
+
+    values = {
+        "a": "1",
+        "b": "0",
+        "c": "X",
+        "y": "X",
+    }
+
+    # XOR(1,0,c) = 1 -> c = 0
+    result = backtrace(
+        c,
+        values,
+        "y",
+        1,
+    )
+
+    assert result == ("c", 0)
+
+
+# ---------------------------------------------------------
+# Backtrace XOR với D'
+# ---------------------------------------------------------
+
+def test_backtrace_xor_with_d_prime():
+    c = make_xor_circuit()
+
+    values = {
+        "a": "D'",
+        "b": "X",
+        "y": "X",
+    }
+
+    # good(D') = 0
+    # XOR(0,b) = 1 -> b = 1
+    result = backtrace(
+        c,
+        values,
+        "y",
+        1,
+    )
+
+    assert result == ("b", 1)
+
+
+# =========================================================
+# Bốn ví dụ P3-v1.1
+# =========================================================
+
+def test_p3_xor_output_fault_sa0():
+    c = make_xor_circuit()
+    fault = Fault_for_Test("y", 0)
+
+    result = podem(
+        c,
+        fault,
+    )
+
+    assert result.status == "DETECTED"
+    assert result.pattern == {
+        "a": "0",
+        "b": "1",
+    }
+    assert result.backtracks == 0
+
+
+def test_p3_xnor_output_fault_sa0():
+    c = make_xnor_circuit()
+    fault = Fault_for_Test("y", 0)
+
+    result = podem(
+        c,
+        fault,
+    )
+
+    assert result.status == "DETECTED"
+    assert result.pattern == {
+        "a": "0",
+        "b": "0",
+    }
+    assert result.backtracks == 0
+
+
+def test_p3_xor_input_fault_sa0():
+    c = make_xor_circuit()
+    fault = Fault_for_Test("a", 0)
+
+    result = podem(
+        c,
+        fault,
+    )
+
+    assert result.status == "DETECTED"
+    assert result.pattern == {
+        "a": "1",
+        "b": "0",
+    }
+    assert result.backtracks == 0
+
+    values = imply(
+        c,
+        result.pattern,
+        fault,
+    )
+
+    assert values["y"] == "D"
+
+
+def test_p3_xnor_input_fault_sa0():
+    c = make_xnor_circuit()
+    fault = Fault_for_Test("a", 0)
+
+    result = podem(
+        c,
+        fault,
+    )
+
+    assert result.status == "DETECTED"
+    assert result.pattern == {
+        "a": "1",
+        "b": "0",
+    }
+    assert result.backtracks == 0
+
+    values = imply(
+        c,
+        result.pattern,
+        fault,
+    )
+
+    assert values["y"] == "D'"
+
+
+# =========================================================
+# TEST FEEDBACK #2 - FAULT INJECTION KHI GIÁ TRỊ ĐÃ LÀ D/D'
+# =========================================================
+
+def make_feedback_fault_injection_circuit() -> Circuit_for_Test:
+    """
+    Mạch tuần tự dùng đúng phản ví dụ của reviewer:
+
+        INPUT(A)
+        D = NOT(Q)
+        Q = DFF(D)
+        Y = AND(Q,A)
+        OUTPUT(Y)
+
+    Q là state của DFF, không phải Primary Input.
+    """
+
+    gates = {
+        "D": Gate_for_Test(
+            output="D",
+            type="NOT",
+            inputs=["Q"],
+        ),
+        "Q": Gate_for_Test(
+            output="Q",
+            type="DFF",
+            inputs=["D"],
+        ),
+        "Y": Gate_for_Test(
+            output="Y",
+            type="AND",
+            inputs=["Q", "A"],
+        ),
+    }
+
+    return Circuit_for_Test(
+        inputs=["A"],
+        outputs=["Y"],
+        gates=gates,
+        fanout={
+            "A": ["Y"],
+            "Q": ["D", "Y"],
+            "D": ["Q"],
+        },
+        topo_order=[
+            "D",
+            "Q",
+            "Y",
+        ],
+    )
+
+
+def test_fault_injection_does_not_create_false_d_difference():
+    """
+    Phản ví dụ từ reviewer:
+
+    Trải mạch thành 2 time frames.
+    Fault Q/SA0 được cấy tại Q@0 và Q@1.
+
+    Pattern:
+        Q@0 = 1
+        A@0 = 0
+        A@1 = 1
+
+    Theo reviewer:
+        - Mạch tốt: Q ở frame 1 = 0.
+        - Mạch lỗi: Q bị giữ ở 0.
+        - Y ở cả hai frame đều = 0.
+
+    Vì vậy không được xuất hiện D hoặc D' giả tại Q@1/Y@1.
+    """
+
+    from atpg.unroll import unroll, fault_in_frames
+
+    c = make_feedback_fault_injection_circuit()
+
+    # unroll() cần tên mạch.
+    c.name = "feedback_fault_injection"
+
+    # Trải thành 2 time frames.
+    unrolled = unroll(
+        c,
+        2,
+    )
+
+    # Fault Q/SA0 tại tất cả các frame.
+    fault = Fault_for_Test(
+        net="Q",
+        stuck_at=0,
+    )
+
+    faults = fault_in_frames(
+        fault,
+        2,
+    )
+
+    # Pattern theo phản ví dụ của reviewer.
+    pattern = {
+        "Q@0": "1",
+        "A@0": "0",
+        "A@1": "1",
+    }
+
+    # Các PI còn lại của mạch trải khung giữ X.
+    for pi in unrolled.inputs:
+        pattern.setdefault(pi, "X")
+
+    values = imply(
+        unrolled,
+        pattern,
+        faults,
+    )
+
+    # Không được tạo fault effect giả tại Q@1.
+    assert values["Q@1"] == "0"
+
+    # Mạch tốt và mạch lỗi đều cho Y = 0.
+    assert values["Y@0"] == "0"
+    assert values["Y@1"] == "0"
+
+
+# =========================================================
+# TEST FEEDBACK #3 - TRACE SAU BACKTRACK
+# =========================================================
+
+def test_podem_trace_backtrack_uses_new_imply_state():
+    c = make_backtrack_circuit()
+    fault = Fault_for_Test("t", 0)
+
+    result = podem(
+        c,
+        fault,
+        trace=True,
+    )
+
+    assert result.status == "DETECTED"
+    assert result.backtracks == 1
+
+    # Tìm dòng trace tương ứng với thao tác backtrack.
+    backtrack_steps = [
+        step
+        for step in result.steps
+        if step["Hành động"] == "backtrack"
+    ]
+
+    assert len(backtrack_steps) == 1
+
+    step = backtrack_steps[0]
+
+    # Backtrack không phải là một lần backtrace mới.
+    assert step["Backtrace → PI"] is None
+
+    # Nhánh cũ a=1 được đảo thành a=0.
+    assert step["Gán PI"] == "a=0"
+
+    # Trace phải chứa trạng thái MỚI sau imply.
+    values = step["Giá trị các net sau imply"]
+
+    assert values["a"] == "0"
+    assert values["t"] == "X"
+    assert values["n"] == "1"
+    assert values["out"] == "X"
+
+    # Sau khi backtrack, fault chưa tạo D-frontier.
+    assert step["D-frontier"] == []

@@ -44,6 +44,47 @@ if TYPE_CHECKING:
     from .faults import Fault
 
 
+def _inject_stuck_at(
+    value: str,
+    stuck_at: int,
+) -> str:
+    """
+    Cấy stuck-at vào một giá trị logic 5 giá trị.
+
+    Giữ nguyên rail của mạch tốt và ép rail của mạch lỗi
+    về giá trị stuck-at.
+    """
+
+    stuck_value = str(stuck_at)
+
+    if value == "X":
+        return "X"
+
+    if value == "0":
+        if stuck_value == "0":
+            return "0"
+        return "D'"
+
+    if value == "1":
+        if stuck_value == "1":
+            return "1"
+        return "D"
+
+    if value == "D":
+        if stuck_value == "0":
+            return "D"
+        return "1"
+
+    if value == "D'":
+        if stuck_value == "0":
+            return "0"
+        return "D'"
+
+    raise ValueError(
+        f"Giá trị logic 5 giá trị không hợp lệ: {value}"
+    )
+
+
 def imply(
     c: "Circuit",
     pattern: dict[str, str],
@@ -85,20 +126,10 @@ def imply(
 
     for f in faults:
         if f.branch_to is None and f.net in c.inputs:
-            good_value = values[f.net]
-            stuck_value = str(f.stuck_at)
-
-            if good_value == "X":
-                values[f.net] = "X"
-
-            elif good_value == stuck_value:
-                values[f.net] = stuck_value
-
-            elif good_value == "0" and stuck_value == "1":
-                values[f.net] = "D'"
-
-            elif good_value == "1" and stuck_value == "0":
-                values[f.net] = "D"
+            values[f.net] = _inject_stuck_at(
+                values[f.net],
+                f.stuck_at,
+            )
 
     # ---------------------------------------------------------
     # 3. Mô phỏng theo topo_order
@@ -124,20 +155,10 @@ def imply(
                     if input_net != f.net:
                         continue
 
-                    current_value = gate_inputs[index]
-                    stuck_value = str(f.stuck_at)
-
-                    if current_value == "X":
-                        gate_inputs[index] = "X"
-
-                    elif current_value == stuck_value:
-                        gate_inputs[index] = stuck_value
-
-                    elif current_value == "0" and stuck_value == "1":
-                        gate_inputs[index] = "D'"
-
-                    elif current_value == "1" and stuck_value == "0":
-                        gate_inputs[index] = "D"
+                    gate_inputs[index] = _inject_stuck_at(
+                        gate_inputs[index],
+                        f.stuck_at,
+                    )
 
         # -----------------------------------------------------
         # 3b. Tính gate bằng logic 5 giá trị
@@ -154,21 +175,10 @@ def imply(
 
         for f in faults:
             if f.branch_to is None and f.net == gate.output:
-
-                good_value = output_value
-                stuck_value = str(f.stuck_at)
-
-                if good_value == "X":
-                    output_value = "X"
-
-                elif good_value == stuck_value:
-                    output_value = stuck_value
-
-                elif good_value == "0" and stuck_value == "1":
-                    output_value = "D'"
-
-                elif good_value == "1" and stuck_value == "0":
-                    output_value = "D"
+                output_value = _inject_stuck_at(
+                    output_value,
+                    f.stuck_at,
+                )
 
         values[gate.output] = output_value
 
@@ -343,12 +353,17 @@ def objective(
     #   stem vẫn mang giá trị logic bình thường,
     #   nhưng nhánh được chỉ định bởi branch_to mang sai biệt.
     if (
-        (fault.branch_to is None and current_value == fault_effect)
+        (
+            fault.branch_to is None
+            and current_value == fault_effect
+        )
         or
-        (fault.branch_to is not None
-         and current_value == str(1 - fault.stuck_at))
+        (
+            fault.branch_to is not None
+            and current_value == str(1 - fault.stuck_at)
+        )
     ):
-        # D-frontier phải xét cả branch fault.
+        # D-frontier phải xét cả stem fault và branch fault.
         d_frontier = _get_d_frontier(
             c,
             values,
@@ -356,26 +371,40 @@ def objective(
         )
 
         for gate_net in d_frontier:
-            # Chỉ chọn frontier còn đường X tới PO.
-            if not _has_x_path(c, gate_net, values):
+            # Chỉ chọn D-frontier còn đường X tới PO.
+            if not _has_x_path(
+                c,
+                gate_net,
+                values,
+            ):
                 continue
 
             gate = c.gates[gate_net]
             gate_type = gate.type.upper()
 
-            # Giá trị non-controlling:
+            # -------------------------------------------------
+            # Giá trị objective khi truyền fault
+            # -------------------------------------------------
+            #
             # AND/NAND -> 1
             # OR/NOR   -> 0
+            # XOR/XNOR -> 0 theo P3-v1.1
+            #
             if gate_type in {"AND", "NAND"}:
                 propagation_value = 1
+
             elif gate_type in {"OR", "NOR"}:
                 propagation_value = 0
+
+            elif gate_type in {"XOR", "XNOR"}:
+                propagation_value = 0
+
             else:
-                # P3-v1 chưa quy định quy tắc này cho XOR/XNOR.
-                # NOT/BUFF cũng không cần objective kiểu này.
+                # NOT/BUFF không cần objective propagation
+                # trong bước này.
                 continue
 
-            # Chọn ngõ vào X đầu tiên theo Gate.inputs.
+            # Chọn input X đầu tiên theo đúng thứ tự Gate.inputs.
             for input_net in gate.inputs:
                 if values.get(input_net, "X") == "X":
                     return input_net, propagation_value
@@ -401,11 +430,11 @@ def backtrace(
     """
     Backtrace từ Objective về một Primary Input.
 
-    Quy tắc P3-v1:
+    Quy tắc:
     - Chọn input X đầu tiên theo Gate.inputs.
     - AND, OR, BUFF: giữ nguyên objective value.
     - NAND, NOR, NOT: đảo objective value.
-    - XOR/XNOR chưa áp dụng quy tắc riêng trong P3-v1.
+    - XOR/XNOR: xử lý theo parity của rail tốt.
 
     Trả về:
         (PI, value)
@@ -417,6 +446,90 @@ def backtrace(
     while current_net not in c.inputs:
 
         gate = c.gates[current_net]
+        gate_type = gate.type.upper()
+
+        # -----------------------------------------------------
+        # XOR/XNOR
+        # -----------------------------------------------------
+
+        if gate_type in {"XOR", "XNOR"}:
+
+            # Các input đang còn X, giữ nguyên thứ tự Gate.inputs.
+            unknown_inputs = [
+                input_net
+                for input_net in gate.inputs
+                if values.get(input_net, "X") == "X"
+            ]
+
+            if not unknown_inputs:
+                raise ValueError(
+                    f"Không còn input X để backtrace từ net {current_net}."
+                )
+
+            # q = 0 với XOR, q = 1 với XNOR.
+            q = 0 if gate_type == "XOR" else 1
+
+            # p = XOR các bit tốt của các input đã biết.
+            # good:
+            #   0  -> 0
+            #   1  -> 1
+            #   D  -> 1
+            #   D' -> 0
+            p = 0
+
+            for input_net in gate.inputs:
+                value = values.get(input_net, "X")
+
+                if value == "0":
+                    good_bit = 0
+
+                elif value == "1":
+                    good_bit = 1
+
+                elif value == "D":
+                    good_bit = 1
+
+                elif value == "D'":
+                    good_bit = 0
+
+                else:
+                    # X không tham gia vào p.
+                    continue
+
+                p ^= good_bit
+
+            # -------------------------------------------------
+            # Chỉ còn đúng một X:
+            #
+            # u = v XOR q XOR p
+            # -------------------------------------------------
+            if len(unknown_inputs) == 1:
+
+                selected_input = unknown_inputs[0]
+
+                current_value = (
+                    current_value
+                    ^ q
+                    ^ p
+                )
+
+            # -------------------------------------------------
+            # Còn từ hai X trở lên:
+            #
+            # Chọn X đầu tiên và ưu tiên thử 0.
+            # -------------------------------------------------
+            else:
+
+                selected_input = unknown_inputs[0]
+                current_value = 0
+
+            current_net = selected_input
+
+            continue
+
+        # -----------------------------------------------------
+        # Các loại gate thông thường
+        # -----------------------------------------------------
 
         # Tìm input X đầu tiên theo đúng thứ tự Gate.inputs.
         selected_input = None
@@ -428,12 +541,11 @@ def backtrace(
 
         if selected_input is None:
             raise ValueError(
-                f"Không tìm thấy input X để backtrace từ net {current_net}."
+                f"Không tìm thấy input X để backtrace "
+                f"từ net {current_net}."
             )
 
-        gate_type = gate.type.upper()
-
-        # Cập nhật giá trị objective theo loại gate.
+        # Cập nhật objective value theo loại gate.
         if gate_type in {"NAND", "NOR", "NOT"}:
             current_value = 1 - current_value
 
@@ -718,28 +830,48 @@ def podem(
                     decisions,
                 )
 
+                # Quan trọng:
+                # Sau khi backtrack phải imply lại trạng thái mới.
+                values = imply(
+                    c,
+                    pattern,
+                    faults,
+                )
+
+                # Cập nhật lại D-frontier theo trạng thái mới.
+                d_frontier = _get_d_frontier(
+                    c,
+                    values,
+                    target_fault,
+                )
+
                 step_number += 1
 
                 if trace:
                     steps.append(
                         {
                             "Bước": step_number,
+
+                            # Backtrack không phải là một lần
+                            # Backtrace Objective -> PI mới.
                             "Objective (net, giá trị)": None,
-                            "Backtrace → PI": (
-                                new_assignment[0],
-                                new_assignment[1],
-                            ),
+                            "Backtrace → PI": None,
+
+                            # Đây là PI vừa được đảo giá trị.
                             "Gán PI": (
                                 f"{new_assignment[0]}="
                                 f"{new_assignment[1]}"
                             ),
+
+                            # Phải ghi trạng thái MỚI sau imply.
                             "Giá trị các net sau imply": values.copy(),
                             "D-frontier": d_frontier.copy(),
+
                             "Hành động": "backtrack",
                         }
                     )
 
-                # Quay lại đầu vòng để imply lại pattern mới.
+                # Tiếp tục vòng lặp với trạng thái mới.
                 continue
 
             # =================================================
