@@ -1,11 +1,21 @@
 # Kế hoạch P1 — Nhóm 4
 
-## Cập nhật thực hiện 03/10/2026
+## Trạng thái hiện tại — 06/10/2026
 
-- Theo yêu cầu tiếp tục triển khai của P1, đã viết Chương 1/2, kết luận đúng trạng thái repo, ba frame và tài liệu tự học. Các ghi chú “học trước khi viết” bên dưới là kế hoạch ban đầu, không xác nhận P1 đã vượt qua kiểm tra kiến thức.
-- P1 đã chốt và tự quay video Hình 4.5, mục 4.3, trang in 166–167; lời giải và lời dẫn ở `p1_video_loi_giai.md`. Công việc quay vẫn còn chờ thực hiện.
+Base `main` `4abf964` (đã merge PR P6 #11) cộng thay đổi P1 trong nhánh `p1-nguyen-ly`.
+
+- Code P2–P6 đã tích hợp, CLI `python -m atpg.run` chạy được; pytest 332 passed (mốc review trên main: 302). Bằng chứng: `results/p1_verification.md`.
+- P6 đã có bản nháp Chương 7 và 3 slide trên nhánh `p6-mo-phong-ket-qua`; P1 rút gọn để vừa ngân sách trang, bản chi tiết lưu ở `notes/p1_chi_tiet/`. Không giao lại việc “viết từ đầu”; PR P6 #11 đã merge, P6 nên đọc lại phần rút gọn.
+- Báo cáo 13 trang PDF (2 bìa + 1 mục lục + 10 trang đánh số; nội dung ~9 trang kể cả tài liệu tham khảo), trong mức 5–10 trang. Slide 19 trang (bìa + 6×3 frame). Build script PASS.
+- **Video Hình 4.5: mới có kịch bản/lời giải** (`p1_video_loi_giai.md`), **chưa có bằng chứng đã quay**. Giờ đóng cổng, kênh và định dạng nộp ngày 08/10/2026 **chưa xác minh**.
+- Còn lại: P1 duyệt PDF cuối và bìa, quay video, diễn tập 20 phút, release/tag `v1.0` và nộp. Checklist: `p1_checklist_nop.md`.
+
+## Lịch sử — cập nhật thực hiện 03/10/2026 (trước tích hợp, không còn là trạng thái hiện tại)
+
+- Theo yêu cầu tiếp tục triển khai của P1, đã viết Chương 1/2, kết luận theo trạng thái repo khi đó, ba frame và tài liệu tự học. Các ghi chú “học trước khi viết” bên dưới là kế hoạch ban đầu, không xác nhận P1 đã vượt qua kiểm tra kiến thức.
+- P1 đã chốt ví dụ Hình 4.5, mục 4.3, trang in 166–167 và nhận phụ trách quay video; lời giải và lời dẫn ở `p1_video_loi_giai.md`. Tại thời điểm này video chưa quay.
 - Bảng SCOAP, ví dụ collapsing và vector Hình 4.5 đã có script kiểm chứng độc lập. Trạng thái kiểm tra bản dựng/PR ở `p1_review.md`.
-- Chưa có phần P2–P6 hoàn chỉnh trong repo; chưa chốt báo cáo cuối, PDF nộp, hoặc tag v1.0. Chương 8 cần cập nhật khi nhận đủ thực nghiệm.
+- Khi đó chưa có phần P2–P6 hoàn chỉnh trong repo (đã thay đổi, xem mục trạng thái hiện tại).
 
 Các mục chưa phân công video bên dưới ghi lại kế hoạch trước cập nhật này.
 
@@ -69,11 +79,11 @@ Tổng 20 phút, nội dung trình bày 18 phút, hỏi đáp nằm ngoài khung
 - Đề xuất ví dụ Hình 4.5, mục 4.3, trang in 166–167 (trang PDF 197–198), lỗi y/SA0. Đây là ví dụ trong nội dung sách, không phải bài tập đánh số. Rubric cho phép ví dụ hoặc bài tập. Xem [đề xuất video](p1_video_de_xuat.md).
 - Chọn bài liên quan trực tiếp đến chủ đề; không mặc định demo c17 tự xây là bài trong sách.
 - Lời giải phải có đề bài, bước giải/giải thích, kết luận và kiểm chứng nếu phù hợp.
-- Người giải thích, quay, ghép và nộp video: chưa phân công.
+- Người giải thích, quay, ghép và nộp video: P1 nhận phụ trách (03/10); chưa có bằng chứng đã quay.
 - Đã xác nhận thời lượng khoảng 2–3 phút; còn thiếu định dạng, kênh nộp và yêu cầu xuất hiện của các thành viên.
 - Không công bố video hoặc tài liệu môn học lên repo công khai khi chưa thống nhất cách chia sẻ.
 
-## Lịch rút ngắn
+## Lịch rút ngắn (kế hoạch 01/10/2026, giữ làm lịch sử; mục tiêu 05/10 đã trễ)
 - 01/10: hoàn thiện khung và thông tin nhóm; kiểm tra TeXPage; thống nhất giao diện, bài tập/video.
 - 02/10: các dữ liệu nền sẵn sàng; học và viết ghi chú theo phần.
 - 03/10: nhận bản nháp chương; PODEM chạy được lỗi mẫu; chuẩn bị lời giải bài tập.
@@ -82,14 +92,14 @@ Tổng 20 phút, nội dung trình bày 18 phút, hỏi đáp nằm ngoài khung
 - 06–07/10: thời gian dự phòng.
 - 08/10: hạn chính thức; giờ đóng cổng/cách nộp chưa được cung cấp.
 
-## Checklist trước khi chốt
-- [ ] TeXPage biên dịch báo cáo và slide; không có tham chiếu/citation chưa giải quyết.
-- [ ] Báo cáo 5–10 trang nội dung; kiểm tra trên PDF thật, không suy từ số file.
-- [ ] P1 hoàn tất học phần nền và nội dung chuyên sâu; viết phần 1, 2, 8.
-- [ ] Có ví dụ collapsing và bảng SCOAP c17 đã kiểm tra.
-- [ ] P2–P6 nộp nội dung, slide và kết quả theo phân công.
-- [ ] Demo và fault simulation kiểm chứng được; không báo coverage chưa đo.
-- [ ] Chọn/giải bài từ tài liệu môn học và hoàn thiện video.
+## Checklist trước khi chốt (cập nhật 06/10/2026)
+- [ ] TeXPage biên dịch báo cáo và slide (chưa xác nhận; build cục bộ đã PASS).
+- [x] Báo cáo 5–10 trang nội dung, đo trên PDF thật: ~9 trang (trang 1–10 đánh số, kể cả tài liệu tham khảo).
+- [x] Phần 1, 2, 8 đã viết; Chương 8 dùng số liệu thực đo.
+- [x] Có ví dụ collapsing và bảng SCOAP c17 đã kiểm tra.
+- [x] P2–P6 có nội dung, slide và kết quả trong bản tích hợp (P6 đã merge, PR #11).
+- [x] Demo và fault simulation kiểm chứng được; coverage có mẫu số cụ thể.
+- [ ] Video Hình 4.5 quay và kiểm tra (đã có lời giải).
 - [ ] Diễn tập 20 phút, kiểm tra bản dự phòng demo.
-- [ ] PDF, code, slide và video nhất quán; README đủ để tái hiện.
-- [ ] Chỉ tạo tag v1.0 khi sản phẩm đã hoàn chỉnh.
+- [ ] P1 duyệt PDF/code/slide/video nhất quán ở commit phát hành.
+- [ ] Chỉ tạo tag v1.0 khi sản phẩm đã hoàn chỉnh và có ủy quyền.

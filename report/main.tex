@@ -6,7 +6,8 @@
   BoldFont=*-bold,ItalicFont=*-italic,BoldItalicFont=*-bolditalic]
 \setsansfont{texgyreheros}[Extension=.otf,UprightFont=*-regular,
   BoldFont=*-bold,ItalicFont=*-italic,BoldItalicFont=*-bolditalic]
-\setmonofont{lmmono10-regular.otf}
+\setmonofont{texgyrecursor}[Extension=.otf,UprightFont=*-regular,
+  BoldFont=*-bold,ItalicFont=*-italic,BoldItalicFont=*-bolditalic]
 \usepackage[vietnamese]{babel}
 % Khổ A4 đứng: 210 x 297 mm; áp dụng cho cả PDF xuất ra.
 \usepackage[a4paper,paperwidth=210mm,paperheight=297mm,margin=25mm]{geometry}
@@ -85,5 +86,8 @@ DFF & D Flip-Flop & Phần tử nhớ D \\
 \input{chapters/07_ket_qua}
 \input{chapters/08_ket_luan}
 
+\begingroup
+\setlength{\emergencystretch}{1em}
 \printbibliography[heading=bibintoc,title={Tài liệu tham khảo}]
+\endgroup
 \end{document}

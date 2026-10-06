@@ -1,3 +1,4 @@
+% Lịch sử: bản bàn giao tại 1b37300, trước biên tập P1 ngày 06/10/2026.
 \chapter{Kết quả và kiểm chứng}
 \label{sec:p6-ket-qua}
 % P6 phụ trách. Số liệu tái tạo bằng các lệnh ghi đầu mỗi file results/c17_all_faults*.md và
@@ -41,7 +42,9 @@ phát hiện nếu một PO khác nhau. Bản mô phỏng song song theo pattern
 bit) cho cùng kết quả trên toàn bộ 32 vector c17. Theo quy ước nhóm, $X$ được
 điền $0$; ngoài ra một pattern có $X$ chỉ được xác nhận khi đã vét cạn
 \emph{mọi} cách điền (kết quả: có, không, hoặc chưa kiểm chứng hết khi quá 16
-bit $X$). Kết luận \texttt{UNTESTABLE} được đối chiếu
+bit $X$). Thử riêng hai mẫu toàn $0$ và toàn $1$ không đủ: với
+$y=a\land\mathrm{XNOR}(x_0,x_1)$, hai mẫu đó cùng phát hiện $a/\mathrm{SA0}$
+nhưng $x_0=0,x_1=1$ thì không. Kết luận \texttt{UNTESTABLE} được đối chiếu
 bằng vét cạn khi mạch có tối đa 16 PI. Bộ sinh chỉ chuyển sang vét cạn khi
 PODEM báo chưa hỗ trợ, và ghi nguồn theo từng hàng. Nén tập test giữ pattern
 phát hiện thêm lỗi mới rồi duyệt ngược để bỏ pattern thừa~\cite[Ch.~4]{p1_wang2006}.
@@ -69,7 +72,9 @@ Pattern bị kiểm chứng sai & 0 & 0\\
 \end{tabular}
 \end{table}
 PODEM tìm được pattern cho mọi lỗi không cần backtrack, mọi pattern đúng với
-mọi cách điền $X$, và tập 6 pattern sau nén phủ cả 34 lỗi gốc. Lệnh, môi trường và thời gian từng lần chạy nằm trong các file kết quả. Với
+mọi cách điền $X$, và tập 6 pattern sau nén phủ cả 34 lỗi gốc. Thời gian sinh
+pattern cho toàn bộ lỗi c17 dưới 0{,}01~s trên máy thử (Python 3.12); con số
+chính xác và môi trường được ghi trong file kết quả, phụ thuộc máy chạy. Với
 \texttt{11/SA0}, PODEM cho $X10XX$ (thứ tự PI $1,2,3,6,7$) sau hai bước, đúng
 golden trace Chương~\ref{sec:p3-podem}; $01000$ cho đầu ra tốt $(1,1)$ và lỗi
 $(0,0)$. Bộ mô phỏng cũng xác nhận các cube chạy tay của P2 ($4/4$ và $8/8$
