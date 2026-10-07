@@ -12,7 +12,97 @@ $\overline D$ & 0 & 1
 $D\land1=D$, $D\land\overline D=0$, $D\land X=X$.\\
 Qua NAND với ngõ vào phụ bằng 1: $D\leftrightarrow\overline D$.
 \end{block}
-\footnotesize Nhóm lập bảng chuẩn cho tám loại cổng, dùng làm dữ liệu kiểm thử chung.
+\footnotesize Bảng đầy đủ cho tám loại cổng ở slide sau.
+\end{frame}
+
+\begin{frame}{Bảng logic năm giá trị cho tám loại cổng}
+\centering\scriptsize
+\renewcommand{\arraystretch}{1.05}
+\setlength{\tabcolsep}{3pt}
+\begin{minipage}[t]{0.24\textwidth}\centering
+\textbf{AND}\\[1pt]
+\begin{tabular}{@{}c|ccccc@{}}
+$a\backslash b$ & 0 & 1 & $X$ & $D$ & $\overline{D}$\\\hline
+0 & 0 & 0 & 0 & 0 & 0\\
+1 & 0 & 1 & $X$ & $D$ & $\overline{D}$\\
+$X$ & 0 & $X$ & $X$ & $X$ & $X$\\
+$D$ & 0 & $D$ & $X$ & $D$ & 0\\
+$\overline{D}$ & 0 & $\overline{D}$ & $X$ & 0 & $\overline{D}$\\
+\end{tabular}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.24\textwidth}\centering
+\textbf{NAND}\\[1pt]
+\begin{tabular}{@{}c|ccccc@{}}
+$a\backslash b$ & 0 & 1 & $X$ & $D$ & $\overline{D}$\\\hline
+0 & 1 & 1 & 1 & 1 & 1\\
+1 & 1 & 0 & $X$ & $\overline{D}$ & $D$\\
+$X$ & 1 & $X$ & $X$ & $X$ & $X$\\
+$D$ & 1 & $\overline{D}$ & $X$ & $\overline{D}$ & 1\\
+$\overline{D}$ & 1 & $D$ & $X$ & 1 & $D$\\
+\end{tabular}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.24\textwidth}\centering
+\textbf{OR}\\[1pt]
+\begin{tabular}{@{}c|ccccc@{}}
+$a\backslash b$ & 0 & 1 & $X$ & $D$ & $\overline{D}$\\\hline
+0 & 0 & 1 & $X$ & $D$ & $\overline{D}$\\
+1 & 1 & 1 & 1 & 1 & 1\\
+$X$ & $X$ & 1 & $X$ & $X$ & $X$\\
+$D$ & $D$ & 1 & $X$ & $D$ & 1\\
+$\overline{D}$ & $\overline{D}$ & 1 & $X$ & 1 & $\overline{D}$\\
+\end{tabular}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.24\textwidth}\centering
+\textbf{NOR}\\[1pt]
+\begin{tabular}{@{}c|ccccc@{}}
+$a\backslash b$ & 0 & 1 & $X$ & $D$ & $\overline{D}$\\\hline
+0 & 1 & 0 & $X$ & $\overline{D}$ & $D$\\
+1 & 0 & 0 & 0 & 0 & 0\\
+$X$ & $X$ & 0 & $X$ & $X$ & $X$\\
+$D$ & $\overline{D}$ & 0 & $X$ & $\overline{D}$ & 0\\
+$\overline{D}$ & $D$ & 0 & $X$ & 0 & $D$\\
+\end{tabular}
+\end{minipage}
+
+\vspace{3mm}
+\begin{minipage}[t]{0.24\textwidth}\centering
+\textbf{XOR}\\[1pt]
+\begin{tabular}{@{}c|ccccc@{}}
+$a\backslash b$ & 0 & 1 & $X$ & $D$ & $\overline{D}$\\\hline
+0 & 0 & 1 & $X$ & $D$ & $\overline{D}$\\
+1 & 1 & 0 & $X$ & $\overline{D}$ & $D$\\
+$X$ & $X$ & $X$ & $X$ & $X$ & $X$\\
+$D$ & $D$ & $\overline{D}$ & $X$ & 0 & 1\\
+$\overline{D}$ & $\overline{D}$ & $D$ & $X$ & 1 & 0\\
+\end{tabular}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.24\textwidth}\centering
+\textbf{XNOR}\\[1pt]
+\begin{tabular}{@{}c|ccccc@{}}
+$a\backslash b$ & 0 & 1 & $X$ & $D$ & $\overline{D}$\\\hline
+0 & 1 & 0 & $X$ & $\overline{D}$ & $D$\\
+1 & 0 & 1 & $X$ & $D$ & $\overline{D}$\\
+$X$ & $X$ & $X$ & $X$ & $X$ & $X$\\
+$D$ & $\overline{D}$ & $D$ & $X$ & 1 & 0\\
+$\overline{D}$ & $D$ & $\overline{D}$ & $X$ & 0 & 1\\
+\end{tabular}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.46\textwidth}\centering
+\textbf{NOT}\\[1pt]
+\begin{tabular}{@{}c|ccccc@{}}
+vào & 0 & 1 & $X$ & $D$ & $\overline{D}$\\\hline
+ra & 1 & 0 & $X$ & $\overline{D}$ & $D$\\
+\end{tabular}
+\\[4mm]
+\textbf{BUFF}\\[1pt]
+\begin{tabular}{@{}c|ccccc@{}}
+vào & 0 & 1 & $X$ & $D$ & $\overline{D}$\\\hline
+ra & 0 & 1 & $X$ & $D$ & $\overline{D}$\\
+\end{tabular}
+\end{minipage}
+
+\vspace{2mm}
+{\footnotesize Hàng: ngõ vào $a$; cột: ngõ vào $b$. Dùng làm dữ liệu kiểm thử chung, khớp chương trình 160/160 ô.}
 \end{frame}
 
 \begin{frame}{D-algorithm: chọn cube, lan truyền và justify}
