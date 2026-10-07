@@ -4,12 +4,12 @@ Bám theo slide bản `v1.0.10` (20 trang). Chữ trong [ngoặc vuông] là tha
 
 | Người | Slide | Thời gian |
 |---|---|---|
-| Phan Ngọc Tuấn Nguyên | 1–4 và 20 | ~3 phút |
+| Phan Ngọc Tuấn Nguyên | 1–4 | ~2–3 phút |
 | Hà Quang Huy | 5–7 | ~3 phút |
 | Võ Trung Nguyên | 8–10 | ~3 phút |
 | Phạm Trọng An Nam | 11–13 | ~3 phút |
 | Nguyễn Thị Thúy Hằng | 14–16 | ~3 phút |
-| Nguyễn Thị Thanh Tuyền | 17–19 (gồm demo) | ~3–4 phút |
+| Nguyễn Thị Thanh Tuyền | 17–20 (gồm demo và kết thúc) | ~4 phút |
 | Dự phòng chuyển người/demo | | ~1–2 phút |
 
 ---
@@ -23,8 +23,6 @@ Bám theo slide bản `v1.0.10` (20 trang). Chữ trong [ngoặc vuông] là tha
 **Slide 3 — c17, lỗi 11/SA0.** Cả nhóm dùng chung một ví dụ: mạch chuẩn c17, lỗi net 11 kẹt ở 0. Đặt 3 bằng 0 thì net 11 mạch tốt bằng 1, mạch lỗi bằng 0, ta gọi là D. Đặt 2 bằng 1 để D đi qua cổng 16, rồi tới ngõ ra 22. Vậy mẫu là X10XX, điền X bằng 0 được 01000.
 
 **Slide 4 — Lộ trình.** Tiếp theo, các bạn sẽ trình bày D-algorithm, PODEM, ATPG cho mạch tuần tự, rồi phần cài đặt và kiểm chứng. Một nguyên tắc chung: nếu tìm kiếm hết giới hạn thì kết quả là ABORTED, không được kết luận là không thể kiểm tra. Bài tập Hình 4.5 trong giáo trình em đã giải trong video nộp kèm. Em xin mời bạn Huy.
-
-**Slide 20 — Kết thúc (sau phần demo).** Tóm lại, nhóm đã cài đặt PODEM, kiểm chứng bằng mô phỏng lỗi độc lập: c17 đạt 100% coverage, nén còn 6 mẫu; mạch tuần tự đạt 18 trên 18 lỗi khi dùng full scan hoặc trải 3 khung. Em xin cảm ơn thầy và các bạn đã lắng nghe.
 
 ---
 
@@ -68,7 +66,7 @@ Bám theo slide bản `v1.0.10` (20 trang). Chữ trong [ngoặc vuông] là tha
 
 ---
 
-## 6. Nguyễn Thị Thanh Tuyền — Kiểm chứng, kết quả, demo (slide 17–19)
+## 6. Nguyễn Thị Thanh Tuyền — Kiểm chứng, kết quả, demo và kết thúc (slide 17–20)
 
 **Slide 17 — Kiểm chứng độc lập.** Để không tin mù quáng vào PODEM, mọi mẫu đều được mô phỏng lại riêng ở mạch tốt và mạch lỗi. Mẫu có X chỉ được tính là đúng khi thử hết mọi cách điền X. Mạch c17 có 34 lỗi; gộp các lỗi tương đương còn 22. Với mạch tuần tự, chỉ chuỗi phát hiện được với *mọi* trạng thái đầu mới được tính.
 
@@ -80,7 +78,7 @@ Bám theo slide bản `v1.0.10` (20 trang). Chữ trong [ngoặc vuông] là tha
 3. Chạy toàn bộ lỗi c17: coverage 100%, nén còn 6 mẫu.
 4. Mạch tuần tự trải 2 khung: 13/18 lỗi phát hiện chắc chắn.
 
-Em xin chuyển lại cho bạn Tuấn Nguyên để kết thúc.
+**Slide 20 — Kết thúc.** Tóm lại, nhóm đã cài đặt PODEM và kiểm chứng bằng mô phỏng lỗi độc lập: c17 đạt 100% coverage, nén còn 6 mẫu; mạch tuần tự đạt 18 trên 18 lỗi khi dùng full scan hoặc trải 3 khung. Phần trình bày của Nhóm 4 đến đây là kết thúc. Em xin thay mặt nhóm cảm ơn thầy và các bạn đã lắng nghe.
 
 ---
 
