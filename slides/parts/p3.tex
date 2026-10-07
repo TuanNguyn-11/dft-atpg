@@ -24,7 +24,7 @@ Bước & Objective & Gán PI & Kết quả chính\\\hline
 Pattern $X10XX$; 0 backtrack. Điền X bằng 0: $01000$.
 \end{block}
 \begin{itemize}
-\item Simulator P6 xác nhận cả 8 cách điền X tại PO22.
+\item Mô phỏng lỗi xác nhận cả 8 cách điền X tại PO22.
 \item Frontier cuối vẫn là $\{19,23\}$; có $D$ tại PO là đủ dừng.
 \end{itemize}
 \end{frame}
@@ -38,10 +38,10 @@ t=a+b,\quad n=\overline a,\quad out=t\cdot n;\qquad t/SA0.
 \item Đảo $a=0$: $n=1$, $t=X$; tiếp tục kích hoạt.
 \item Gán $b=1$: $t=D$, $out=D$; phát hiện lỗi.
 \end{enumerate}
-\begin{block}{Đã đối chiếu code P5 và simulator P6}
+\begin{block}{Đã đối chiếu với chương trình và mô phỏng lỗi}
 3 hàng gán/đảo, 1 backtrack; pattern $(a,b)=01$. Giới hạn 0: ABORTED;
 giới hạn 1: DETECTED. Exporter chuẩn hóa hành động về quy ước golden.
 \end{block}
-\small c17: P2 chọn 4 cube/3 PI/0 backtrack; PODEM gán 2 PI/0 backtrack.
+\small c17: D-algorithm chọn 4 cube/3 PI/0 backtrack; PODEM gán 2 PI/0 backtrack.
 Không suy ra tốc độ. Chọn X đầu tiên, topo ổn định; không dùng SCOAP.
 \end{frame}

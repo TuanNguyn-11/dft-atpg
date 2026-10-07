@@ -6,8 +6,8 @@ D-algorithm của Roth (1966) biểu diễn sai khác giữa mạch tốt và m�
 bằng $D=(1,0)$, $D'=(0,1)$; $0=(0,0)$, $1=(1,1)$ và $X$ chưa biết
 \cite{p2_roth1966}. Đánh giá cổng riêng trên hai thành phần rồi ghép kết quả:
 $D\land1=D$, $D\land D'=0$, $D\land X=X$,
-$\operatorname{NAND}(D,1)=D'$. Bảng tám loại cổng đầy đủ nằm ở
-\nolinkurl{tests/data/five_valued_tables.md}.
+$\operatorname{NAND}(D,1)=D'$. Nhóm lập bảng đầy đủ cho tám loại cổng và
+dùng làm dữ liệu kiểm thử chung cho chương trình.
 Với NAND $z=\overline{ab}$, singular cover gồm $(0,X,1)$, $(X,0,1)$,
 $(1,1,0)$. PDCF cho $z/\mathrm{SA0}$ là $(0,X,D)$ hoặc $(X,0,D)$;
 PDC như $(D,1,D')$ đưa sai khác qua cổng. D-intersection kết hợp
@@ -21,7 +21,7 @@ Thuật toán chọn PDCF, thực hiện implication tiến/lùi, chọn PDC đ�
 ra PO, rồi dùng singular cover justify các yêu cầu nội bộ. Khi xung đột,
 khôi phục trạng thái và thử cube khác. Chỉ thành công khi sai khác tới PO
 \emph{và} mọi yêu cầu đều nhất quán, được thực hiện bởi PI. Lưu đồ ở
-Hình~\ref{fig:p2-flow}; mã giả và trace đầy đủ trong \nolinkurl{notes/p2_ghi_chu.md}.
+Hình~\ref{fig:p2-flow}.
 \begin{figure}[htbp]
 \centering
 \input{figures/p2/d_algorithm_flow}
@@ -56,7 +56,7 @@ D-algorithm luôn ít bước hơn PODEM.\par
 \begin{figure}[htbp]
 \centering
 \input{figures/common/c17}
-\caption{Hình c17 do P2 cung cấp: cube sau tổng quát hóa, $6=X$;
+\caption{Mạch c17 với cube sau tổng quát hóa, $6=X$;
 đường quan sát $11=D\to16=D'\to22=D$.}
 \label{fig:p2-c17}
 \end{figure}
@@ -67,5 +67,5 @@ có thể làm các yêu cầu cục bộ xung đột hoặc che sai khác. Tron
 hưởng net 11 đi qua 16 và 19 rồi hội tụ tại 23. Tìm kiếm có thể tăng theo
 cấp số mũ trong trường hợp xấu; PODEM hạn chế quyết định tại PI
 (Chương~\ref{sec:p3-podem}). Sách Bushnell--Agrawal là tài liệu đọc bổ sung
-\cite{p2_bushnell2000}; ví dụ và số bước trên đây do P2 xây dựng, không phải
-kết quả đo từ implementation.
+\cite{p2_bushnell2000}; ví dụ và số bước trên đây là chạy tay, không phải
+kết quả đo từ chương trình.

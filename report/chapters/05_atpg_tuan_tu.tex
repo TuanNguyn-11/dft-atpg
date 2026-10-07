@@ -3,7 +3,7 @@
 \textbf{Trạng thái và mạch ví dụ.}
 Với DFF, $Q(t+1)=D(t)$; đáp ứng còn phụ thuộc trạng thái đầu.
 Chuỗi kiểm thử cần khởi tạo, kích hoạt rồi đưa sai khác ra PO
-\cite{p4_nptel_seq}. Mạch \nolinkurl{circuits/seq_example.bench} có PI
+\cite{p4_nptel_seq}. Mạch ví dụ \texttt{seq\_example} do nhóm thiết kế có PI
 $A,B$, PO $Y$, sáu cổng và một DFF đồng bộ lý tưởng:
 \[
 N_1=AQ,\quad N_2=\neg B,\quad N_3=N_1\lor N_2,\quad
@@ -44,21 +44,13 @@ khiển/quan sát nhưng tốn MUX, dây nối và thời gian dịch; partial s
 phần cứng nhưng để lại trạng thái không trực tiếp truy cập được.
 Chế độ chỉ đặt được $Q@0$ vẫn quan sát qua Y, nên khác full scan có đọc D.
 
-\textbf{API và thực nghiệm.}\par
+\textbf{Cài đặt và thực nghiệm.}\par
 \label{sec:p4-thuc-nghiem}
-Ba hàm \texttt{full\_scan}, \texttt{unroll} và
-\texttt{fault\_in\_frames} trong module \nolinkurl{src/atpg/unroll.py}
-giữ nguyên mạch đầu vào, tạo lại fanout và thứ tự topo. Mười phép thử
-\texttt{unroll} và hai phép thử tích hợp dùng API thật.
-Với full scan, PODEM phát hiện $18/18$ lỗi stem; mọi cube được simulator
-và oracle độc lập (\nolinkurl{scripts/p4_seq_experiment.py}) xác nhận,
-bộ mẫu sau điền $X=0$ phủ $18/18$.
-Trải khung qua CLI dùng PODEM và vét cạn chuỗi bổ sung,
+Chương trình cung cấp các hàm \texttt{full\_scan}, \texttt{unroll} và
+\texttt{fault\_in\_frames}; chúng giữ nguyên mạch đầu vào, tạo lại fanout và
+thứ tự topo. Với full scan, PODEM phát hiện $18/18$ lỗi stem; mọi cube được
+bộ mô phỏng lỗi và một mô hình vét cạn độc lập xác nhận, bộ mẫu sau điền
+$X=0$ phủ $18/18$. Trải khung dùng PODEM kết hợp vét cạn chuỗi bổ sung,
 đạt $1/18$, $13/18$, $18/18$ khi $k=1,2,3$ từ trạng thái chưa biết;
-phân nguồn từng hàng ở Chương~\ref{sec:p6-ket-qua}.
-Kết quả tái lập được lưu tại
-\nolinkurl{results/seq_integrated_full_scan.md} và
-\nolinkurl{results/seq_integrated_k1.md} đến \nolinkurl{k3.md}.
-Chi tiết sơ đồ, trace và phép đối chiếu được giữ trong
-\nolinkurl{notes/p1_chi_tiet/05_atpg_tuan_tu.tex} và kết quả P4;
-mốc vét cạn độc lập không được gọi là kết quả PODEM.
+phân nguồn từng hàng ở Chương~\ref{sec:p6-ket-qua}. Kết quả vét cạn độc lập
+chỉ là mốc đối chiếu, không được gọi là kết quả PODEM.
