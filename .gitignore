@@ -34,3 +34,6 @@ build-output.txt
 Thumbs.db
 *.swp
 *.tmp
+
+# Video (có hình trích giáo trình) không đưa lên repo công khai
+*.mp4

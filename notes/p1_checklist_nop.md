@@ -12,7 +12,7 @@ Hạn chính thức **08/10/2026**. Giờ đóng cổng, kênh và định dạn
 | Code + test | `src/atpg/`, `tests/` | pytest 350 passed (Python 3.12.15), sau PR #14, #15, nhánh P5 và vá đầu vào lõi PODEM |
 | README/demo | `README.md`, `demo.md` | Lệnh tái lập: `python scripts/p1_verify_release.py` |
 | Bằng chứng kết quả | `results/p1_*.md` | c17, full scan, trải khung k=1..3, log kiểm chứng |
-| Lời giải/kịch bản video Hình 4.5 | `notes/p1_video_loi_giai.md` | Có lời giải và lời dẫn; **video chưa có bằng chứng đã quay** |
+| Lời giải/kịch bản video Hình 4.5 | `notes/p1_video_loi_giai.md` | Có lời giải, lời thoại; P1 đã quay video (07/10/2026), file `notes/Fig4.5.mp4` được Git bỏ qua, nộp riêng |
 
 Lưu ý: PDF phải được build lại trên đúng commit phát hành (sau khi merge P6 và P1), không dùng `main.pdf` trung gian.
 
@@ -24,7 +24,8 @@ Lưu ý: PDF phải được build lại trên đúng commit phát hành (sau kh
 - [x] Merge PR P1 #12 (agent, theo ủy quyền; `99bd39a`). Cây nguồn `main` trùng commit đã kiểm chứng `b8f9639`; chạy lại pytest 332 passed và checker P1/P2/P3 trên `main`.
 - [ ] P1 xác nhận bìa, tên/MSSV thành viên, GVHD, tháng/năm.
 - [ ] P1 xác nhận giờ đóng cổng, kênh nộp, định dạng file/video ngày 08/10/2026; có chiếu video trong 20 phút hay chỉ nộp kèm.
-- [ ] P1 quay video Hình 4.5 (2–3 phút), xem lại tiếng/hình, lưu theo định dạng yêu cầu.
+- [x] P1 quay video Hình 4.5 (P1 xác nhận 07/10/2026; file ngoài Git).
+- [ ] P1 xem lại tiếng/hình và đổi định dạng nếu kênh nộp yêu cầu.
 - [ ] Cả nhóm diễn tập 20 phút (không gồm hỏi đáp), thử demo CLI trên máy trình chiếu, chuẩn bị bản dự phòng (ảnh/kết quả `results/`).
 - [x] Tạo tag `v1.0` (`99bd39a`) và [release](https://github.com/TuanNguyn-11/dft-atpg/releases/tag/v1.0) kèm hai PDF (agent, theo ủy quyền, 06/10/2026). Nếu bìa/nội dung phải sửa: phát hành `v1.0.1`.
 - [x] Merge PR P2 #14 và P4 #15 (agent, theo ủy quyền); sửa dàn trang Chương 5, build lại PDF, phát hành `v1.0.1`.
@@ -34,7 +35,8 @@ Lưu ý: PDF phải được build lại trên đúng commit phát hành (sau kh
 - [x] Merge nhánh P5 `5b461af` (exporter trace, test); P1 biên tập Chương 6 cho vừa 10 trang, gộp cite trùng, sửa frame slide P5 tràn; bản gốc ở `notes/p1_chi_tiet/06_cai_dat_podem_p5_5b461af.tex`; phát hành `v1.0.5`.
 - [x] Vá lõi `podem.podem`: từ chối net/nhánh không thuộc mạch và `max_backtracks` âm bằng `ValueError` (feedback P6-01), thêm 8 test hồi quy; sửa chữ cũ ở `demo.md`, `notes/p6_ghi_chu.md`; phát hành `v1.0.6`.
 - [x] PR P3 #23 được P3 tự merge (06/10/2026); P1 kiểm lại trên `d958a69`: pytest 350 passed, checker P1/P2/P3 (kể cả `notes/p3_doi_chieu_code.py`)/P4 PASS, giới hạn 0/1 → ABORTED/DETECTED đúng; build lại PDF, phát hành `v1.0.7`.
-- [x] Theo yêu cầu P1 (07/10/2026): bỏ đoạn phân công và mọi nhãn P1–P6, đường dẫn file khỏi báo cáo/slide, viết lại câu cho tự nhiên; mục `\section` nhỏ hơn tiêu đề chương; slide bìa có tên/MSSV 6 thành viên, trường, bộ môn, GVHD; slide demo mô tả kịch bản thay vì câu lệnh. Phát hành `v1.0.8` — **bản dùng để nộp**.
+- [x] Theo yêu cầu P1 (07/10/2026): bỏ đoạn phân công và mọi nhãn P1–P6, đường dẫn file khỏi báo cáo/slide, viết lại câu cho tự nhiên; mục `\section` nhỏ hơn tiêu đề chương; slide bìa có tên/MSSV 6 thành viên, trường, bộ môn, GVHD; slide demo mô tả kịch bản thay vì câu lệnh. Phát hành `v1.0.8`.
+- [x] Theo yêu cầu P1 (07/10/2026): sửa “Thúy Hằng” trên bìa; PODEM trong danh mục viết tắt là “Thuật toán sinh mẫu kiểm tra tự động định hướng theo đường đi”; tiêu đề “Xử lý cổng XOR/XNOR trong PODEM”; bỏ xuống dòng sau các tiêu đề đậm; mục 7.4 “Mạch tuần tự”; tài liệu tham khảo trang riêng; slide bìa theo mẫu video, bỏ dòng nguồn, bỏ hỏi đáp, slide cuối là lời cảm ơn. Phát hành `v1.0.9` — **bản dùng để nộp**.
 - [ ] Người trình bày demo dùng câu lệnh trong `demo.md` (slide không còn ghi lệnh).
 - [ ] Báo P5 về thay đổi kiểm tra đầu vào trong `src/atpg/podem.py`.
 - [ ] P5 đọc lại bản biên tập Chương 6.
