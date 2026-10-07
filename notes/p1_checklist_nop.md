@@ -23,7 +23,7 @@ Lưu ý: PDF phải được build lại trên đúng commit phát hành (sau kh
 - [ ] P4, P5 xem lại bản rút gọn Chương 5, 6 (bản gốc ở `notes/p1_chi_tiet/`).
 - [x] Merge PR P1 #12 (agent, theo ủy quyền; `99bd39a`). Cây nguồn `main` trùng commit đã kiểm chứng `b8f9639`; chạy lại pytest 332 passed và checker P1/P2/P3 trên `main`.
 - [ ] P1 xác nhận bìa, tên/MSSV thành viên, GVHD, tháng/năm.
-- [ ] P1 xác nhận giờ đóng cổng, kênh nộp, định dạng file/video ngày 08/10/2026; có chiếu video trong 20 phút hay chỉ nộp kèm.
+- [x] P1 xác nhận giờ đóng cổng, kênh nộp, định dạng file/video ngày 08/10/2026 (P1 báo đã xác nhận 07/10/2026).
 - [x] P1 quay video Hình 4.5 (P1 xác nhận 07/10/2026; file ngoài Git).
 - [ ] P1 xem lại tiếng/hình và đổi định dạng nếu kênh nộp yêu cầu.
 - [ ] Cả nhóm diễn tập 20 phút (không gồm hỏi đáp), thử demo CLI trên máy trình chiếu, chuẩn bị bản dự phòng (ảnh/kết quả `results/`).
@@ -36,7 +36,8 @@ Lưu ý: PDF phải được build lại trên đúng commit phát hành (sau kh
 - [x] Vá lõi `podem.podem`: từ chối net/nhánh không thuộc mạch và `max_backtracks` âm bằng `ValueError` (feedback P6-01), thêm 8 test hồi quy; sửa chữ cũ ở `demo.md`, `notes/p6_ghi_chu.md`; phát hành `v1.0.6`.
 - [x] PR P3 #23 được P3 tự merge (06/10/2026); P1 kiểm lại trên `d958a69`: pytest 350 passed, checker P1/P2/P3 (kể cả `notes/p3_doi_chieu_code.py`)/P4 PASS, giới hạn 0/1 → ABORTED/DETECTED đúng; build lại PDF, phát hành `v1.0.7`.
 - [x] Theo yêu cầu P1 (07/10/2026): bỏ đoạn phân công và mọi nhãn P1–P6, đường dẫn file khỏi báo cáo/slide, viết lại câu cho tự nhiên; mục `\section` nhỏ hơn tiêu đề chương; slide bìa có tên/MSSV 6 thành viên, trường, bộ môn, GVHD; slide demo mô tả kịch bản thay vì câu lệnh. Phát hành `v1.0.8`.
-- [x] Theo yêu cầu P1 (07/10/2026): sửa “Thúy Hằng” trên bìa; PODEM trong danh mục viết tắt là “Thuật toán sinh mẫu kiểm tra tự động định hướng theo đường đi”; tiêu đề “Xử lý cổng XOR/XNOR trong PODEM”; bỏ xuống dòng sau các tiêu đề đậm; mục 7.4 “Mạch tuần tự”; tài liệu tham khảo trang riêng; slide bìa theo mẫu video, bỏ dòng nguồn, bỏ hỏi đáp, slide cuối là lời cảm ơn. Phát hành `v1.0.9` — **bản dùng để nộp**.
+- [x] Theo yêu cầu P1 (07/10/2026): sửa “Thúy Hằng” trên bìa; PODEM trong danh mục viết tắt là “Thuật toán sinh mẫu kiểm tra tự động định hướng theo đường đi”; tiêu đề “Xử lý cổng XOR/XNOR trong PODEM”; bỏ xuống dòng sau các tiêu đề đậm; mục 7.4 “Mạch tuần tự”; tài liệu tham khảo trang riêng; slide bìa theo mẫu video, bỏ dòng nguồn, bỏ hỏi đáp, slide cuối là lời cảm ơn. Phát hành `v1.0.9` (báo cáo nộp).
+- [x] Slide: tăng khoảng cách dòng Nhóm 4 – danh sách thành viên; thêm lời thoại từng thành viên `notes/thoai_thuyet_trinh.md`. Phát hành `v1.0.10` — báo cáo giữ nguyên PDF của v1.0.9, slide mới — **bản dùng để nộp**.
 - [ ] Người trình bày demo dùng câu lệnh trong `demo.md` (slide không còn ghi lệnh).
 - [ ] Báo P5 về thay đổi kiểm tra đầu vào trong `src/atpg/podem.py`.
 - [ ] P5 đọc lại bản biên tập Chương 6.
