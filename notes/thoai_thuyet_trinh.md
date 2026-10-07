@@ -44,7 +44,7 @@ Bám theo slide bản `v1.0.12` (22 trang). Chữ trong [ngoặc vuông] là tha
 
 **Slide 10 — Ý tưởng.** Khác D-algorithm, PODEM chỉ ra quyết định ở **ngõ vào chính**. Mỗi vòng có bốn bước: objective chọn net và giá trị cần đạt; backtrace lần ngược về một ngõ vào chưa gán; imply mô phỏng lại toàn mạch; nếu thất bại thì đảo giá trị ngõ vào đó, hết cả hai cách thì quay lên mức trên. Các net bên trong tự suy ra bằng mô phỏng nên không cần justify.
 
-**Slide 11 — c17.** Với cùng lỗi 11/SA0, PODEM chỉ cần hai quyết định. Bước 1, mục tiêu là net 11 bằng 1, backtrace về đặt 3 bằng 0, lỗi được kích hoạt. Bước 2, muốn D qua cổng 16 thì cần 2 bằng 1. Lúc này ngõ ra 22 có D, dừng. Mẫu X10XX, không quay lui, và mô phỏng xác nhận cả 8 cách điền X đều phát hiện lỗi.
+**Slide 11 — c17.** Với cùng lỗi 11/SA0, PODEM chỉ cần hai quyết định. Bước 1, mục tiêu là net 11 bằng 1, backtrace về đặt 3 bằng 0, lỗi được kích hoạt. Bước 2, muốn D qua cổng 16 thì cần 2 bằng 1. Lúc này ngõ ra 22 có D, dừng. [Chỉ đường đỏ trên hình: 11 → 16 → 22] Mẫu X10XX, không quay lui, và mô phỏng xác nhận cả 8 cách điền X đều phát hiện lỗi.
 
 **Slide 12 — Ví dụ quay lui.** Mạch phụ này có một lần quay lui. Thử a bằng 1: t thành D, nhưng n bằng 0 nên ngõ ra bị chặn, nhánh thất bại. Đảo lại a bằng 0: n bằng 1. Gán thêm b bằng 1: t bằng D, ngõ ra bằng D. Kết quả 01, một lần backtrack. Nếu giới hạn quay lui là 0 thì chương trình trả ABORTED. Lưu ý: D-algorithm đếm lần chọn cube, PODEM đếm lần gán ngõ vào, nên không so sánh nhanh chậm trực tiếp được. Em xin mời bạn An Nam.
 
