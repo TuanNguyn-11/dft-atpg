@@ -11,14 +11,23 @@ PODEM chỉ quyết định tại PI; net nội bộ được suy ra qua mô ph�
 \end{frame}
 
 \begin{frame}{c17: hai quyết định phát hiện 11/SA0}
-\begin{center}
+\begin{columns}[c,onlytextwidth]
+\column{0.44\textwidth}
+\centering
+\begingroup
+\def\pTwoCSeventeenWidth{\linewidth}
+\input{../report/figures/common/c17}
+\endgroup
+\column{0.54\textwidth}
+\centering\small
 \begin{tabular}{ccll}
 \hline
 Bước & Objective & Gán PI & Kết quả chính\\\hline
 1 & $(11,1)$ & $3=0$ & $11=D$, $10=1$\\
 2 & $(2,1)$ & $2=1$ & $16=\overline D$, $22=D$\\\hline
 \end{tabular}
-\end{center}
+\end{columns}
+\vspace{3mm}
 \begin{block}{Kết quả theo thứ tự PI $(1,2,3,6,7)$}
 Pattern $X10XX$; 0 backtrack. Điền X bằng 0: $01000$.
 \end{block}
