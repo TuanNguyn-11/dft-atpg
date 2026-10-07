@@ -11,10 +11,10 @@ sau kích hoạt, chọn đầu vào X của D-frontier về giá trị không �
 (1 cho AND/NAND, 0 cho OR/NOR).
 \emph{Backtrace} đưa mục tiêu về PI chưa gán, đảo bit qua NAND/NOR/NOT;
 \emph{imply} tính lại toàn mạch bằng logic $0,1,X,D,D'$.
-P3-v1 chọn cổng theo topo ổn định và đầu vào X đầu tiên trong netlist,
-không dùng SCOAP.
+Phiên bản của nhóm chọn cổng theo topo ổn định và đầu vào X đầu tiên
+trong netlist, không dùng SCOAP.
 
-\textbf{Bổ sung XOR/XNOR (P3-v1.1).}
+\textbf{Bổ sung cho XOR/XNOR.}
 \label{sec:p3-xor-xnor}
 Đặt $y=x_1\oplus\cdots\oplus x_n\oplus q$, với $q=0$ cho XOR,
 $q=1$ cho XNOR. Backtrace mục tiêu $y=v$: nếu chỉ còn một đầu vào X,
@@ -24,8 +24,8 @@ Nếu còn nhiều X, chọn X đầu tiên và thử 0, imply rồi tính lại
 Objective lan truyền cũng ưu tiên X đầu tiên bằng 0; XOR/XNOR không có
 giá trị điều khiển. Ví dụ $D\oplus0=D$, $D\oplus1=D'$,
 nhưng $D\oplus D=0$: nhiều nhánh lỗi có thể triệt tiêu.
-XNOR đảo kết quả XOR đúng một lần. Quy tắc, bảng và ví dụ chi tiết ở
-\nolinkurl{notes/p3_xor_xnor.md}; đặc tả này đã được P5 triển khai và kiểm thử trong bản tích hợp.
+XNOR đảo kết quả XOR đúng một lần. Quy tắc này đã được cài đặt và kiểm
+thử trong chương trình (Chương~\ref{sec:p5-cai-dat-podem}).
 
 \textbf{Dừng và quay lui.}
 Có $D/D'$ ở PO thì thành công. Khi lỗi đã kích hoạt nhưng không
@@ -36,11 +36,9 @@ $\to$ thử PI $b$ $\to$ nếu thất bại, kiểm tra giới hạn rồi thử
 $\to$ nếu cả hai thất bại, trả PI về X và quay về cha}.
 Xóa quyết định con trước khi đảo cha. Đếm backtrack bằng số phép đảo PI;
 hết cây mới kết luận UNTESTABLE, hết giới hạn là ABORTED.
-Lưu đồ và cây đầy đủ ở \nolinkurl{report/figures/p3/}; giải thích trong
-\nolinkurl{notes/p3_ly_thuyet.md}.
 
 \textbf{c17, lỗi stem $11/\mathrm{SA0}$.}
-Theo PI $(1,2,3,6,7)$, P3-v1 cho Bảng~\ref{tab:p3-c17}.
+Theo thứ tự PI $(1,2,3,6,7)$, quá trình tìm kiếm cho Bảng~\ref{tab:p3-c17}.
 
 \begin{table}[htbp]\centering\small
 \caption{Hai phép gán PI; các net chưa liệt kê giữ X.}
@@ -66,8 +64,7 @@ PO tốt $(1,1)$, lỗi $(0,0)$. PO23 còn X trong trace là xấp xỉ bảo th
 \begin{minipage}{0.49\linewidth}\centering
 \resizebox{\linewidth}{!}{\input{figures/p3/decision_tree.tex}}
 \end{minipage}
-\caption{Trái: c17 ở trạng thái cuối (hình P2 nếu có;
-dự phòng P3: mọi khối là NAND).
+\caption{Trái: c17 ở trạng thái cuối.
 Phải: cây quyết định mạch phụ, thử $a=1$ rồi đảo $a=0$.}
 \label{fig:p3-examples}
 \end{figure}
@@ -78,22 +75,19 @@ thử $a=1$ cho $(t,n,out)=(D,0,0)$, nhánh thất bại với mọi $b$;
 đảo $a=0$ cho $(X,1,X)$; chọn lại objective $(t,1)$, gán $b=1$
 cho $(D,1,D)$. Kết quả $01$, ba hàng gán/đảo, một backtrack.
 Giới hạn 0 phải ABORTED trước phép đảo, không phải UNTESTABLE.
-Hai trace đủ bảy cột ở \nolinkurl{results/golden_trace_c17_11sa0.md}
-và \nolinkurl{results/golden_trace_backtrack.md}.
+Hai ví dụ trên được lưu thành golden trace bảy cột để đối chiếu chương trình.
 
-\textbf{So sánh và đối chiếu nhóm.}
-Trace tay P2 trên nhánh \nolinkurl{p2-d-algorithm} có 4 lần chọn cube
+\textbf{So sánh và đối chiếu.}
+Trace tay D-algorithm (Chương~\ref{sec:p2-d-algorithm}) có 4 lần chọn cube
 (không đếm implication), 3 PI được gán, 0 backtrack, pattern $X100X$;
-sau tổng quát hóa được $X10XX$. P3 có 2 phép gán PI, 0 backtrack.
+sau tổng quát hóa được $X10XX$. PODEM có 2 phép gán PI, 0 backtrack.
 Hai đơn vị đếm khác nhau, không suy ra tỷ lệ tăng tốc.
 D-algorithm cần justification các quyết định nội bộ; PODEM dùng backtrace
 và imply. FAN cải tiến lựa chọn bằng cấu trúc fanout và multiple backtrace
 \cite{p3_fujiwara1983}; nhóm chưa cài FAN.
-Bộ kiểm chứng P3 duyệt 32 vector c17, 4 vector mạch phụ và 22 lỗi stem;
-đạt các kỳ vọng trên. Đối chiếu API và exporter P5 đủ bảy cột:
-giá trị net khớp; API ghi thao tác vừa làm, golden ghi hành động kế tiếp.
-Exporter đã chuẩn hóa hai nhãn ở ví dụ quay lui; không đổi golden.
-Simulator P6 xác nhận cube c17 8/8 và mẫu phụ 01; giới hạn 0/1 lần lượt
+Bộ kiểm chứng lý thuyết duyệt 32 vector c17, 4 vector mạch phụ và 22 lỗi
+stem; đạt các kỳ vọng trên. Trace bảy cột của chương trình có giá trị net
+khớp golden trace; chương trình ghi thao tác vừa làm, golden trace ghi hành
+động kế tiếp, nên bộ xuất trace chuẩn hóa nhãn theo golden.
+Bộ mô phỏng lỗi xác nhận cube c17 8/8 và mẫu phụ 01; giới hạn 0/1 lần lượt
 cho ABORTED/DETECTED. Số liệu chỉ áp dụng heuristic đã công bố.
-Nguồn P2 và bằng chứng đối chiếu có thể tái lập ở
-\nolinkurl{notes/p3_doi_chieu_P5.md}.

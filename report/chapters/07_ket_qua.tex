@@ -6,7 +6,7 @@
 \section{Môi trường, mạch thử và danh sách lỗi}
 \label{sec:p6-mach-loi}
 Công cụ viết bằng Python ($\ge 3.10$), chỉ dùng thư viện chuẩn, kiểm thử bằng
-\texttt{pytest}. Luồng xử lý: trình đọc \texttt{.bench} tính fanout, mức và thứ
+\texttt{pytest}. Luồng xử lý: trình đọc netlist định dạng \texttt{.bench} tính fanout, mức và thứ
 tự topo; danh sách lỗi; PODEM (Chương~\ref{sec:p5-cai-dat-podem}) sinh pattern;
 bộ mô phỏng lỗi kiểm chứng; \texttt{unroll} (Chương~\ref{sec:p4-atpg-tuan-tu})
 trải mạch tuần tự. Lỗi đầu vào như giá trị kẹt khác 0/1, net hoặc nhánh không
@@ -20,7 +20,7 @@ tồn tại, số khung không dương đều bị từ chối, không được 
 Mạch & PI & PO & Cổng tổ hợp & DFF & Nguồn\\
 \midrule
 c17 & 5 & 2 & 6 (NAND) & 0 & ISCAS'85~\cite{p6_brglez1985}\\
-\texttt{seq\_example} & 2 & 1 & 6 & 1 & P4 tự thiết kế\\
+\texttt{seq\_example} & 2 & 1 & 6 & 1 & Nhóm tự thiết kế\\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -69,17 +69,19 @@ Pattern bị kiểm chứng sai & 0 & 0\\
 \end{tabular}
 \end{table}
 PODEM tìm được pattern cho mọi lỗi không cần backtrack, mọi pattern đúng với
-mọi cách điền $X$, và tập 6 pattern sau nén phủ cả 34 lỗi gốc. Lệnh, môi trường và thời gian từng lần chạy nằm trong các file kết quả. Với
+mọi cách điền $X$, và tập 6 pattern sau nén phủ cả 34 lỗi gốc. Lệnh, môi
+trường và thời gian từng lần chạy được ghi kèm kết quả để tái lập. Với
 \texttt{11/SA0}, PODEM cho $X10XX$ (thứ tự PI $1,2,3,6,7$) sau hai bước, đúng
 golden trace Chương~\ref{sec:p3-podem}; $01000$ cho đầu ra tốt $(1,1)$ và lỗi
-$(0,0)$. Bộ mô phỏng cũng xác nhận các cube chạy tay của P2 ($4/4$ và $8/8$
-cách điền phát hiện lỗi tại 22) và mạch phụ của P3 (chỉ vector $01$ phát hiện
+$(0,0)$. Bộ mô phỏng cũng xác nhận các cube chạy tay của D-algorithm ($4/4$
+và $8/8$ cách điền phát hiện lỗi tại 22) và mạch phụ ở
+Chương~\ref{sec:p3-podem} (chỉ vector $01$ phát hiện
 \texttt{t/SA0}; PODEM cần một backtrack, giới hạn 0 cho \texttt{ABORTED}).
 
 \section{Mạch tuần tự: full scan và trải khung}
 \label{sec:p6-tuan-tu}
-Với full scan, kết quả vét cạn của P4 phát hiện $18/18$ lỗi
-(Mục~\ref{sec:p4-thuc-nghiem}). Khi không scan, mạch được trải $k$ khung và
+Với full scan, PODEM phát hiện $18/18$ lỗi stem, trùng mô hình vét cạn độc
+lập (Chương~\ref{sec:p4-atpg-tuan-tu}). Khi không scan, mạch được trải $k$ khung và
 $Q@0$ là trạng thái đầu \emph{chưa biết}: mạch tốt và mạch lỗi có thể bắt đầu ở
 trạng thái bất kỳ. Chuỗi chỉ được tính là phát hiện \emph{bảo đảm} khi mọi vết
 PO của mạch tốt khác mọi vết PO của mạch lỗi, với mọi cặp trạng thái đầu và mọi
@@ -102,18 +104,18 @@ $k$ & Bảo đảm & Nguồn chuỗi bảo đảm & Chỉ có điều kiện & N
 \bottomrule
 \end{tabular}
 \end{table}
-Số phát hiện bảo đảm (1, 13, 18) trùng kết quả vét cạn độc lập của P4. Với hai
+Số phát hiện bảo đảm (1, 13, 18) trùng kết quả vét cạn độc lập. Với hai
 khung, 5 lỗi chỉ phát hiện khi biết $Q@0$, nên không gọi hai khung là $100\%$ từ
 trạng thái chưa biết. Với $k=1$, 8 lỗi được PODEM kết luận không thể phát hiện
 trong một khung và vét cạn xác nhận; đây là giới hạn của $k$, chưa phải
-\texttt{untestable}. Cột cuối ứng với chế độ \texttt{--init controllable}: chỉ
-đặt được trạng thái đầu, còn quan sát vẫn qua PO ở các khung, nên \emph{không}
+\texttt{untestable}. Cột cuối ứng với giả định điều khiển được trạng thái
+đầu: chỉ đặt được trạng thái đầu, còn quan sát vẫn qua PO ở các khung, nên \emph{không}
 tương đương full scan (full scan đặt $Q$ và đọc $D$ ở mọi pattern).
 
 \section{Nhận xét và giới hạn}
 \label{sec:p6-nhan-xet}
-Bộ mô phỏng độc lập giúp phát hiện sai lệch khi tích hợp: trên bản PODEM trước
-khi merge, nó chỉ ra backtrace chưa hỗ trợ cổng XOR và bốn kết luận
+Bộ mô phỏng độc lập giúp phát hiện sai lệch khi tích hợp: trên phiên bản
+PODEM trước khi hoàn thiện, nó chỉ ra backtrace chưa hỗ trợ cổng XOR và bốn kết luận
 \texttt{UNTESTABLE} sai trên mạch đã trải; bản cuối không còn sai lệch nào.
 Giới hạn: c17 nhỏ nên coverage $100\%$ chưa nói lên hiệu năng; gộp lỗi mới ở
 mức tương đương, chưa gộp trội; vét cạn tham chiếu chỉ dùng được với mạch ít

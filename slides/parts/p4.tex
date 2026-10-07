@@ -1,17 +1,17 @@
-\begin{frame}{P4 -- Vì sao ATPG tuần tự khó?}
+\begin{frame}{Vì sao ATPG tuần tự khó?}
 \small
 \begin{itemize}
   \item DFF lưu trạng thái: $Q(t+1)=D(t)$; $Q(0)$ có thể chưa biết.
   \item Không scan: khó điều khiển $Q$, khó quan sát $D$; cần chuỗi PI
         qua nhiều chu kỳ để khởi tạo, kích hoạt và lan truyền lỗi.
-  \item Mạch ví dụ P4: 2 PI, 1 PO, 6 cổng tổ hợp, 1 DFF.
+  \item Mạch ví dụ của nhóm: 2 PI, 1 PO, 6 cổng tổ hợp, 1 DFF.
 \end{itemize}
 \vspace{1mm}
 \centering
 \resizebox{0.7\textwidth}{!}{\input{../report/figures/p4/seq_circuit}}
 \end{frame}
 
-\begin{frame}{P4 -- Trải khung và ví dụ $N_3/SA0$}
+\begin{frame}{Trải khung và ví dụ $N_3/SA0$}
 \small
 \begin{itemize}
   \item Thay DFF bằng ràng buộc $Q_{t+1}=D_t$; cùng một lỗi hiện diện
@@ -31,7 +31,7 @@ Khung & $N_3$ tốt/lỗi & $D$ tốt/lỗi & $Y$ tốt/lỗi\\
 \centering Lỗi quan sát tại PO ở khung 1, với cả $Q_0=0$ và $Q_0=1$.
 \end{frame}
 
-\begin{frame}{P4 -- Full scan và kết quả kiểm chứng}
+\begin{frame}{Full scan và kết quả kiểm chứng}
 \small
 \begin{itemize}
   \item Scan FF: shift in $Q$ $\rightarrow$ capture $D$ $\rightarrow$ shift out.
@@ -52,5 +52,5 @@ Không scan, $k=3$ & 18/18\\
 \end{center}
 \footnotesize Full scan: PODEM và simulator, coverage của cả bộ mẫu.
 Không scan: $Q_0$ chưa biết; PODEM + vét cạn chuỗi bổ sung.
-Chi tiết và nguồn từng hàng trong \texttt{results/seq\_integrated\_*.md}.
+Nguồn từng hàng được ghi kèm kết quả.
 \end{frame}
