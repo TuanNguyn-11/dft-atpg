@@ -14,10 +14,24 @@
 \usetikzlibrary{arrows.meta,positioning,shapes.geometric,calc}
 \usetheme{Madrid}
 \setbeamertemplate{navigation symbols}{}
+\setbeamerfont{title}{size=\large}
+\setbeamerfont{subtitle}{size=\small}
+% Trang tiêu đề: khung tiêu đề + khối tác giả (gồm ngày), căn giữa theo chiều dọc.
+\setbeamertemplate{title page}{%
+  \vbox{}\vfill
+  \begin{centering}
+  \begin{beamercolorbox}[sep=8pt,center,rounded=true,shadow=true]{title}
+    \usebeamerfont{title}\inserttitle\par\vskip0.3em
+    {\usebeamerfont{subtitle}\usebeamercolor[fg]{subtitle}\insertsubtitle\par}
+  \end{beamercolorbox}
+  \vskip1.5em
+  {\usebeamerfont{author}\usebeamercolor[fg]{author}\insertauthor\par}
+  \end{centering}
+  \vfill}
 \title[DFT -- ATPG]{Automatic Test Pattern Generation Algorithms for Combinational and Sequential Circuits}
 \subtitle{Đồ án cuối kỳ --- Kỹ thuật DFT và kiểm thử}
 \author[Nhóm 4]{\texorpdfstring{GVHD: Nguyễn Văn Thành Lộc\\
-  \textbf{Nhóm 4} -- Kỹ thuật DFT và kiểm thử, Đợt 1, HK1 (2026 -- 2027)\\[6pt]
+  \textbf{Nhóm 4} -- Kỹ thuật DFT và kiểm thử, Đợt 1, HK1 (2026 -- 2027)\\[14pt]
   {\footnotesize
   \begin{tabular}{@{}l@{\hspace{3em}}l@{}}
   Phan Ngọc Tuấn Nguyên & 23119178\\
@@ -26,11 +40,10 @@
   Phạm Trọng An Nam & 23119174\\
   Nguyễn Thị Thúy Hằng & 23119142\\
   Nguyễn Thị Thanh Tuyền & 23119222\\
-  \end{tabular}}}{Nhóm 4}}
-\date{Tháng 10 năm 2026}
+  \end{tabular}}\\[16pt]Tháng 10 năm 2026}{Nhóm 4}}
+\date[Tháng 10 năm 2026]{}
 \begin{document}
 \begin{frame}
-\vspace*{-9mm}
 \titlepage
 \end{frame}
 \input{parts/p1}
