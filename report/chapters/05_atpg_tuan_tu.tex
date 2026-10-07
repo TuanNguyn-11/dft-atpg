@@ -13,7 +13,7 @@ D=\neg(N_3A),\quad N_4=Q\oplus B,\quad Y=N_4A.
 Phạm vi gồm 18 lỗi stem (SA0/SA1 trên 9 net), không gộp lỗi,
 không xét lỗi clock, lỗi bên trong FF hay lỗi nhánh qua DFF.
 
-\textbf{Trải khung thời gian.}\par
+\textbf{Trải khung thời gian.}
 \label{sec:p4-unroll}
 Sao khối tổ hợp thành $k$ khung, nối $D_t$ tới $Q_{t+1}$, quan sát
 $Y_0,\ldots,Y_{k-1}$. Mỗi lỗi vật lý phải được cấy vào mọi khung.
@@ -44,7 +44,7 @@ khiển/quan sát nhưng tốn MUX, dây nối và thời gian dịch; partial s
 phần cứng nhưng để lại trạng thái không trực tiếp truy cập được.
 Chế độ chỉ đặt được $Q@0$ vẫn quan sát qua Y, nên khác full scan có đọc D.
 
-\textbf{Cài đặt và thực nghiệm.}\par
+\textbf{Cài đặt và thực nghiệm.}
 \label{sec:p4-thuc-nghiem}
 Chương trình cung cấp các hàm \texttt{full\_scan}, \texttt{unroll} và
 \texttt{fault\_in\_frames}; chúng giữ nguyên mạch đầu vào, tạo lại fanout và
