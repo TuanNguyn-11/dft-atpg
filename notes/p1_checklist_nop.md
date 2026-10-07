@@ -39,7 +39,8 @@ Lưu ý: PDF phải được build lại trên đúng commit phát hành (sau kh
 - [x] Theo yêu cầu P1 (07/10/2026): sửa “Thúy Hằng” trên bìa; PODEM trong danh mục viết tắt là “Thuật toán sinh mẫu kiểm tra tự động định hướng theo đường đi”; tiêu đề “Xử lý cổng XOR/XNOR trong PODEM”; bỏ xuống dòng sau các tiêu đề đậm; mục 7.4 “Mạch tuần tự”; tài liệu tham khảo trang riêng; slide bìa theo mẫu video, bỏ dòng nguồn, bỏ hỏi đáp, slide cuối là lời cảm ơn. Phát hành `v1.0.9` (báo cáo nộp).
 - [x] Slide: tăng khoảng cách dòng Nhóm 4 – danh sách thành viên; thêm lời thoại từng thành viên `notes/thoai_thuyet_trinh.md`. Phát hành `v1.0.10`.
 - [x] Slide P1: thêm sơ đồ c17 lớn (slide 3) và sơ đồ có giá trị + các bước kích hoạt/lan truyền (slide 4); slide 21 trang; lời thoại đánh số lại. Phát hành `v1.0.11`.
-- [x] Slide 7 mới: bảng logic năm giá trị đủ 8 cổng, sinh tự động từ `tests/data/five_valued_tables.md`; slide 22 trang; lời thoại thêm phần bảng cho Huy. Phát hành `v1.0.12` — báo cáo giữ nguyên PDF của v1.0.9 — **bản dùng để nộp**.
+- [x] Slide 7 mới: bảng logic năm giá trị đủ 8 cổng, sinh tự động từ `tests/data/five_valued_tables.md`; slide 22 trang; lời thoại thêm phần bảng cho Huy. Phát hành `v1.0.12`.
+- [x] Bỏ câu “Bảng đầy đủ cho tám loại cổng ở slide sau” (cuối slide 6). Phát hành `v1.0.13` — báo cáo giữ nguyên PDF của v1.0.9 — **bản dùng để nộp**.
 - [ ] Người trình bày demo dùng câu lệnh trong `demo.md` (slide không còn ghi lệnh).
 - [ ] Báo P5 về thay đổi kiểm tra đầu vào trong `src/atpg/podem.py`.
 - [ ] P5 đọc lại bản biên tập Chương 6.
