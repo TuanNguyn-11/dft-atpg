@@ -37,7 +37,8 @@ Lưu ý: PDF phải được build lại trên đúng commit phát hành (sau kh
 - [x] PR P3 #23 được P3 tự merge (06/10/2026); P1 kiểm lại trên `d958a69`: pytest 350 passed, checker P1/P2/P3 (kể cả `notes/p3_doi_chieu_code.py`)/P4 PASS, giới hạn 0/1 → ABORTED/DETECTED đúng; build lại PDF, phát hành `v1.0.7`.
 - [x] Theo yêu cầu P1 (07/10/2026): bỏ đoạn phân công và mọi nhãn P1–P6, đường dẫn file khỏi báo cáo/slide, viết lại câu cho tự nhiên; mục `\section` nhỏ hơn tiêu đề chương; slide bìa có tên/MSSV 6 thành viên, trường, bộ môn, GVHD; slide demo mô tả kịch bản thay vì câu lệnh. Phát hành `v1.0.8`.
 - [x] Theo yêu cầu P1 (07/10/2026): sửa “Thúy Hằng” trên bìa; PODEM trong danh mục viết tắt là “Thuật toán sinh mẫu kiểm tra tự động định hướng theo đường đi”; tiêu đề “Xử lý cổng XOR/XNOR trong PODEM”; bỏ xuống dòng sau các tiêu đề đậm; mục 7.4 “Mạch tuần tự”; tài liệu tham khảo trang riêng; slide bìa theo mẫu video, bỏ dòng nguồn, bỏ hỏi đáp, slide cuối là lời cảm ơn. Phát hành `v1.0.9` (báo cáo nộp).
-- [x] Slide: tăng khoảng cách dòng Nhóm 4 – danh sách thành viên; thêm lời thoại từng thành viên `notes/thoai_thuyet_trinh.md`. Phát hành `v1.0.10` — báo cáo giữ nguyên PDF của v1.0.9, slide mới — **bản dùng để nộp**.
+- [x] Slide: tăng khoảng cách dòng Nhóm 4 – danh sách thành viên; thêm lời thoại từng thành viên `notes/thoai_thuyet_trinh.md`. Phát hành `v1.0.10`.
+- [x] Slide P1: thêm sơ đồ c17 lớn (slide 3) và sơ đồ có giá trị + các bước kích hoạt/lan truyền (slide 4); slide 21 trang; lời thoại đánh số lại. Phát hành `v1.0.11` — báo cáo giữ nguyên PDF của v1.0.9 — **bản dùng để nộp**.
 - [ ] Người trình bày demo dùng câu lệnh trong `demo.md` (slide không còn ghi lệnh).
 - [ ] Báo P5 về thay đổi kiểm tra đầu vào trong `src/atpg/podem.py`.
 - [ ] P5 đọc lại bản biên tập Chương 6.
