@@ -1,6 +1,6 @@
 # Lời thoại thuyết trình — Nhóm 4 (20 phút)
 
-Bám theo slide bản `v1.0.12` (22 trang). Chữ trong [ngoặc vuông] là thao tác, không đọc. Mỗi người nên tập để nói tự nhiên, không đọc nguyên văn.
+Bám theo slide bản `v1.0.16` (23 trang). Chữ trong [ngoặc vuông] là thao tác, không đọc. Mỗi người nên tập để nói tự nhiên, không đọc nguyên văn.
 
 | Người | Slide | Thời gian |
 |---|---|---|
@@ -9,7 +9,7 @@ Bám theo slide bản `v1.0.12` (22 trang). Chữ trong [ngoặc vuông] là tha
 | Võ Trung Nguyên | 10–12 | ~3 phút |
 | Phạm Trọng An Nam | 13–15 | ~3 phút |
 | Nguyễn Thị Thúy Hằng | 16–18 | ~3 phút |
-| Nguyễn Thị Thanh Tuyền | 19–22 (gồm demo và kết thúc) | ~4 phút |
+| Nguyễn Thị Thanh Tuyền | 19–23 (gồm demo, so sánh và kết thúc) | ~4,5 phút |
 | Dự phòng chuyển người/demo | | ~1–2 phút |
 
 ---
@@ -70,7 +70,7 @@ Bám theo slide bản `v1.0.12` (22 trang). Chữ trong [ngoặc vuông] là tha
 
 ---
 
-## 6. Nguyễn Thị Thanh Tuyền — Kiểm chứng, kết quả, demo và kết thúc (slide 19–22)
+## 6. Nguyễn Thị Thanh Tuyền — Kiểm chứng, kết quả, demo và kết thúc (slide 19–23)
 
 **Slide 19 — Kiểm chứng độc lập.** Để không tin mù quáng vào PODEM, mọi mẫu đều được mô phỏng lại riêng ở mạch tốt và mạch lỗi. Mẫu có X chỉ được tính là đúng khi thử hết mọi cách điền X. Mạch c17 có 34 lỗi; gộp các lỗi tương đương còn 22. Với mạch tuần tự, chỉ chuỗi phát hiện được với *mọi* trạng thái đầu mới được tính.
 
@@ -82,7 +82,9 @@ Bám theo slide bản `v1.0.12` (22 trang). Chữ trong [ngoặc vuông] là tha
 3. Chạy toàn bộ lỗi c17: coverage 100%, nén còn 6 mẫu.
 4. Mạch tuần tự trải 2 khung: 13/18 lỗi phát hiện chắc chắn.
 
-**Slide 22 — Kết thúc.** Tóm lại, nhóm đã cài đặt PODEM và kiểm chứng bằng mô phỏng lỗi độc lập: c17 đạt 100% coverage, nén còn 6 mẫu; mạch tuần tự đạt 18 trên 18 lỗi khi dùng full scan hoặc trải 3 khung. Phần trình bày của Nhóm 4 đến đây là kết thúc. Em xin thay mặt nhóm cảm ơn thầy và các bạn đã lắng nghe.
+**Slide 22 — So sánh D-algorithm và PODEM.** [Chỉ bảng] Cuối cùng, nhóm chạy cùng lỗi 11/SA0 bằng cả hai thuật toán để so sánh. Cả hai đều tìm được mẫu đúng: D-algorithm ra X100X, PODEM ra X10XX, đều được mô phỏng lỗi xác nhận. Khác biệt chính là nơi ra quyết định: D-algorithm phải gán 4 net giữa mạch rồi justify ngược về đầu vào, còn PODEM chỉ gán 2 đầu vào nên không cần justify. Lưu ý số quyết định của hai thuật toán đếm theo đơn vị khác nhau, và thời gian phụ thuộc máy, nên nhóm không kết luận thuật toán nào nhanh hơn bao nhiêu lần.
+
+**Slide 23 — Kết thúc.** Tóm lại, nhóm đã cài đặt PODEM và kiểm chứng bằng mô phỏng lỗi độc lập: c17 đạt 100% coverage, nén còn 6 mẫu; mạch tuần tự đạt 18 trên 18 lỗi khi dùng full scan hoặc trải 3 khung. Phần trình bày của Nhóm 4 đến đây là kết thúc. Em xin thay mặt nhóm cảm ơn thầy và các bạn đã lắng nghe.
 
 ---
 
