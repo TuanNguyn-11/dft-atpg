@@ -86,3 +86,21 @@ Mach seq_example_unroll_2: 5 PI, 2 PO, 13 cong, 0 DFF
 .\.venv\Scripts\python.exe -m atpg.run circuits/c17.bench --fault 11 2
 ```
 Dòng mong đợi (mã thoát 2, không in coverage): `atpg.run: error: SV phai la 0 hoac 1 (stuck-at-0/stuck-at-1), nhan '2'`
+
+## 8. So sánh D-algorithm và PODEM trên cùng một lỗi
+```
+.\.venv\Scripts\python.exe -m atpg.compare circuits/c17.bench --fault 11 0 --trace
+```
+In **bảng tiêu chí** (4 nhóm: kết quả, quá trình tìm kiếm, chi phí tính toán, đối chiếu chạy tay) rồi trace từng bước của hai thuật toán. Các dòng mong đợi trong bảng:
+```
+| A. Kết quả | Test cube (thứ tự PI 1, 2, 3, 6, 7) | X100X | X10XX | ...
+| B. Quá trình tìm kiếm | Nơi ra quyết định | net nội bộ (cube của từng cổng) | chỉ ở PI | ...
+| B. Quá trình tìm kiếm | Số quyết định (kể cả lần chọn thất bại) | 4 | 2 | ...
+| B. Quá trình tìm kiếm | Số lần quay lui (backtrack) | 0 | 0 | ...
+```
+Hàng "Khớp chạy tay" ghi `khớp` cho cả hai (D-algorithm khớp bảng chạy tay của P2, PODEM khớp golden trace của P3). Hàng thời gian phụ thuộc máy.
+
+Các biến thể:
+- Ví dụ có quay lui: `.\.venv\Scripts\python.exe -m atpg.compare circuits/backtrack_example.bench --fault t 0 --trace` (PODEM quay lui 1 lần; D-algorithm 0 lần với thứ tự mặc định, 1 lần nếu thêm `--order first`).
+- Toàn bộ lỗi c17: `.\.venv\Scripts\python.exe -m atpg.compare circuits/c17.bench --all` (cả hai 22/22, mọi pattern được kiểm chứng).
+- Xuất file: thêm `--md FILE` (Markdown), `--csv FILE` (mở bằng Excel), `--tex FILE` (bảng LaTeX `tabular` để chèn slide/báo cáo).

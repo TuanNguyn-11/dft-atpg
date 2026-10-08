@@ -62,3 +62,10 @@
 - seq_example (Q@0 chưa biết): k = 1, 2, 3 → bảo đảm 1/18, 13/18, 18/18; nguồn chuỗi bảo đảm PODEM/vét cạn 0/1, 3/10, 3/15. File: `results/seq_example_p6_k1.md` … `k3.md`.
 - Review chéo P5 và xác nhận P2/P3: xem `notes/p6_review_p5.md`.
 
+## 12. So sánh D-algorithm và PODEM (yêu cầu bổ sung của thầy, 08/10/2026)
+- Code: `src/atpg/dalg.py` (D-algorithm cho một lỗi stuck-at trên mạch tổ hợp, logic 5 giá trị, PDCF/PDC/singular cover, D-frontier và J-frontier, quay lui) và `src/atpg/compare.py` (CLI in bảng tiêu chí). Không sửa `podem.py`; số lần gọi implication và đánh giá cổng của PODEM được đếm bằng cách bọc tạm thời khi chạy.
+- Heuristic D-algorithm: D-frontier chọn cổng gần PO nhất; thử cube theo thứ tự đầu vào sau trước (`--order last`), chọn để trùng chạy tay của P2. Thứ tự chỉ đổi cách tìm, không đổi tính đúng.
+- Kiểm chứng: c17 11/SA0 khớp bảng chạy tay P2 (cube X100X, 4 lần chọn cube, 0 quay lui, J = {10} sau bước 3); mọi pattern được `fault_sim` xác nhận; D-algorithm khớp vét cạn trên mạch ngẫu nhiên đủ 8 loại cổng (test `tests/test_compare.py`).
+- Tiêu chí so sánh: (A) trạng thái, test cube, số bit X, kiểm chứng X=0 và mọi cách điền X, PO quan sát; (B) nơi ra quyết định, số quyết định, net nội bộ gán trực tiếp, số lần justify, số lần quay lui, độ nhạy với thứ tự thử; (C) số lần implication, số lần đánh giá cổng, thời gian; (D) khớp chạy tay.
+- Không kết luận thuật toán nào "luôn tốt hơn": trên c17 PODEM ít quyết định hơn (2 so với 4) và không phải justify; trên mạch phụ, số quay lui phụ thuộc thứ tự thử.
+
