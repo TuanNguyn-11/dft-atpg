@@ -1,0 +1,18 @@
+﻿Nhóm,Tiêu chí,D-algorithm,PODEM,Ý nghĩa
+A. Kết quả,Trạng thái,DETECTED,DETECTED,DETECTED = tìm được pattern
+A. Kết quả,"Test cube (thứ tự PI a, b)",01,01,X = đầu vào tùy ý
+A. Kết quả,Số bit X trong cube,0,0,"nhiều X hơn thì cube linh hoạt hơn, dễ nén tập test"
+A. Kết quả,Kiểm chứng bằng fault simulation (X điền 0),OK,OK,mô phỏng độc lập mạch tốt và mạch lỗi
+A. Kết quả,Đúng với mọi cách điền X,có,có,vét cạn mọi cách điền X
+A. Kết quả,PO quan sát được lỗi (X điền 0),out,out,đầu ra có D/D'
+B. Quá trình tìm kiếm,Nơi ra quyết định,net nội bộ (cube của từng cổng),chỉ ở PI,khác biệt cốt lõi giữa hai thuật toán
+B. Quá trình tìm kiếm,Số quyết định (kể cả lần chọn thất bại),2,2,D-alg: chọn PDCF/PDC/cover; PODEM: gán PI qua backtrace
+B. Quá trình tìm kiếm,Net nội bộ được gán trực tiếp,"3 (t, n, out)",0,"PODEM chỉ gán PI, net nội bộ suy ra bằng mô phỏng"
+B. Quá trình tìm kiếm,PI được chọn trực tiếp,-,"a, b",
+B. Quá trình tìm kiếm,Số lần justify (J-frontier),0,0 (không cần),PODEM không có bước justify riêng
+B. Quá trình tìm kiếm,Số lần quay lui (backtrack),0,1,"phụ thuộc thứ tự thử, không phải thước đo tuyệt đối"
+B. Quá trình tìm kiếm,Nếu đổi thứ tự thử cube của D-algorithm,"order=first: DETECTED, 01, 3 quyết định, 1 quay lui",-,"cùng thuật toán, chỉ đổi thứ tự thử"
+C. Chi phí tính toán,Số lần gọi implication,2,6,D-alg: implication tiến + lùi; PODEM: mô phỏng tiến
+C. Chi phí tính toán,Số lần đánh giá cổng,9,18,đếm trong code của từng thuật toán; chỉ so sánh tương đối
+C. Chi phí tính toán,"Thời gian (trung vị, ms)",0.288,0.131,phụ thuộc máy chạy
+D. Đối chiếu,Khớp chạy tay,không có chạy tay để đối chiếu,"khớp (results/golden_trace_backtrack.md (P3): 01, 2 quyết định, 1 quay lui)",

@@ -1,0 +1,26 @@
+% Sinh tu dong boi: python -m atpg.compare (P6). Mach c17, loi 11/SA0.
+\begin{tabular}{@{}lll@{}}
+\toprule
+Tiêu chí & D-algorithm & PODEM\\
+\midrule
+Trạng thái & DETECTED & DETECTED\\
+Test cube & X100X & X10XX\\
+Số bit X trong cube & 2 & 3\\
+Kiểm chứng bằng fault simulation (X điền 0) & OK & OK\\
+Đúng với mọi cách điền X & có & có\\
+PO quan sát được lỗi (X điền 0) & 22, 23 & 22, 23\\
+\midrule
+Nơi ra quyết định & net nội bộ (cube của từng cổng) & chỉ ở PI\\
+Số quyết định (kể cả lần chọn thất bại) & 4 & 2\\
+Net nội bộ được gán trực tiếp & 4 (11, 16, 10, 22) & 0\\
+Số lần justify (J-frontier) & 1 & 0 (không cần)\\
+Số lần quay lui (backtrack) & 0 & 0\\
+Nếu đổi thứ tự thử cube của D-algorithm & order=first: DETECTED, X10XX, 2 quyết định, 0 quay lui & -\\
+\midrule
+Số lần gọi implication & 4 & 4\\
+Số lần đánh giá cổng & 36 & 24\\
+Thời gian (trung vị, ms) & 0.759 & 0.087\\
+\midrule
+Khớp chạy tay & khớp & khớp\\
+\bottomrule
+\end{tabular}

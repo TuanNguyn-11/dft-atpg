@@ -1,0 +1,10 @@
+﻿Tiêu chí,D-algorithm,PODEM
+Phát hiện (DETECTED / tổng),22/22,22/22
+Tổng số quyết định,67,64
+Quyết định trung bình mỗi lỗi,3.05,2.91
+Tổng số lần quay lui,2,0
+Tổng net nội bộ gán trực tiếp,72,0
+Số bit X trung bình mỗi cube,2.27,2.09
+Pattern đúng (X=0 và mọi cách điền X),22/22,22/22
+Pattern trước → sau nén,22 → 7 (phủ 34/34 lỗi gốc),22 → 6 (phủ 34/34 lỗi gốc)
+Tổng số lần implication,67,128
