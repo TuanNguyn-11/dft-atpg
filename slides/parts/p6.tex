@@ -47,3 +47,34 @@ Phát hiện bảo đảm ($Q@0$ chưa biết) & 1/18 & 13/18 & 18/18\\
   \item Mạch tuần tự: trải 2 khung, phân biệt bảo đảm/có điều kiện.
 \end{itemize}
 \end{frame}
+
+\begin{frame}{So sánh D-algorithm và PODEM trên lỗi 11/SA0 (c17)}
+\centering\scriptsize
+\renewcommand{\arraystretch}{1.05}
+\begin{tabular}{@{}p{0.36\textwidth}p{0.3\textwidth}p{0.28\textwidth}@{}}
+\toprule
+\textbf{Tiêu chí} & \textbf{D-algorithm} & \textbf{PODEM}\\
+\midrule
+Trạng thái & DETECTED & DETECTED\\
+Test cube (PI 1, 2, 3, 6, 7) & X100X & X10XX\\
+Số bit $X$ trong cube & 2 & 3\\
+Kiểm chứng mô phỏng lỗi (mọi cách điền $X$) & Đúng & Đúng\\
+PO quan sát được lỗi & 22, 23 & 22, 23\\
+\midrule
+Nơi ra quyết định & Net nội bộ (cube từng cổng) & Chỉ ở PI\\
+Số quyết định & 4 (chọn cube) & 2 (gán PI)\\
+Net nội bộ gán trực tiếp & 4 (11, 16, 10, 22) & 0\\
+Số lần justify & 1 & 0 (không cần)\\
+Số lần quay lui & 0 & 0\\
+\midrule
+Số lần implication & 4 & 4\\
+Số lần đánh giá cổng & 36 & 24\\
+Thời gian (trung vị 200 lần, ms) & 0,759 & 0,087\\
+\midrule
+Đối chiếu chạy tay & Khớp bảng chạy tay & Khớp golden trace\\
+\bottomrule
+\end{tabular}
+
+\vspace{1mm}
+{\scriptsize Số quyết định của hai thuật toán khác đơn vị; thời gian phụ thuộc máy chạy.}
+\end{frame}

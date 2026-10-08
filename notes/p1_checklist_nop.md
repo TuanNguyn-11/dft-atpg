@@ -42,7 +42,8 @@ Lưu ý: PDF phải được build lại trên đúng commit phát hành (sau kh
 - [x] Slide 7 mới: bảng logic năm giá trị đủ 8 cổng, sinh tự động từ `tests/data/five_valued_tables.md`; slide 22 trang; lời thoại thêm phần bảng cho Huy. Phát hành `v1.0.12`.
 - [x] Bỏ câu “Bảng đầy đủ cho tám loại cổng ở slide sau” (cuối slide 6). Phát hành `v1.0.13`.
 - [x] Slide 11 (PODEM trên c17): mạch c17 nhỏ góc trên trái, bảng bên phải, khung kết quả xuống dưới. Phát hành `v1.0.14`.
-- [x] PR P6 #33: D-algorithm (`src/atpg/dalg.py`) và bảng so sánh với PODEM (`src/atpg/compare.py`); P1 kiểm: 364 passed, c17 11/SA0 X100X/4 quyết định vs X10XX/2 quyết định, `--all` 22/22 cả hai. Gói code nộp cập nhật. Phát hành `v1.0.15` — báo cáo/slide như v1.0.14 — **bản dùng để nộp**.
+- [x] PR P6 #33: D-algorithm (`src/atpg/dalg.py`) và bảng so sánh với PODEM (`src/atpg/compare.py`); P1 kiểm: 364 passed, c17 11/SA0 X100X/4 quyết định vs X10XX/2 quyết định, `--all` 22/22 cả hai. Gói code nộp cập nhật. Phát hành `v1.0.15`.
+- [x] Slide 22: bảng so sánh D-algorithm/PODEM (3 cột, 14 tiêu chí) theo báo cáo bổ sung của P6; slide 23 trang; lời thoại Tuyền cập nhật. Phát hành `v1.0.16` — báo cáo như v1.0.9 — **bản dùng để nộp**.
 - [ ] Người trình bày demo dùng câu lệnh trong `demo.md` (slide không còn ghi lệnh).
 - [ ] Báo P5 về thay đổi kiểm tra đầu vào trong `src/atpg/podem.py`.
 - [ ] P5 đọc lại bản biên tập Chương 6.
