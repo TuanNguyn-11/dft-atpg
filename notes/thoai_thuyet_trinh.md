@@ -1,15 +1,15 @@
 # Lời thoại thuyết trình — Nhóm 4 (20 phút)
 
-Bám theo slide bản `v1.0.16` (23 trang). Chữ trong [ngoặc vuông] là thao tác, không đọc. Mỗi người nên tập để nói tự nhiên, không đọc nguyên văn.
+Bám theo slide bản `v1.0.17` (25 trang). Chữ trong [ngoặc vuông] là thao tác, không đọc. Mỗi người nên tập để nói tự nhiên, không đọc nguyên văn.
 
 | Người | Slide | Thời gian |
 |---|---|---|
 | Phan Ngọc Tuấn Nguyên | 1–5 | ~3 phút |
-| Hà Quang Huy | 6–9 | ~3,5 phút |
-| Võ Trung Nguyên | 10–12 | ~3 phút |
-| Phạm Trọng An Nam | 13–15 | ~3 phút |
-| Nguyễn Thị Thúy Hằng | 16–18 | ~3 phút |
-| Nguyễn Thị Thanh Tuyền | 19–23 (gồm demo, so sánh và kết thúc) | ~4,5 phút |
+| Hà Quang Huy | 6–10 | ~3,5 phút |
+| Võ Trung Nguyên | 11–14 | ~3 phút |
+| Phạm Trọng An Nam | 15–17 | ~3 phút |
+| Nguyễn Thị Thúy Hằng | 18–20 | ~3 phút |
+| Nguyễn Thị Thanh Tuyền | 21–25 (gồm demo, so sánh và kết thúc) | ~4,5 phút |
 | Dự phòng chuyển người/demo | | ~1–2 phút |
 
 ---
@@ -28,7 +28,7 @@ Bám theo slide bản `v1.0.16` (23 trang). Chữ trong [ngoặc vuông] là tha
 
 ---
 
-## 2. Hà Quang Huy — D-algorithm (slide 6–9)
+## 2. Hà Quang Huy — D-algorithm (slide 6–10)
 
 **Slide 6 — D-calculus.** Để theo dõi lỗi, mình ghép mạch tốt và mạch lỗi thành một giá trị. D nghĩa là tốt bằng 1, lỗi bằng 0; D ngang là ngược lại. Tính cổng thì tính riêng từng phần rồi ghép lại, ví dụ D AND 1 vẫn là D, còn D AND D ngang thì bằng 0. Qua cổng NAND với đầu vào kia bằng 1, D đổi thành D ngang.
 
@@ -36,55 +36,59 @@ Bám theo slide bản `v1.0.16` (23 trang). Chữ trong [ngoặc vuông] là tha
 
 **Slide 8 — Thuật toán.** D-algorithm làm ba việc. Một là chọn **PDCF** để kích hoạt lỗi, ví dụ lỗi z/SA0 ở cổng NAND cần một đầu vào bằng 0. Hai là dùng **PDC** để đẩy D đi tiếp: đầu vào phụ phải bằng 1. Ba là **justify**, tức tìm giá trị đầu vào cho các yêu cầu bên trong mạch. D-frontier là các cổng có D ở đầu vào nhưng đầu ra chưa biết; J-frontier là các cổng đã gán đầu ra nhưng chưa justify. Nếu hai yêu cầu mâu thuẫn thì quay lui và thử cách khác.
 
-**Slide 9 — Ví dụ c17.** [Chỉ hình] Bước 1 chọn PDCF: 6 bằng 0 nên 11 bằng D. Bước 2: 2 bằng 1, D qua 16 thành D ngang. Bước 3: 10 bằng 1, sai khác tới 22 thành D. Bước 4 justify net 10 bằng cách đặt 3 bằng 0. Tổng cộng 4 lần chọn cube, không cần quay lui. Điền X bằng 0 thì mạch tốt ra (1,1), mạch lỗi ra (0,0). Em xin mời bạn Trung Nguyên trình bày PODEM.
+**Slide 9 — Ví dụ c17.** [Chỉ hình] Bước 1 chọn PDCF: 6 bằng 0 nên 11 bằng D. Bước 2: 2 bằng 1, D qua 16 thành D ngang. Bước 3: 10 bằng 1, sai khác tới 22 thành D. Bước 4 justify net 10 bằng cách đặt 3 bằng 0. Tổng cộng 4 lần chọn cube, không cần quay lui. Điền X bằng 0 thì mạch tốt ra (1,1), mạch lỗi ra (0,0).
+
+**Slide 10 — Các vector test của D-algorithm.** [Chỉ dòng cube] D-algorithm cho cube X100X, có 2 bit X nên ra 4 vector test. [Chỉ bảng] Cả 4 vector, mạch tốt đều ra 11, mạch lỗi ra 00, nên đều phát hiện được lỗi. Cube này còn ràng buộc thừa 6 bằng 0; bỏ đi thì được X10XX, giống kết quả của PODEM mà bạn Trung Nguyên sẽ trình bày. Em xin mời bạn Trung Nguyên.
 
 ---
 
-## 3. Võ Trung Nguyên — PODEM (slide 10–12)
+## 3. Võ Trung Nguyên — PODEM (slide 11–14)
 
-**Slide 10 — Ý tưởng.** Khác D-algorithm, PODEM chỉ ra quyết định ở **ngõ vào chính**. Mỗi vòng có bốn bước: objective chọn net và giá trị cần đạt; backtrace lần ngược về một ngõ vào chưa gán; imply mô phỏng lại toàn mạch; nếu thất bại thì đảo giá trị ngõ vào đó, hết cả hai cách thì quay lên mức trên. Các net bên trong tự suy ra bằng mô phỏng nên không cần justify.
+**Slide 11 — Ý tưởng.** Khác D-algorithm, PODEM chỉ ra quyết định ở **ngõ vào chính**. Mỗi vòng có bốn bước: objective chọn net và giá trị cần đạt; backtrace lần ngược về một ngõ vào chưa gán; imply mô phỏng lại toàn mạch; nếu thất bại thì đảo giá trị ngõ vào đó, hết cả hai cách thì quay lên mức trên. Các net bên trong tự suy ra bằng mô phỏng nên không cần justify.
 
-**Slide 11 — c17.** Với cùng lỗi 11/SA0, PODEM chỉ cần hai quyết định. Bước 1, mục tiêu là net 11 bằng 1, backtrace về đặt 3 bằng 0, lỗi được kích hoạt. Bước 2, muốn D qua cổng 16 thì cần 2 bằng 1. Lúc này ngõ ra 22 có D, dừng. [Chỉ đường đỏ trên hình: 11 → 16 → 22] Mẫu X10XX, không quay lui, và mô phỏng xác nhận cả 8 cách điền X đều phát hiện lỗi.
+**Slide 12 — c17.** Với cùng lỗi 11/SA0, PODEM chỉ cần hai quyết định. Bước 1, mục tiêu là net 11 bằng 1, backtrace về đặt 3 bằng 0, lỗi được kích hoạt. Bước 2, muốn D qua cổng 16 thì cần 2 bằng 1. Lúc này ngõ ra 22 có D, dừng. [Chỉ đường đỏ trên hình: 11 → 16 → 22] Mẫu X10XX, không quay lui, và mô phỏng xác nhận cả 8 cách điền X đều phát hiện lỗi.
 
-**Slide 12 — Ví dụ quay lui.** Mạch phụ này có một lần quay lui. Thử a bằng 1: t thành D, nhưng n bằng 0 nên ngõ ra bị chặn, nhánh thất bại. Đảo lại a bằng 0: n bằng 1. Gán thêm b bằng 1: t bằng D, ngõ ra bằng D. Kết quả 01, một lần backtrack. Nếu giới hạn quay lui là 0 thì chương trình trả ABORTED. Lưu ý: D-algorithm đếm lần chọn cube, PODEM đếm lần gán ngõ vào, nên không so sánh nhanh chậm trực tiếp được. Em xin mời bạn An Nam.
+**Slide 13 — Các vector test của PODEM.** [Chỉ dòng cube] PODEM cho cube X10XX, có 3 bit X nên ra 8 vector test, gấp đôi D-algorithm. [Chỉ bảng] Cả 8 vector đều làm mạch tốt ra 11, mạch lỗi ra 00, đã được mô phỏng lỗi xác nhận. Cube càng nhiều X thì càng linh hoạt khi ghép và nén tập test.
 
----
-
-## 4. Phạm Trọng An Nam — ATPG tuần tự (slide 13–15)
-
-**Slide 13 — Vì sao khó?** Mạch tuần tự có flip-flop lưu trạng thái, và lúc bật nguồn mình không biết trạng thái đó là gì. Không có scan thì không đặt được Q, không đọc được D, nên phải dùng một chuỗi đầu vào qua nhiều chu kỳ để khởi tạo, kích hoạt rồi đưa lỗi ra. Mạch ví dụ của nhóm có 2 ngõ vào, 1 ngõ ra, 6 cổng và 1 flip-flop.
-
-**Slide 14 — Trải khung thời gian.** Cách làm là "trải" mạch: chép phần tổ hợp thành nhiều khung, ngõ ra D của khung trước nối vào Q của khung sau, và lỗi có mặt ở mọi khung. Với lỗi N3/SA0, đặt A bằng 1, B bằng 0 ở cả hai khung. Khung 0: N3 tốt 1, lỗi 0, nên D thành 0/1. Khung 1: Q nhận 0/1 và đưa thẳng ra Y. Lỗi được phát hiện ở khung 1, bất kể trạng thái đầu là 0 hay 1.
-
-**Slide 15 — Full scan và kết quả.** Full scan thay flip-flop bằng scan flip-flop: dịch giá trị vào Q, chạy một xung, rồi dịch D ra. Khi đó Q như một ngõ vào, D như một ngõ ra, quay về bài toán tổ hợp. [Chỉ bảng] Kết quả trên 18 lỗi: full scan phát hiện 18/18. Không scan, trạng thái đầu chưa biết: 1 khung được 1/18, 2 khung 13/18, 3 khung đủ 18/18. Scan dễ test hơn nhưng tốn thêm phần cứng và thời gian dịch. Em xin mời bạn Hằng.
+**Slide 14 — Ví dụ quay lui.** Mạch phụ này có một lần quay lui. Thử a bằng 1: t thành D, nhưng n bằng 0 nên ngõ ra bị chặn, nhánh thất bại. Đảo lại a bằng 0: n bằng 1. Gán thêm b bằng 1: t bằng D, ngõ ra bằng D. Kết quả 01, một lần backtrack. Nếu giới hạn quay lui là 0 thì chương trình trả ABORTED. Lưu ý: D-algorithm đếm lần chọn cube, PODEM đếm lần gán ngõ vào, nên không so sánh nhanh chậm trực tiếp được. Em xin mời bạn An Nam.
 
 ---
 
-## 5. Nguyễn Thị Thúy Hằng — Cài đặt PODEM (slide 16–18)
+## 4. Phạm Trọng An Nam — ATPG tuần tự (slide 15–17)
 
-**Slide 16 — Kiến trúc.** [Chỉ sơ đồ] Chương trình viết bằng Python. Mạch được đọc từ file .bench, đưa vào lõi PODEM gồm objective, backtrace và imply. Kết quả được một bộ mô phỏng lỗi riêng kiểm tra lại. Với mạch tuần tự, khối unroll trải khung trước rồi mới đưa vào PODEM. Imply mô phỏng năm giá trị 0, 1, X, D, D ngang theo thứ tự từ đầu vào tới đầu ra; khi quay lui thì dựng lại mẫu và mô phỏng lại toàn mạch.
+**Slide 15 — Vì sao khó?** Mạch tuần tự có flip-flop lưu trạng thái, và lúc bật nguồn mình không biết trạng thái đó là gì. Không có scan thì không đặt được Q, không đọc được D, nên phải dùng một chuỗi đầu vào qua nhiều chu kỳ để khởi tạo, kích hoạt rồi đưa lỗi ra. Mạch ví dụ của nhóm có 2 ngõ vào, 1 ngõ ra, 6 cổng và 1 flip-flop.
 
-**Slide 17 — Trace c17.** Đây là trace thật chương trình in ra cho lỗi 11/SA0. Bước 1 gán 3 bằng 0, net 11 thành D. Bước 2 gán 2 bằng 1, ngõ ra 22 có D, thành công. Kết quả khớp đúng với phần chạy tay của bạn Trung Nguyên. Với mạch phụ, chương trình cũng quay lui đúng một lần như lý thuyết.
+**Slide 16 — Trải khung thời gian.** Cách làm là "trải" mạch: chép phần tổ hợp thành nhiều khung, ngõ ra D của khung trước nối vào Q của khung sau, và lỗi có mặt ở mọi khung. Với lỗi N3/SA0, đặt A bằng 1, B bằng 0 ở cả hai khung. Khung 0: N3 tốt 1, lỗi 0, nên D thành 0/1. Khung 1: Q nhận 0/1 và đưa thẳng ra Y. Lỗi được phát hiện ở khung 1, bất kể trạng thái đầu là 0 hay 1.
 
-**Slide 18 — Kiểm thử và giới hạn.** Chương trình phân biệt rõ ba kết quả: DETECTED khi ngõ ra có D, UNTESTABLE khi đã thử hết, ABORTED khi chạm giới hạn quay lui. Cổng XOR được xử lý riêng vì không có giá trị điều khiển. Bộ kiểm thử có 350 test đều đạt, và đầu vào sai bị từ chối thay vì cho ra kết quả sai. Giới hạn: nhóm chưa dùng các heuristic như SCOAP hay FAN. Em xin mời bạn Tuyền.
+**Slide 17 — Full scan và kết quả.** Full scan thay flip-flop bằng scan flip-flop: dịch giá trị vào Q, chạy một xung, rồi dịch D ra. Khi đó Q như một ngõ vào, D như một ngõ ra, quay về bài toán tổ hợp. [Chỉ bảng] Kết quả trên 18 lỗi: full scan phát hiện 18/18. Không scan, trạng thái đầu chưa biết: 1 khung được 1/18, 2 khung 13/18, 3 khung đủ 18/18. Scan dễ test hơn nhưng tốn thêm phần cứng và thời gian dịch. Em xin mời bạn Hằng.
 
 ---
 
-## 6. Nguyễn Thị Thanh Tuyền — Kiểm chứng, kết quả, demo và kết thúc (slide 19–23)
+## 5. Nguyễn Thị Thúy Hằng — Cài đặt PODEM (slide 18–20)
 
-**Slide 19 — Kiểm chứng độc lập.** Để không tin mù quáng vào PODEM, mọi mẫu đều được mô phỏng lại riêng ở mạch tốt và mạch lỗi. Mẫu có X chỉ được tính là đúng khi thử hết mọi cách điền X. Mạch c17 có 34 lỗi; gộp các lỗi tương đương còn 22. Với mạch tuần tự, chỉ chuỗi phát hiện được với *mọi* trạng thái đầu mới được tính.
+**Slide 18 — Kiến trúc.** [Chỉ sơ đồ] Chương trình viết bằng Python. Mạch được đọc từ file .bench, đưa vào lõi PODEM gồm objective, backtrace và imply. Kết quả được một bộ mô phỏng lỗi riêng kiểm tra lại. Với mạch tuần tự, khối unroll trải khung trước rồi mới đưa vào PODEM. Imply mô phỏng năm giá trị 0, 1, X, D, D ngang theo thứ tự từ đầu vào tới đầu ra; khi quay lui thì dựng lại mẫu và mô phỏng lại toàn mạch.
 
-**Slide 20 — Kết quả.** [Chỉ bảng trên] Trên c17, PODEM phát hiện 22/22 lỗi đại diện và 34/34 lỗi gốc, không cần quay lui, không mẫu nào sai. Sau khi nén, chỉ còn 6 mẫu mà vẫn phủ đủ 34 lỗi. [Chỉ bảng dưới] Mạch tuần tự: 1, 13 rồi 18 trên 18 khi trải 1, 2, 3 khung, khớp với kết quả vét cạn độc lập.
+**Slide 19 — Trace c17.** Đây là trace thật chương trình in ra cho lỗi 11/SA0. Bước 1 gán 3 bằng 0, net 11 thành D. Bước 2 gán 2 bằng 1, ngõ ra 22 có D, thành công. Kết quả khớp đúng với phần chạy tay của bạn Trung Nguyên. Với mạch phụ, chương trình cũng quay lui đúng một lần như lý thuyết.
 
-**Slide 21 — Demo.** Em xin demo nhanh. [Chạy lệnh theo `demo.md`]
+**Slide 20 — Kiểm thử và giới hạn.** Chương trình phân biệt rõ ba kết quả: DETECTED khi ngõ ra có D, UNTESTABLE khi đã thử hết, ABORTED khi chạm giới hạn quay lui. Cổng XOR được xử lý riêng vì không có giá trị điều khiển. Bộ kiểm thử có 350 test đều đạt, và đầu vào sai bị từ chối thay vì cho ra kết quả sai. Giới hạn: nhóm chưa dùng các heuristic như SCOAP hay FAN. Em xin mời bạn Tuyền.
+
+---
+
+## 6. Nguyễn Thị Thanh Tuyền — Kiểm chứng, kết quả, demo và kết thúc (slide 21–25)
+
+**Slide 21 — Kiểm chứng độc lập.** Để không tin mù quáng vào PODEM, mọi mẫu đều được mô phỏng lại riêng ở mạch tốt và mạch lỗi. Mẫu có X chỉ được tính là đúng khi thử hết mọi cách điền X. Mạch c17 có 34 lỗi; gộp các lỗi tương đương còn 22. Với mạch tuần tự, chỉ chuỗi phát hiện được với *mọi* trạng thái đầu mới được tính.
+
+**Slide 22 — Kết quả.** [Chỉ bảng trên] Trên c17, PODEM phát hiện 22/22 lỗi đại diện và 34/34 lỗi gốc, không cần quay lui, không mẫu nào sai. Sau khi nén, chỉ còn 6 mẫu mà vẫn phủ đủ 34 lỗi. [Chỉ bảng dưới] Mạch tuần tự: 1, 13 rồi 18 trên 18 khi trải 1, 2, 3 khung, khớp với kết quả vét cạn độc lập.
+
+**Slide 23 — Demo.** Em xin demo nhanh. [Chạy lệnh theo `demo.md`]
 1. Trace lỗi 11/SA0 trên c17: chương trình in bảng từng bước, ra mẫu X10XX.
 2. Mạch phụ: thấy một lần backtrack.
 3. Chạy toàn bộ lỗi c17: coverage 100%, nén còn 6 mẫu.
 4. Mạch tuần tự trải 2 khung: 13/18 lỗi phát hiện chắc chắn.
 
-**Slide 22 — So sánh D-algorithm và PODEM.** [Chỉ bảng] Cuối cùng, nhóm chạy cùng lỗi 11/SA0 bằng cả hai thuật toán để so sánh. Cả hai đều tìm được mẫu đúng: D-algorithm ra X100X, PODEM ra X10XX, đều được mô phỏng lỗi xác nhận. Khác biệt chính là nơi ra quyết định: D-algorithm phải gán 4 net giữa mạch rồi justify ngược về đầu vào, còn PODEM chỉ gán 2 đầu vào nên không cần justify. Lưu ý số quyết định của hai thuật toán đếm theo đơn vị khác nhau, và thời gian phụ thuộc máy, nên nhóm không kết luận thuật toán nào nhanh hơn bao nhiêu lần.
+**Slide 24 — So sánh D-algorithm và PODEM.** [Chỉ bảng] Cuối cùng, nhóm chạy cùng lỗi 11/SA0 bằng cả hai thuật toán để so sánh. Cả hai đều tìm được mẫu đúng: D-algorithm ra X100X, PODEM ra X10XX, đều được mô phỏng lỗi xác nhận. Khác biệt chính là nơi ra quyết định: D-algorithm phải gán 4 net giữa mạch rồi justify ngược về đầu vào, còn PODEM chỉ gán 2 đầu vào nên không cần justify. Lưu ý số quyết định của hai thuật toán đếm theo đơn vị khác nhau, và thời gian phụ thuộc máy, nên nhóm không kết luận thuật toán nào nhanh hơn bao nhiêu lần.
 
-**Slide 23 — Kết thúc.** Tóm lại, nhóm đã cài đặt PODEM và kiểm chứng bằng mô phỏng lỗi độc lập: c17 đạt 100% coverage, nén còn 6 mẫu; mạch tuần tự đạt 18 trên 18 lỗi khi dùng full scan hoặc trải 3 khung. Phần trình bày của Nhóm 4 đến đây là kết thúc. Em xin thay mặt nhóm cảm ơn thầy và các bạn đã lắng nghe.
+**Slide 25 — Kết thúc.** Tóm lại, nhóm đã cài đặt PODEM và kiểm chứng bằng mô phỏng lỗi độc lập: c17 đạt 100% coverage, nén còn 6 mẫu; mạch tuần tự đạt 18 trên 18 lỗi khi dùng full scan hoặc trải 3 khung. Phần trình bày của Nhóm 4 đến đây là kết thúc. Em xin thay mặt nhóm cảm ơn thầy và các bạn đã lắng nghe.
 
 ---
 
