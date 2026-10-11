@@ -137,3 +137,20 @@ Cube gốc $(X,1,0,0,X)$; hình sau tổng quát hóa $(X,1,0,X,X)$.
 \footnotesize $X=0$: $01000$; PO tốt $(1,1)$, lỗi $(0,0)$.
 4 lần chọn cube, 0 backtrack.
 \end{frame}
+
+\begin{frame}{D-algorithm: các vector test tìm được}
+\centering\small
+Cube (thứ tự PI 1, 2, 3, 6, 7): \textbf{X100X} \(\Rightarrow\) 2 bit X \(\Rightarrow\) $2^2=4$ vector test\\[2mm]
+\renewcommand{\arraystretch}{1.1}
+\begin{tabular}{@{}cccc@{}}
+\toprule
+STT & Vector & Ngõ ra mạch tốt (22, 23) & Ngõ ra khi lỗi 11/SA0\\
+\midrule
+1 & 01000 & 11 & 00\\
+2 & 01001 & 11 & 00\\
+3 & 11000 & 11 & 00\\
+4 & 11001 & 11 & 00\\
+\bottomrule
+\end{tabular}\\[2mm]
+{\footnotesize Mọi vector đều phát hiện lỗi (mạch tốt 11, mạch lỗi 00). Bỏ ràng buộc thừa 6 = 0 (tổng quát hóa) được X10XX như PODEM.}
+\end{frame}

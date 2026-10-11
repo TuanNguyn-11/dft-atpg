@@ -37,6 +37,28 @@ Pattern $X10XX$; 0 backtrack. Điền X bằng 0: $01000$.
 \end{itemize}
 \end{frame}
 
+\begin{frame}{PODEM: các vector test tìm được}
+\centering\small
+Cube (thứ tự PI 1, 2, 3, 6, 7): \textbf{X10XX} \(\Rightarrow\) 3 bit X \(\Rightarrow\) $2^3=8$ vector test\\[2mm]
+\renewcommand{\arraystretch}{1.1}
+\begin{tabular}{@{}cccc@{}}
+\toprule
+STT & Vector & Ngõ ra mạch tốt (22, 23) & Ngõ ra khi lỗi 11/SA0\\
+\midrule
+1 & 01000 & 11 & 00\\
+2 & 01001 & 11 & 00\\
+3 & 01010 & 11 & 00\\
+4 & 01011 & 11 & 00\\
+5 & 11000 & 11 & 00\\
+6 & 11001 & 11 & 00\\
+7 & 11010 & 11 & 00\\
+8 & 11011 & 11 & 00\\
+\bottomrule
+\end{tabular}\\[2mm]
+{\footnotesize Mọi vector đều phát hiện lỗi (mạch tốt 11, mạch lỗi 00); kiểm chứng bằng mô phỏng lỗi độc lập.}
+\end{frame}
+
+
 \begin{frame}{Một lần quay lui dẫn tới vector 01}
 \[
 t=a+b,\quad n=\overline a,\quad out=t\cdot n;\qquad t/SA0.

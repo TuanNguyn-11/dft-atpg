@@ -78,5 +78,6 @@ if __name__ == "__main__":
     shared = set(re.findall(r"@\w+\{([^,]+),", (ROOT / "report/bib/p1.bib").read_text(encoding="utf-8")))
     assert all(key in keys | shared for cite in re.findall(r"\\cite\{([^}]+)\}", chapter) for key in cite.split(","))
     slides = (ROOT / "slides/parts/p3.tex").read_text(encoding="utf-8")
-    assert 2 <= slides.count(r"\begin{frame}") == slides.count(r"\end{frame}") <= 3
-    print("PASS: auxiliary netlist, P3 labels/citations/chapter and 3 slide frames")
+    # P1 thêm slide bảng vector test PODEM (08/10/2026) nên tối đa 4 frame.
+    assert 2 <= slides.count(r"\begin{frame}") == slides.count(r"\end{frame}") <= 4
+    print("PASS: auxiliary netlist, P3 labels/citations/chapter and slide frames")
