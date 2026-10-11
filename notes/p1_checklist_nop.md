@@ -45,7 +45,8 @@ Lưu ý: PDF phải được build lại trên đúng commit phát hành (sau kh
 - [x] PR P6 #33: D-algorithm (`src/atpg/dalg.py`) và bảng so sánh với PODEM (`src/atpg/compare.py`); P1 kiểm: 364 passed, c17 11/SA0 X100X/4 quyết định vs X10XX/2 quyết định, `--all` 22/22 cả hai. Gói code nộp cập nhật. Phát hành `v1.0.15`.
 - [x] Slide 22: bảng so sánh D-algorithm/PODEM (3 cột, 14 tiêu chí) theo báo cáo bổ sung của P6; slide 23 trang; lời thoại Tuyền cập nhật. Phát hành `v1.0.16`.
 - [x] Slide 10 (D-algorithm, X100X → 4 vector) và slide 13 (PODEM, X10XX → 8 vector): bảng vector test sinh từ mô phỏng lỗi; checker P3 cho phép 4 frame; lời thoại 25 slide. Phát hành `v1.0.17`.
-- [x] Ghép bản sửa Chương 3 của Huy (đoạn giải thích lưu đồ, thứ tự đoạn sau bảng, hình cố định vị trí, bỏ câu và cite Bushnell); slide 10 sửa thành “Bỏ ràng buộc 6 = 0”. Báo cáo vẫn 14 trang (đánh số 1–10). Phát hành `v1.0.18` — **bản dùng để nộp** (báo cáo mới thay v1.0.9).
+- [x] Ghép bản sửa Chương 3 của Huy (đoạn giải thích lưu đồ, thứ tự đoạn sau bảng, hình cố định vị trí, bỏ câu và cite Bushnell); slide 10 sửa thành “Bỏ ràng buộc 6 = 0”. Báo cáo vẫn 14 trang (đánh số 1–10). Phát hành `v1.0.18` (báo cáo mới thay v1.0.9).
+- [x] Slide 3: dòng “Hình mạch c17: link” trỏ tới https://share.google/8SGb6lj8d62R1OuPD. Phát hành `v1.0.19` — báo cáo như v1.0.18 — **bản dùng để nộp**.
 - [ ] Người trình bày demo dùng câu lệnh trong `demo.md` (slide không còn ghi lệnh).
 - [ ] Báo P5 về thay đổi kiểm tra đầu vào trong `src/atpg/podem.py`.
 - [ ] P5 đọc lại bản biên tập Chương 6.
