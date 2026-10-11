@@ -22,17 +22,18 @@ ra PO, rồi dùng singular cover justify các yêu cầu nội bộ. Khi xung �
 khôi phục trạng thái và thử cube khác. Chỉ thành công khi sai khác tới PO
 \emph{và} mọi yêu cầu đều nhất quán, được thực hiện bởi PI. Lưu đồ ở
 Hình~\ref{fig:p2-flow}.
-\begin{figure}[htbp]
+\begin{figure}[H]
 \centering
 \input{figures/p2/d_algorithm_flow}
 \caption{Luồng D-algorithm; khôi phục cả gán net và frontier khi quay lui.}
 \label{fig:p2-flow}
 \end{figure}
+Lưu đồ bắt đầu bằng việc chọn PDCF để kích hoạt lỗi, sau đó implication cập nhật giá trị các net và frontier. Nếu sai khác chưa đến ngõ ra, thuật toán chọn PDC để lan truyền $D/D'$ đến PO và dùng cover để justification các giá trị đầu vào còn thiếu. Khi gặp xung đột, thuật toán khôi phục trạng thái trước đó để thử lựa chọn khác. Kết quả là \texttt{DETECTED} khi sai khác đến PO và J-frontier rỗng; nếu dừng do chạm giới hạn tìm kiếm thì trả về \texttt{ABORTED}.
 
 \textbf{Ví dụ c17, lỗi stem $11/\mathrm{SA0}$.}
 Bảng~\ref{tab:p2-trace} ghi bốn lần chọn cube; không đếm các lần implication.
-Ở bước 3, $22=D$ chưa đủ kết luận thành công vì net 10 còn cần justification.
-\begin{table}[htbp]
+
+\begin{table}[H]
 \centering\small
 \caption{Chạy tay D-algorithm: $J$ ghi các net đầu ra chưa justify.}
 \label{tab:p2-trace}
@@ -47,13 +48,12 @@ Bước & Cube trên các net & Implication chính & $J$\\
 \bottomrule
 \end{tabular}
 \end{table}
+Ở bước 3, $22=D$ chưa đủ kết luận thành công vì net 10 còn cần justification.
 Theo thứ tự PI $(1,2,3,6,7)$, thu được $(X,1,0,0,X)$, điền $X=0$ thành
 $01000$. Bốn cách điền đều cho $22_{\rm tốt}=1$, $22_{\rm lỗi}=0$.
 Sau kiểm chứng có thể bỏ ràng buộc $6=0$, được $(X,1,0,X,X)$;
 đây là bước tổng quát hóa cube, không phải một quyết định tìm kiếm.
-Ví dụ có \textbf{4 lần chọn cube, 0 backtrack}; không dùng nó để kết luận
-D-algorithm luôn ít bước hơn PODEM.\par
-\begin{figure}[htbp]
+\begin{figure}[H]
 \centering
 \input{figures/common/c17}
 \caption{Mạch c17 với cube sau tổng quát hóa, $6=X$;
@@ -65,7 +65,4 @@ D-algorithm luôn ít bước hơn PODEM.\par
 Quyết định trên net nội bộ tạo thêm công việc justification; fanout hội tụ
 có thể làm các yêu cầu cục bộ xung đột hoặc che sai khác. Trong c17, ảnh
 hưởng net 11 đi qua 16 và 19 rồi hội tụ tại 23. Tìm kiếm có thể tăng theo
-cấp số mũ trong trường hợp xấu; PODEM hạn chế quyết định tại PI
-(Chương~\ref{sec:p3-podem}). Sách Bushnell--Agrawal là tài liệu đọc bổ sung
-\cite{p2_bushnell2000}; ví dụ và số bước trên đây là chạy tay, không phải
-kết quả đo từ chương trình.
+cấp số mũ trong trường hợp xấu.
