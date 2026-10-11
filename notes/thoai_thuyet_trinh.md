@@ -38,7 +38,7 @@ Bám theo slide bản `v1.0.17` (25 trang). Chữ trong [ngoặc vuông] là tha
 
 **Slide 9 — Ví dụ c17.** [Chỉ hình] Bước 1 chọn PDCF: 6 bằng 0 nên 11 bằng D. Bước 2: 2 bằng 1, D qua 16 thành D ngang. Bước 3: 10 bằng 1, sai khác tới 22 thành D. Bước 4 justify net 10 bằng cách đặt 3 bằng 0. Tổng cộng 4 lần chọn cube, không cần quay lui. Điền X bằng 0 thì mạch tốt ra (1,1), mạch lỗi ra (0,0).
 
-**Slide 10 — Các vector test của D-algorithm.** [Chỉ dòng cube] D-algorithm cho cube X100X, có 2 bit X nên ra 4 vector test. [Chỉ bảng] Cả 4 vector, mạch tốt đều ra 11, mạch lỗi ra 00, nên đều phát hiện được lỗi. Cube này còn ràng buộc thừa 6 bằng 0; bỏ đi thì được X10XX, giống kết quả của PODEM mà bạn Trung Nguyên sẽ trình bày. Em xin mời bạn Trung Nguyên.
+**Slide 10 — Các vector test của D-algorithm.** [Chỉ dòng cube] D-algorithm cho cube X100X, có 2 bit X nên ra 4 vector test. [Chỉ bảng] Cả 4 vector, mạch tốt đều ra 11, mạch lỗi ra 00, nên đều phát hiện được lỗi. Nếu bỏ ràng buộc 6 bằng 0 thì được X10XX, giống kết quả của PODEM mà bạn Trung Nguyên sẽ trình bày. Em xin mời bạn Trung Nguyên.
 
 ---
 
